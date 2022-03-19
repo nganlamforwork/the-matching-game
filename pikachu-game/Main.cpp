@@ -14,7 +14,7 @@ int main()
 	Common::setUpConsole();
 	PrintRectangle(0, 0, 10, 10);
 	PrintOptionsBoard();
-	DrawBoard(0,0,6);
+	DrawBoard(0,0,8);
 	/*int n = 4;
 	GenerateMatrix(n);*/
 	Sleep(5000);

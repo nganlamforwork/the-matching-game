@@ -23,8 +23,8 @@ void Common::setAndCenterWindow()
 {
 	RECT rectClient, rectWindow;
 	GetClientRect(consoleWindow, &rectClient), GetWindowRect(consoleWindow, &rectWindow);
-	int width = 1216;
-	int height = 784;
+	int width = 960;
+	int height = 540;
 	int posX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
 		posY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
 	MoveWindow(consoleWindow, posX, posY, width, height, TRUE);
@@ -42,7 +42,7 @@ void Common::hideScrollBars()
 
 void Common::setConsoleTitle()
 {
-	SetConsoleTitle(L"\u0043\u1EDC\u0020\u0043\u0041\u0052\u00D4");
+	SetConsoleTitle(L"PIKACHU GAME");
 }
 
 void Common::disableMaximize()
