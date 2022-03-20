@@ -17,10 +17,10 @@ Board::Board(int size)
 
 Board::~Board()
 {
-    /*for (int i = 0; i < _size; i++)
+    for (int i = 0; i < _size; i++)
         delete[] _dataBoard[i];
     delete[] _dataBoard,
-        _dataBoard = nullptr;*/
+        _dataBoard = nullptr;
 }
 
 int Board::getSize()
@@ -185,7 +185,9 @@ void Board::renderBoardData()
 	for (int i = 0; i < _size; i++)
 		for (int j = 0; j < _size; j++) {
 			Common::gotoXY(_left + 3 + 4 * j, _top + 1 + 2 * i);
-			char tmp = _dataBoard[i][j].getCharHolder();
-			putchar(tmp);
+			_dataBoard[i][j].setX(_left + 3 + 4 * j);
+			_dataBoard[i][j].setY(_top + 1 + 2 * i);
+
+			putchar(_dataBoard[i][j].getCharHolder());
 		}
 }
