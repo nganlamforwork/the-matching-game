@@ -3,20 +3,17 @@
 
 #include <iostream>
 #include "Common.h"
-
-void GenerateMatrix(const int n);
-void PrintRectangle(int left, int top, int width, int height);
-void PrintOptionsBoard();
-void DrawBoard(const int left, const int top, const int size);
+#include "Board.h"
 
 int main()
 {
 	Common::setUpConsole();
-	PrintRectangle(0, 0, 10, 10);
-	PrintOptionsBoard();
-	DrawBoard(0,0,8);
-	/*int n = 4;
-	GenerateMatrix(n);*/
+
+	Board testingBoard(6);
+	testingBoard.drawBoard();
+	testingBoard.generateBoardData();
+	testingBoard.renderBoardData();
+
 	Sleep(5000);
 
 	Common::clearConsole();

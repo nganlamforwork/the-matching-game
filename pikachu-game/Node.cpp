@@ -1,5 +1,9 @@
 #include "Node.h"
 
+Node::Node()
+{
+}
+
 Node::Node(char charHolder, int status, int x, int y)
 {
 	_CharHolder = charHolder;
@@ -26,6 +30,11 @@ int Node::getX()
 int Node::getY()
 {
 	return _y;
+}
+
+void Node::setCharHolder(const char& charHolder)
+{
+	_CharHolder = charHolder;
 }
 
 void Node::setStatus(const int& status)

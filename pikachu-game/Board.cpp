@@ -1,9 +1,26 @@
-#include "Board.h"
+﻿#include "Board.h"
+#include "Node.h"
+#include "Common.h"
 
 Board::Board(int size)
 {
 	_size = size;
 	_remainCouple = _size * _size / 2;
+    _pairCharacter = new int[_size * _size];
+
+    //Board
+     _dataBoard = new Node* [_size];
+    for (int i = 0; i < _size; i++)
+        _dataBoard[i] = new Node[_size];
+
+}
+
+Board::~Board()
+{
+    /*for (int i = 0; i < _size; i++)
+        delete[] _dataBoard[i];
+    delete[] _dataBoard,
+        _dataBoard = nullptr;*/
 }
 
 int Board::getSize()
@@ -44,35 +61,131 @@ void Board::generateBoardData()
 
     bool* checkDuplicate = new bool[_size * _size];
     int* pos = new int[_size * _size];
-    int* pairCharacter = new int[_size * _size];
 
     //Build random character pair
     for (int i = 0; i < _size * _size; i += 2)
         if (i / 2 > 25)
-            pairCharacter[i] = pairCharacter[i + 1] = rand() % 26 + 'A';
+            _pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A';
         else
-            pairCharacter[i] = pairCharacter[i + 1] = i / 2 + 'A';
+            _pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A';
 
     //Build position array
     for (int i = 0; i < _size * _size; i++) checkDuplicate[i] = 0;
     for (int i = 0; i < _size * _size; i++) {
         int tmp = 0;
+
         do {
             tmp = rand() % (_size * _size);
         } while (checkDuplicate[tmp]);
+
         checkDuplicate[tmp] = 1;
         pos[i] = tmp;
     }
 
-    //Initiallized
-    char** dataTable = new char* [_size];
-    for (int i = 0; i < _size; i++)
-        dataTable[i] = new char[_size];
 
     //Build table
-    for (int i = 0; i < _size * _size; i++)
-        dataTable[pos[i] / _size][pos[i] % _size] = pairCharacter[i];
+    for (int i = 0; i < _size * _size; i++) {
+        int r = pos[i] / _size;
+        int c = pos[i] % _size;
+        _dataBoard[r][c].setCharHolder(_pairCharacter[i]);
+    }
 
     delete[] pos;
     delete[] checkDuplicate;
+}
+
+void Board::drawBoard() 
+{
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::clearConsole();
+
+	//Vẽ biên trên
+	Common::gotoXY(_left + 1, _top);
+	putchar(201);
+	for (int i = 1; i < _size * 4; i++)
+	{
+		Sleep(5);
+		if (i % 4 == 0)
+			putchar(209);
+		else
+			putchar(205);
+	}
+	putchar(187);
+
+
+	//Vẽ biên phải
+	for (int i = 1; i < _size * 2; i++)
+	{
+		Sleep(10);
+		Common::gotoXY(_size * 4 + _left + 1, i + _top);
+		if (i % 2 != 0)
+			putchar(186);
+		else
+			putchar(182);
+	}
+	Common::gotoXY(_size * 4 + _left + 1, _size * 2 + _top);
+	putchar(188);
+
+
+	//Ve biên dưới
+	for (int i = 1; i < _size * 4; i++)
+	{
+		Common::gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
+		Sleep(5);
+		if (i % 4 == 0)
+			putchar(207);
+		else
+			putchar(205);
+	}
+	Common::gotoXY(_left + 1, _size * 2 + _top);
+	putchar(200);
+
+	//Ve biên trái
+	for (int i = 1; i < _size * 2; i++)
+	{
+		Sleep(10);
+		Common::gotoXY(_left + 1, _size * 2 + _top - i);
+		if (i % 2 != 0)
+			putchar(186);
+		else
+			putchar(199);
+	}
+
+	//Vẽ đường dọc
+	for (int i = 1; i < _size * 2; i++)
+	{
+		for (int j = 4; j < _size * 4; j += 4)
+		{
+			if (i % 2 != 0)
+			{
+				Common::gotoXY(j + _left + 1, i + _top);
+				putchar(179);
+			}
+		}
+		Sleep(10);
+	}
+
+	//Vẽ đường ngang
+	for (int i = 1; i < _size * 4; i++)
+	{
+		for (int j = 2; j < _size * 2; j += 2)
+		{
+			Common::gotoXY(i + _left + 1, j + _top);
+			if (i % 4 == 0)
+				putchar(197);
+			else
+				putchar(196);
+		}
+		Sleep(5);
+	}
+}
+
+void Board::renderBoardData()
+{
+	for (int i = 0; i < _size; i++)
+		for (int j = 0; j < _size; j++) {
+			Common::gotoXY(_left + 3 + 4 * j, _top + 1 + 2 * i);
+			char tmp = _dataBoard[i][j].getCharHolder();
+			putchar(tmp);
+		}
 }
