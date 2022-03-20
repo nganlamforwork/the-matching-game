@@ -2,14 +2,16 @@
 #include "Node.h"
 #include "Common.h"
 
-Board::Board(int size)
+Board::Board(int size, int left, int top)
 {
 	_size = size;
+	_left = left;
+	_top = top;
 	_remainCouple = _size * _size / 2;
     _pairCharacter = new int[_size * _size];
 
     //Board
-     _dataBoard = new Node* [_size];
+    _dataBoard = new Node* [_size];
     for (int i = 0; i < _size; i++)
         _dataBoard[i] = new Node[_size];
 
@@ -190,4 +192,62 @@ void Board::renderBoardData()
 
 			putchar(_dataBoard[i][j].getCharHolder());
 		}
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+int Board::getXCoor(const int& c)
+{
+	return _left + 3 + 4 * c;
+}
+
+int Board::getYCoor(const int& r)
+{
+	return _top + 1 + 2 * r;
+}
+
+int Board::getCCoor(const int& x)
+{
+	return (x - _left - 3) / 4;
+}
+
+int Board::getRCoor(const int& y)
+{
+	return (y - _top - 1) / 24;
+}
+
+char Board::getCharRC(const int& r, const int& c)
+{
+	return _dataBoard[r][c].getCharHolder();
+}
+
+int Board::getStatus(const int& r, const int& c)
+{
+	return _dataBoard[r][c].getStatus();
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+void Board::lockCell(const int& r, const int& c)
+{
+	_dataBoard[r][c].setStatus(LOCK_);
+}
+
+void Board::unlockCell(const int& r, const int& c)
+{
+	_dataBoard[r][c].setStatus(NORMAL_);
+
+	Common::gotoXY(getXCoor(c), getYCoor(r));
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	putchar(_dataBoard[r][c].getCharHolder());
+}
+
+void Board::deleteCell(const int& r, const int& c)
+{
+	_dataBoard[r][c].setStatus(DELETED_);
+	_dataBoard[r][c].swapChar();
+
+	Common::gotoXY(getXCoor(c),getYCoor(r));
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	putchar(_dataBoard[r][c].getCharHolder());
 }

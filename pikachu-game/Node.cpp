@@ -17,6 +17,11 @@ char Node::getCharHolder()
 	return _CharHolder;
 }
 
+char Node::getHiddenChar()
+{
+	return _HiddenChar;
+}
+
 int Node::getStatus()
 {
 	return _Status;
@@ -50,4 +55,9 @@ void Node::setX(const int& x)
 void Node::setY(const int& y)
 {
 	_y = y;
+}
+
+void Node::swapChar()
+{
+	std::swap(_CharHolder, _HiddenChar);
 }

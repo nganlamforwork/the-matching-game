@@ -10,7 +10,7 @@ private:
 	int* _pairCharacter;
 	Node** _dataBoard;
 public:
-	Board(int);
+	Board(int,int,int);
 	~Board();
 
 	int getSize();
@@ -23,4 +23,16 @@ public:
 	void generateBoardData();
 	void drawBoard();
 	void renderBoardData();
+	
+	int getXCoor(const int& c);
+	int getYCoor(const int& r);
+	int getRCoor(const int& y);
+	int getCCoor(const int& x);
+	int getStatus(const int& r, const int& c);
+
+	char getCharRC(const int& r, const int& c);
+
+	void lockCell(const int& r, const int& c);
+	void unlockCell(const int& r, const int& c);
+	void deleteCell(const int& r, const int& c);
 };

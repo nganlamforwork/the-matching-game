@@ -4,15 +4,18 @@
 #include <iostream>
 #include "Common.h"
 #include "Board.h"
+#include "Game.h"
+
+#define EASY_ 4
+#define MEDIUM_ 6
+#define HARD_ 8
 
 int main()
 {
 	Common::setUpConsole();
 
-	Board testingBoard(6);
-	testingBoard.drawBoard();
-	testingBoard.generateBoardData();
-	testingBoard.renderBoardData();
+	Game testingGame(EASY_);
+	testingGame.startGame();
 
 	Sleep(5000);
 

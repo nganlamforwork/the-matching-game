@@ -23,6 +23,14 @@
 #define LIGHT_YELLOW 14
 #define BRIGHT_WHITE 15
 
+#define WIN_SOUND 0
+#define LOSE_SOUND 1
+#define MOVE_SOUND 2
+#define ENTER_SOUND 3
+#define ERROR_SOUND 4
+#define BACKGROUND_SOUND 5
+#define EFFECT_SOUND 6
+
 using namespace std;
 
 class Common
