@@ -7,10 +7,6 @@
 #include "Game.h"
 #include "Menu.h"
 
-#define EASY 4
-#define MEDIUM 6
-#define HARD 8
-
 int main()
 {
 	Common::setUpConsole();

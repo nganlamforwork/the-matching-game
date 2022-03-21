@@ -19,6 +19,11 @@ Game::~Game()
 	_board = nullptr;
 }
 
+void Game::setMode(int mode)
+{
+	_mode = mode;
+}
+
 void Game::renderBoard()
 {
 	_board->drawBoard();

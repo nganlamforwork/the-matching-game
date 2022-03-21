@@ -30,6 +30,9 @@ private:
 public:
 	Game(int);
 	~Game();
+	
+	void setMode(int mode);
+
 	void startGame();					 //Bắt đầu trò chơi
 	void renderBoard();					//In bảng ban đầu
 	void selectCell(const int& color);
