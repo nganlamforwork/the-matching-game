@@ -6,15 +6,15 @@
 #include "Board.h"
 #include "Game.h"
 
-#define EASY_ 4
-#define MEDIUM_ 6
-#define HARD_ 8
+#define EASY 4
+#define MEDIUM 6
+#define HARD 8
 
 int main()
 {
 	Common::setUpConsole();
 
-	Game testingGame(EASY_);
+	Game testingGame(EASY);
 	testingGame.startGame();
 
 	Sleep(5000);

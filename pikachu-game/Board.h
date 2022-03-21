@@ -2,6 +2,9 @@
 #include <iostream>
 #include "Node.h"
 
+#define CELL_LENGTH 8
+#define CELL_HEIGHT 4
+
 class Board {
 private:
 	int _size = 4;						//Kích cỡ bàn cờ
