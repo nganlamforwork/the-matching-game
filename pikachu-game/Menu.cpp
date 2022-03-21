@@ -168,7 +168,7 @@ void Menu::renderGameTitle()
 					putchar(word[i][j * wide[i] + k]);
 			}
 			left += wide[i] + 1;
-			Sleep(20);
+			//Sleep(20);
 		}
 
 		colorCount++;

@@ -179,11 +179,53 @@ bool Game::checkMatchEqualChar(std::pair<int,int> firstCell, std::pair<int, int>
 
 bool Game::checkMatchI(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	return 1;
+	if (firstCell.first == secondCell.first)//Same row
+	{
+		int start = firstCell.second;
+		int end = secondCell.second;
+		if (start > end) swap(start, end);
+		if (abs(start - end) == 1) return 1;
+		for (int i = start + 1; i < end; i++)
+		{
+			if (_board->getStatus(firstCell.first, i) != -1) return 0;
+		}
+		return 1;
+	}
+	if (firstCell.second == secondCell.second)//Same collumn
+	{
+		int start = firstCell.first;
+		int end = secondCell.first;
+		if (start > end) swap(start, end);
+		if (abs(start - end) == 1) return 1;
+		for (int i = start + 1; i < end; i++)
+		{
+			if (_board->getStatus(i, firstCell.second) != -1) return 0;
+		}
+		return 1;
+	}
+	
+	return 0;
 }
 bool Game::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	return 1;
+	std::pair<int, int> A;
+
+	A.first = firstCell.first;
+	A.second = secondCell.second;
+
+	if (_board->getStatus(firstCell.first, secondCell.second) == -1)
+	{
+		if (checkMatchI(A, secondCell) && checkMatchI(A, firstCell)) return 1;
+	}
+
+	A.first = secondCell.first;
+	A.second = firstCell.second;
+	if (_board->getStatus(secondCell.first, firstCell.second) == -1)
+	{
+		if (checkMatchI(A, secondCell) && checkMatchI(A, firstCell)) return 1;
+	}
+
+	return 0;
 }
 bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
@@ -198,8 +240,8 @@ bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondC
 	if (!checkMatchEqualChar(firstCell, secondCell)) return 0;
 	if (checkMatchI(firstCell, secondCell)) return 1;
 	if (checkMatchL(firstCell, secondCell)) return 1;
-	if (checkMatchZ(firstCell, secondCell)) return 1;
-	if (checkMatchU(firstCell, secondCell)) return 1;
+	if (checkMatchZ(firstCell, secondCell)) return 0;
+	if (checkMatchU(firstCell, secondCell)) return 0;
 	return 0;
 }
 
