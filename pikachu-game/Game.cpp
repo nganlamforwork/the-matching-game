@@ -30,9 +30,6 @@ void Game::renderBoard()
 	_board->generateBoardData();
 	_board->renderBoardData();
 
-	Common::gotoXY(120, 30);
-	Common::setConsoleColor(BRIGHT_WHITE, YELLOW);
-	cout << "ESC: EXIT";
 }
 
 void Game::startGame()

@@ -98,9 +98,13 @@ void Board::generateBoardData()
 
 void Board::drawBoard() 
 {
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::clearConsole();
 
+	Common::gotoXY(122, 30);
+	Common::setConsoleColor(BRIGHT_WHITE, YELLOW);
+	cout << "ESC: EXIT";
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	//Vẽ biên trên
 	Common::gotoXY(_left + 1, _top);
 	putchar(201);
