@@ -19,11 +19,17 @@ Game::~Game()
 	_board = nullptr;
 }
 
+void Game::setMode(int mode)
+{
+	_mode = mode;
+}
+
 void Game::renderBoard()
 {
 	_board->drawBoard();
 	_board->generateBoardData();
 	_board->renderBoardData();
+
 }
 
 void Game::startGame()
@@ -33,9 +39,7 @@ void Game::startGame()
 
 	_y = _board->getYCoor(0);
 	_x = _board->getXCoor(0);
-	Common::gotoXY(_x, _y);
-	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
-	putchar(_board->getCharRC(_r, _c));
+	selectCell(GREEN);
 
 	while (!_finish && _remainCards) {
 		switch (Common::getConsoleInput())
@@ -46,6 +50,7 @@ void Game::startGame()
 				break;
 			case 1:
 				Common::playSound(4);
+				Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 				_finish = 1;
 				break;
 			case 2:
@@ -76,11 +81,18 @@ void Game::unselectCell()
 	_x = _board->getXCoor(_c);
 	Common::gotoXY(_x, _y);
 	
-	if (_board->getStatus(_r,_c))
-		Common::setConsoleColor(BRIGHT_WHITE, RED);
+	if (_board->getStatus(_r,_c)==1)
+		Common::setConsoleColor(RED, BRIGHT_WHITE);
 	else 
 		Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	putchar(_board->getCharRC(_r, _c));
+
+	for (int i = _y - 1; i <= _y + 1; i++)
+		for (int j = _x - 3; j <= _x + 3; j++) {
+			Common::gotoXY(j, i);
+			if (j == _x && i == _y) putchar(_board->getCharRC(_r, _c));
+			else putchar(' ');
+		}
+	Common::gotoXY(_x, _y);
 }
 
 void Game::selectCell(const int& color)
@@ -88,8 +100,15 @@ void Game::selectCell(const int& color)
 	_y = _board->getYCoor(_r);
 	_x = _board->getXCoor(_c);
 	Common::gotoXY(_x, _y);
-	Common::setConsoleColor(BRIGHT_WHITE, color);
-	putchar(_board->getCharRC(_r, _c));
+	Common::setConsoleColor(color, BRIGHT_WHITE);
+
+	for (int i = _y - 1; i <= _y + 1; i++)
+		for (int j = _x - 3; j <= _x + 3; j++) {
+			Common::gotoXY(j, i);
+			if (j == _x && i == _y) putchar(_board->getCharRC(_r, _c));
+			else putchar(' ');
+		}
+	Common::gotoXY(_x, _y);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -198,8 +217,9 @@ void Game::deleteCards()
 	}
 
 	_remainCards -= 2;
-	for (auto card : _lockedCardsArr) 
+	for (auto card : _lockedCardsArr) {
 		_board->deleteCell(card.first, card.second);		//First: row - Second: column
+	}
 	_lockedCardsArr.clear();
 }
 
@@ -218,5 +238,6 @@ void Game::lockCell()
 	if (_lockedCards == 2) {
 		deleteCards();
 		Common::gotoXY(_x, _y);
+		selectCell(GREEN);
 	}
 }
