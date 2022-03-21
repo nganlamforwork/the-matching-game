@@ -5,6 +5,7 @@
 #include "Common.h"
 #include "Board.h"
 #include "Game.h"
+#include "Menu.h"
 
 #define EASY 4
 #define MEDIUM 6
@@ -14,8 +15,10 @@ int main()
 {
 	Common::setUpConsole();
 
-	Game testingGame(EASY);
-	testingGame.startGame();
+	/*Game testingGame(EASY);
+	testingGame.startGame();*/
+	Menu testingMenu;
+	testingMenu.renderMainScreen();
 
 	Sleep(5000);
 
