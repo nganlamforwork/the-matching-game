@@ -9,4 +9,5 @@ public:
 	Menu();
 	~Menu();
 	void renderMainScreen();
+	void renderGameTitle();
 };
