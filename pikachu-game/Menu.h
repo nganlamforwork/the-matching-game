@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <filesystem>
+#include <fstream>
 #include "Common.h"
 #include "Game.h"
 
@@ -34,6 +35,6 @@ public:
 	static void playEasy();
 	static void playMedium();
 	static void playHard();
-	void aboutPage();
-	void exitGame();
+	static void aboutPage();
+	static void exitGame();
 };

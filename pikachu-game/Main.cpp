@@ -9,14 +9,14 @@
 
 int main()
 {
-	Common::setUpConsole();
+	Common::setUpConsole(18);
 
 	/*Game testingGame(EASY);
 	testingGame.startGame();*/
 	Menu testingMenu;
 	testingMenu.renderMainScreen();
 
-	Sleep(5000);
+	Sleep(50000000);
 
 	Common::clearConsole();
 }
