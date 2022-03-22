@@ -65,11 +65,11 @@ void Board::generateBoardData()
     int* pos = new int[_size * _size];
 
     //Build random character pair
-    for (int i = 0; i < _size * _size; i += 2)
-        if (i / 2 > 25)
-            _pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A';
-        else
-            _pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A';
+	for (int i = 0; i < _size * _size; i += 2)
+		if (i / 2 > 25)
+			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A';
+		else
+			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A';
 
     //Build position array
     for (int i = 0; i < _size * _size; i++) checkDuplicate[i] = 0;
@@ -109,7 +109,7 @@ void Board::drawBoard()
 	Common::gotoXY(_left + 1, _top);
 	putchar(201);
 	for (int i = 1; i < _size * CELL_LENGTH; i++){
-		Sleep(2);
+		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
 			putchar(209);
 		else
@@ -120,7 +120,7 @@ void Board::drawBoard()
 
 	//Vẽ biên phải
 	for (int i = 1; i < _size * CELL_HEIGHT; i++){
-		Sleep(5);
+		//Sleep(5);
 		Common::gotoXY(_size * CELL_LENGTH + _left + 1, i + _top);
 		if (i % CELL_HEIGHT != 0)
 			putchar(186);
@@ -134,7 +134,7 @@ void Board::drawBoard()
 	//Ve biên dưới
 	for (int i = 1; i < _size * CELL_LENGTH; i++){
 		Common::gotoXY(_size * CELL_LENGTH + _left - i + 1, _size * CELL_HEIGHT + _top);
-		Sleep(2);
+		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
 			putchar(207);
 		else
@@ -145,7 +145,7 @@ void Board::drawBoard()
 
 	//Ve biên trái
 	for (int i = 1; i < _size * CELL_HEIGHT; i++){
-		Sleep(5);
+		//Sleep(5);
 		Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top - i);
 		if (i % CELL_HEIGHT != 0)
 			putchar(186);
@@ -162,7 +162,7 @@ void Board::drawBoard()
 				putchar(179);
 			}
 		}
-		Sleep(5);
+		//Sleep(5);
 	}
 
 	//Vẽ đường ngang
@@ -174,7 +174,7 @@ void Board::drawBoard()
 			else
 				putchar(196);
 		}
-		Sleep(2);
+		//Sleep(2);
 	}
 }
 
