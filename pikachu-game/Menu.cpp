@@ -35,7 +35,7 @@ void Menu::renderMainScreen()
 		{_options[0], playEasy},
 		{_options[1], playMedium},
 		{_options[2], playHard},
-		{_options[3], aboutPage},
+		{_options[3], playEasy},
 		{_options[4], playEasy} };
 
 	bool loadMenu = 1;

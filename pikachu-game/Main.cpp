@@ -16,7 +16,7 @@ int main()
 	Menu testingMenu;
 	testingMenu.renderMainScreen();
 
-	Sleep(50000000);
+	Sleep(5000);
 
 	Common::clearConsole();
 }
