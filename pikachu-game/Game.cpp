@@ -387,6 +387,23 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 	if (checkMatchU_R(firstCell, secondCell) || checkMatchU_C(firstCell, secondCell)) return 1;
 
 	pair<int, int>A, B;
+	if (firstCell.second > secondCell.second || firstCell.first > secondCell.first) swap(firstCell, secondCell);
+
+	A.first = firstCell.first;
+	A.second = secondCell.second;
+	if (_board->getStatus(A.first, A.second) == -1)
+	{
+		if (checkMatchU_R(firstCell, A)) return 1;
+		if (checkMatchU_C(A, secondCell)) return 1;
+	}
+
+	B.first = secondCell.first;
+	B.second = firstCell.second;
+	if (_board->getStatus(B.first, B.second) == -1)
+	{
+		if (checkMatchU_R(B, secondCell)) return 1;
+		if (checkMatchU_C(firstCell, B)) return 1;
+	}
 
 	return 0;
 }
