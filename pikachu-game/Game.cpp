@@ -393,16 +393,16 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 	A.second = secondCell.second;
 	if (_board->getStatus(A.first, A.second) == -1)
 	{
-		if (checkMatchU_R(firstCell, A)) return 1;
-		if (checkMatchU_C(A, secondCell)) return 1;
+		if (checkMatchU_R(firstCell, A) && checkMatchI(A, firstCell)) return 1;
+		if (checkMatchU_C(A, secondCell) && checkMatchI(A, secondCell)) return 1;
 	}
 
 	B.first = secondCell.first;
 	B.second = firstCell.second;
 	if (_board->getStatus(B.first, B.second) == -1)
 	{
-		if (checkMatchU_R(B, secondCell)) return 1;
-		if (checkMatchU_C(firstCell, B)) return 1;
+		if (checkMatchU_R(B, secondCell) && checkMatchI(B, firstCell)) return 1;
+		if (checkMatchU_C(firstCell, B) && checkMatchI(B, secondCell)) return 1;
 	}
 
 	return 0;
