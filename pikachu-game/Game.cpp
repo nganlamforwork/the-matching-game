@@ -230,8 +230,8 @@ bool Game::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> second
 }
 bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	//Có tr??ng h?p ng??i ch?i pick cell ? d??i tr??c r?i pick cell ? trên thì b? bug
 	std::pair<int, int> A, B;
+	if (firstCell.second > secondCell.second || firstCell.first > secondCell.first) swap(firstCell, secondCell);
 
 	A.first = firstCell.first;
 	B.first = secondCell.first;
@@ -257,6 +257,36 @@ bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> second
 		B.first = i;
 		if (_board->getStatus(A.first, A.second) != -1 ||
 			_board->getStatus(B.first, B.second) != -1) continue;
+
+		if (!checkMatchI(A, firstCell)) continue;
+		if (!checkMatchI(B, secondCell)) continue;
+		if (checkMatchI(A, B)) return 1;
+	}
+
+	A.first = firstCell.first;
+	B.first = secondCell.first;
+
+	for (int i = firstCell.second - 1; i > secondCell.second; i--)
+	{
+		A.second = i;
+		B.second = i;
+		if (_board->getStatus(A.first, A.second) != -1 ||
+			_board->getStatus(B.first, B.second) != -1) continue;
+		if (!checkMatchI(A, firstCell)) continue;
+		if (!checkMatchI(B, secondCell)) continue;
+		if (checkMatchI(A, B)) return 1;
+	}
+
+	A.second = firstCell.second;
+	B.second = secondCell.second;
+
+	for (int i = firstCell.first - 1; i > secondCell.first; i--)
+	{
+		A.first = i;
+		B.first = i;
+		if (_board->getStatus(A.first, A.second) != -1 ||
+			_board->getStatus(B.first, B.second) != -1) continue;
+
 		if (!checkMatchI(A, firstCell)) continue;
 		if (!checkMatchI(B, secondCell)) continue;
 		if (checkMatchI(A, B)) return 1;
@@ -290,20 +320,21 @@ bool Game::checkMatchU_R(std::pair<int, int>firstCell, std::pair<int, int>second
 			if (!checkMatchI(B, secondCell)) continue;
 			if (checkMatchI(A, B)) return 1;
 		}
-		
+		if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
 	}
 	else
 	if (_board->getStatus(firstCell.first + 1, firstCell.second) == -1 &&
 		_board->getStatus(secondCell.first + 1, secondCell.second) == -1)
 	{
-		for (int i = firstCell.first + 1; i < size - 1; i++)
+		for (int i = firstCell.first + 1; i < size; i++)
 		{
 			A.first = i;
 			B.first = i;
 			if (!checkMatchI(A, firstCell)) continue;
 			if (!checkMatchI(B, secondCell)) continue;
 			if (checkMatchI(A, B)) return 1;
-		}
+		}	
+		if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
 	}
 
 	return 0;
@@ -323,10 +354,10 @@ bool Game::checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> seco
 	A.first = firstCell.first;
 	B.first = secondCell.first;
 
-	if (_board->getStatus(firstCell.first, firstCell.second - 1) == -1 &&
-		_board->getStatus(secondCell.first, secondCell.second - 1) == -1)
+	if (_board->getStatus(firstCell.first, firstCell.second + 1) == -1 &&
+		_board->getStatus(secondCell.first, secondCell.second + 1) == -1)
 	{
-		for (int i = firstCell.second - 1; i > 0; i--)
+		for (int i = firstCell.second + 1; i < size; i++)
 		{
 			A.second = i;
 			B.second = i;
@@ -334,13 +365,13 @@ bool Game::checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> seco
 			if (!checkMatchI(B, secondCell)) continue;
 			if (checkMatchI(A, B)) return 1;
 		}
-
+		if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
 	}
 	else
-		if (_board->getStatus(firstCell.first + 1, firstCell.second) == -1 &&
-			_board->getStatus(secondCell.first + 1, secondCell.second) == -1)
+		if (_board->getStatus(firstCell.first, firstCell.second - 1) == -1 &&
+			_board->getStatus(secondCell.first, secondCell.second - 1) == -1)
 		{
-			for (int i = firstCell.first + 1; i < size - 1; i++)
+			for (int i = firstCell.second - 1; i > 0; i--)
 			{
 				A.second = i;
 				B.second = i;
@@ -348,13 +379,13 @@ bool Game::checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> seco
 				if (!checkMatchI(B, secondCell)) continue;
 				if (checkMatchI(A, B)) return 1;
 			}
+			if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
 		}
 }
 bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
 	if (checkMatchU_R(firstCell, secondCell) || checkMatchU_C(firstCell, secondCell)) return 1;
 
-	//C?ng b? bug gi?ng nh? Z-Matching
 	pair<int, int>A, B;
 
 	return 0;
