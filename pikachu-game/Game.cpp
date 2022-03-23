@@ -1,4 +1,4 @@
-#include "Game.h"
+﻿#include "Game.h"
 #include "Common.h"
 #include "Board.h"
 
@@ -212,15 +212,13 @@ bool Game::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> second
 	tmp.first = firstCell.first;
 	tmp.second = secondCell.second;
 
-	if (_board->getStatus(tmp.first, tmp.second) == DELETED)
-	{
+	if (_board->getStatus(tmp.first, tmp.second) == DELETED){
 		if (checkMatchI(tmp, secondCell) && checkMatchI(tmp, firstCell)) return 1;
 	}
 
 	tmp.first = secondCell.first;
 	tmp.second = firstCell.second;
-	if (_board->getStatus(tmp.first, tmp.second) == DELETED)
-	{
+	if (_board->getStatus(tmp.first, tmp.second) == DELETED){
 		if (checkMatchI(tmp, secondCell) && checkMatchI(tmp, firstCell)) return 1;
 	}
 
@@ -228,68 +226,33 @@ bool Game::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> second
 }
 bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
+	//First: row - Second: column
 	std::pair<int, int> A, B;
-	if (firstCell.second > secondCell.second || firstCell.first > secondCell.first) swap(firstCell, secondCell);
+	if (firstCell.second > secondCell.second) swap(firstCell, secondCell); //Cố định firstCell là ô bên trái
 
+	//Horizontal check (Z)
 	A.first = firstCell.first;
 	B.first = secondCell.first;
-
-	for (int i = firstCell.second + 1; i < secondCell.second; i++)
-	{
-		A.second = i;
-		B.second = i;
-		if (_board->getStatus(A.first, A.second) != DELETED ||
-			_board->getStatus(B.first, B.second) != DELETED) continue;
-
-		if (!checkMatchI(A, firstCell)) continue;
-		if (!checkMatchI(B, secondCell)) continue;
+	for (int i = firstCell.second + 1; i < secondCell.second; i++) {
+		A.second = B.second = i;
+		int x = _board->getStatus(A.first, A.second);
+		if (_board->getStatus(A.first, A.second) != DELETED) break;
+		if (_board->getStatus(B.first, B.second) != DELETED) continue;
+		if (!checkMatchI(secondCell, B)) continue;
 		if (checkMatchI(A, B)) return 1;
 	}
 
+	if (firstCell.first > secondCell.first) swap(firstCell, secondCell); //Cố định firstCell là ô ở trên
+	//Vertical check
 	A.second = firstCell.second;
 	B.second = secondCell.second;
-
-	for (int i = firstCell.first + 1; i < secondCell.first; i++)
-	{
-		A.first = i;
-		B.first = i;
-		if (_board->getStatus(A.first, A.second) != -1 ||
-			_board->getStatus(B.first, B.second) != -1) continue;
-
-		if (!checkMatchI(A, firstCell)) continue;
-		if (!checkMatchI(B, secondCell)) continue;
+	for (int i = firstCell.first + 1; i < secondCell.first; i++) {
+		A.first = B.first = i;
+		if (_board->getStatus(A.first, A.second) != DELETED) break;
+		if (_board->getStatus(B.first, B.second) != DELETED) continue;
+		if (!checkMatchI(secondCell, B)) continue;
 		if (checkMatchI(A, B)) return 1;
 	}
-
-	A.first = firstCell.first;
-	B.first = secondCell.first;
-
-	for (int i = firstCell.second - 1; i > secondCell.second; i--)
-	{
-		A.second = i;
-		B.second = i;
-		if (_board->getStatus(A.first, A.second) != -1 ||
-			_board->getStatus(B.first, B.second) != -1) continue;
-		if (!checkMatchI(A, firstCell)) continue;
-		if (!checkMatchI(B, secondCell)) continue;
-		if (checkMatchI(A, B)) return 1;
-	}
-
-	A.second = firstCell.second;
-	B.second = secondCell.second;
-
-	for (int i = firstCell.first - 1; i > secondCell.first; i--)
-	{
-		A.first = i;
-		B.first = i;
-		if (_board->getStatus(A.first, A.second) != -1 ||
-			_board->getStatus(B.first, B.second) != -1) continue;
-
-		if (!checkMatchI(A, firstCell)) continue;
-		if (!checkMatchI(B, secondCell)) continue;
-		if (checkMatchI(A, B)) return 1;
-	}
-
 	return 0;
 }
 bool Game::checkMatchU_R(std::pair<int, int>firstCell, std::pair<int, int>secondCell)
@@ -355,22 +318,23 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 {
 	if (checkMatchU_R(firstCell, secondCell) || checkMatchU_C(firstCell, secondCell)) return 1;
 
-	pair<int, int>A, B;
-	if ((firstCell.first > secondCell.first && firstCell.second > secondCell.second) || 
-		(firstCell.first > secondCell.first && firstCell.second < secondCell.second)) swap(firstCell, secondCell);
+	std::pair<int, int>A, B;
+	if (firstCell.first > secondCell.first) swap(firstCell, secondCell);
 
-	A.first = firstCell.first;
+	//U - Up
+	A.first  = firstCell.first;
 	A.second = secondCell.second;
 	if (_board->getStatus(A.first, A.second) == DELETED){
-		if (checkMatchU_R(firstCell, A) && checkMatchI(A, secondCell)) return 1;
-		if (checkMatchU_C(A, secondCell) && checkMatchI(A, firstCell)) return 1;
+		if (checkMatchI(A, secondCell) && checkMatchU_R(firstCell, A)) return 1;
+		if (checkMatchI(A, firstCell) && checkMatchU_C(A, secondCell)) return 1;
 	}
 
-	B.first = secondCell.first;
+	//U - Down
+	B.first  = secondCell.first;
 	B.second = firstCell.second;
 	if (_board->getStatus(B.first, B.second) == DELETED){
-		if (checkMatchU_R(B, secondCell) && checkMatchI(B, firstCell)) return 1;
-		if (checkMatchU_C(firstCell, B) && checkMatchI(B, secondCell)) return 1;
+		if (checkMatchI(B, firstCell) && checkMatchU_R(B, secondCell)) return 1;
+		if (checkMatchI(B, secondCell) && checkMatchU_C(firstCell, B)) return 1;
 	}
 
 	return 0;
