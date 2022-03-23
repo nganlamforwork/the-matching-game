@@ -269,3 +269,27 @@ void Board::deleteCell(const int& r, const int& c)
 	Common::gotoXY(x, y);
 
 }
+
+////////////////////////////////////////////////////////////////////////////
+
+bool Board::outputMatchI()
+{
+	Common::gotoXY(getLeftCoor(), getTopCoor());
+	cout << "hi" << endl;
+	return 1;
+}
+
+bool Board::outputMatchU(int left, int top)
+{
+	return 1;
+}
+
+bool Board::outputMatchL(int left, int top)
+{
+	return 1;
+}
+
+bool Board::outputMatchZ(int left, int top)
+{
+	return 1;
+}

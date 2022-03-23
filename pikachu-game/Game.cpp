@@ -3,7 +3,6 @@
 #include "Board.h"
 
 
-
 Game::Game(int mode)
 {
 	_mode = mode;
@@ -34,7 +33,6 @@ void Game::renderBoard()
 	_board->renderBoardData();
 
 }
-
 
 void Game::startGame()
 {
@@ -395,8 +393,11 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
 	if (!checkMatchEqualChar(firstCell, secondCell)) return 0;
-	if (checkMatchI(firstCell, secondCell)) return 1;
-	if (checkMatchL(firstCell, secondCell)) return 1;
+	if (checkMatchI(firstCell, secondCell))
+	{
+		return Board::outputMatchI();
+	}
+ 	if (checkMatchL(firstCell, secondCell)) return 1;
 	if (checkMatchZ(firstCell, secondCell)) return 1;
 	if (checkMatchU(firstCell, secondCell)) return 1;
 	return 0;
