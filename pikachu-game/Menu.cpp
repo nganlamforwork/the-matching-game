@@ -283,6 +283,45 @@ void Menu::playHard()
 	Game game(HARD);
 	game.startGame();
 }
+void Menu::aboutPage()
+{
+	int top = 2, left = 35;
+	ifstream about;
+	about.open("tutorial.txt");
+	Common::clearConsole();
+	Common::setUpConsole(22);
+	Common::hideScrollBars();
+
+	/*Common::setConsoleColor(BRIGHT_WHITE, PURPLE);
+	Common::gotoXY(left-5, top -2 );
+	for (int i = 0; i < 51; i++)
+		putchar('_');
+	Common::gotoXY(left - 5, top - 1);
+	for (int i = 0; i < 22; i++) {
+		putchar('|');
+		Common::gotoXY(left - 5, top - 1 + i);
+	}
+	Common::gotoXY(left - 5 + 50, top - 1);
+	for (int i = 0; i < 22; i++) {
+		putchar('|');
+		Common::gotoXY(left - 5 + 50, top - 1 + i);
+	}*/
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	std::string line;
+	int cnt = 0;
+	while (!about.eof()) {
+		Common::gotoXY(left, top + (cnt++) * 2);
+		std::getline(about, line);
+		cout << line;
+	}
+
+	/*Common::setConsoleColor(BRIGHT_WHITE, PURPLE);
+	Common::gotoXY(left - 5, top + cnt * 2);
+	for (int i = 0; i < 51; i++)
+		putchar('*');*/
+}
+}
 void Menu::exitGame()
 {
 	Common::clearConsole();

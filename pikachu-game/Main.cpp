@@ -9,7 +9,7 @@
 
 int main()
 {
-	Common::setUpConsole();
+	Common::setUpConsole(18);
 
 	/*Game testingGame(EASY);
 	testingGame.startGame();*/

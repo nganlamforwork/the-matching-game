@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <filesystem>
+#include <fstream>
 #include "Common.h"
 #include "Game.h"
 
