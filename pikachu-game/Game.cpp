@@ -189,7 +189,7 @@ bool Game::checkMatchI(std::pair<int, int> firstCell, std::pair<int, int> second
 		if (start > end) swap(start, end);
 		for (int i = start + 1; i < end; i++)
 		{
-			if (_board->getStatus(firstCell.first, i) != -1) return 0;
+			if (_board->getStatus(firstCell.first, i) != DELETED_) return 0;
 		}
 		return 1;
 	}
@@ -200,7 +200,7 @@ bool Game::checkMatchI(std::pair<int, int> firstCell, std::pair<int, int> second
 		if (start > end) swap(start, end);
 		for (int i = start + 1; i < end; i++)
 		{
-			if (_board->getStatus(i, firstCell.second) != -1) return 0;
+			if (_board->getStatus(i, firstCell.second) != DELETED_) return 0;
 		}
 		return 1;
 	}
@@ -214,14 +214,14 @@ bool Game::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> second
 	tmp.first = firstCell.first;
 	tmp.second = secondCell.second;
 
-	if (_board->getStatus(tmp.first, tmp.second) == -1)
+	if (_board->getStatus(tmp.first, tmp.second) == DELETED_)
 	{
 		if (checkMatchI(tmp, secondCell) && checkMatchI(tmp, firstCell)) return 1;
 	}
 
 	tmp.first = secondCell.first;
 	tmp.second = firstCell.second;
-	if (_board->getStatus(tmp.first, tmp.second) == -1)
+	if (_board->getStatus(tmp.first, tmp.second) == DELETED_)
 	{
 		if (checkMatchI(tmp, secondCell) && checkMatchI(tmp, firstCell)) return 1;
 	}
@@ -240,8 +240,8 @@ bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> second
 	{
 		A.second = i;
 		B.second = i;
-		if (_board->getStatus(A.first, A.second) != -1 ||
-			_board->getStatus(B.first, B.second) != -1) continue;
+		if (_board->getStatus(A.first, A.second) != DELETED_ ||
+			_board->getStatus(B.first, B.second) != DELETED_) continue;
 
 		if (!checkMatchI(A, firstCell)) continue;
 		if (!checkMatchI(B, secondCell)) continue;
@@ -299,43 +299,33 @@ bool Game::checkMatchU_R(std::pair<int, int>firstCell, std::pair<int, int>second
 	int size = _board->getSize();
 
 	if (firstCell.first != secondCell.first) return 0;
-	if (firstCell.first == 0 || firstCell.first == size - 1)//If both cells are at the top or bottom edge
-	{
-		return 1;
-	}
+	if (firstCell.first == 0 || firstCell.first == size - 1) return 1;//If both cells are at the top or bottom edge
 
 	std::pair<int, int> A, B;
 
 	A.second = firstCell.second;
 	B.second = secondCell.second;
 
-	if (_board->getStatus(firstCell.first - 1, firstCell.second) == -1 &&
-		_board->getStatus(secondCell.first - 1, secondCell.second) == -1)
+	for (int i = firstCell.first - 1; i > 0; i--)
 	{
-		for(int i = firstCell.first - 1; i > 0; i--)
-		{
-			A.first = i;
-			B.first = i;
-			if (!checkMatchI(A, firstCell)) continue;
-			if (!checkMatchI(B, secondCell)) continue;
-			if (checkMatchI(A, B)) return 1;
-		}
-		if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
+		A.first = i;
+		B.first = i;
+		if (_board->getStatus(A.first, A.second) != DELETED_ ||
+			_board->getStatus(B.first, B.second) != DELETED_) break;
+		if (checkMatchI(A, B)) return 1;
 	}
-	else
-	if (_board->getStatus(firstCell.first + 1, firstCell.second) == -1 &&
-		_board->getStatus(secondCell.first + 1, secondCell.second) == -1)
+	if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
+
+	for (int i = firstCell.first + 1; i < size; i++)
 	{
-		for (int i = firstCell.first + 1; i < size; i++)
-		{
-			A.first = i;
-			B.first = i;
-			if (!checkMatchI(A, firstCell)) continue;
-			if (!checkMatchI(B, secondCell)) continue;
-			if (checkMatchI(A, B)) return 1;
-		}	
-		if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
+		A.first = i;
+		B.first = i;
+		if (_board->getStatus(A.first, A.second) != DELETED_ ||
+			_board->getStatus(B.first, B.second) != DELETED_) break;
+		if (checkMatchI(A, B)) return 1;
 	}
+	if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
+
 
 	return 0;
 }
@@ -354,33 +344,27 @@ bool Game::checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> seco
 	A.first = firstCell.first;
 	B.first = secondCell.first;
 
-	if (_board->getStatus(firstCell.first, firstCell.second + 1) == -1 &&
-		_board->getStatus(secondCell.first, secondCell.second + 1) == -1)
+	for (int i = firstCell.second - 1; i > 0; i--)
 	{
-		for (int i = firstCell.second + 1; i < size; i++)
-		{
-			A.second = i;
-			B.second = i;
-			if (!checkMatchI(A, firstCell)) continue;
-			if (!checkMatchI(B, secondCell)) continue;
-			if (checkMatchI(A, B)) return 1;
-		}
-		if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
+		A.second = i;
+		B.second = i;
+		if (_board->getStatus(A.first, A.second) != DELETED_ ||
+			_board->getStatus(B.first, B.second) != DELETED_) break;
+		if (checkMatchI(A, B)) return 1;
 	}
-	else
-		if (_board->getStatus(firstCell.first, firstCell.second - 1) == -1 &&
-			_board->getStatus(secondCell.first, secondCell.second - 1) == -1)
-		{
-			for (int i = firstCell.second - 1; i > 0; i--)
-			{
-				A.second = i;
-				B.second = i;
-				if (!checkMatchI(A, firstCell)) continue;
-				if (!checkMatchI(B, secondCell)) continue;
-				if (checkMatchI(A, B)) return 1;
-			}
-			if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
-		}
+	if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
+
+	for (int i = firstCell.second + 1; i < size; i++)
+	{
+		A.second = i;
+		B.second = i;
+		if (_board->getStatus(A.first, A.second) != DELETED_ ||
+			_board->getStatus(B.first, B.second) != DELETED_) break;
+		if (checkMatchI(A, B)) return 1;
+	}
+	if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
+
+	return 0;
 }
 bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
@@ -392,7 +376,7 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 
 	A.first = firstCell.first;
 	A.second = secondCell.second;
-	if (_board->getStatus(A.first, A.second) == -1)
+	if (_board->getStatus(A.first, A.second) == DELETED_)
 	{
 		if (checkMatchU_R(firstCell, A) && checkMatchI(A, secondCell)) return 1;
 		if (checkMatchU_C(A, secondCell) && checkMatchI(A, firstCell)) return 1;
@@ -400,7 +384,7 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 
 	B.first = secondCell.first;
 	B.second = firstCell.second;
-	if (_board->getStatus(B.first, B.second) == -1)
+	if (_board->getStatus(B.first, B.second) == DELETED_)
 	{
 		if (checkMatchU_R(B, secondCell) && checkMatchI(B, firstCell)) return 1;
 		if (checkMatchU_C(firstCell, B) && checkMatchI(B, secondCell)) return 1;
