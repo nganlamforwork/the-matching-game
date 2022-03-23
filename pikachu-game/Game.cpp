@@ -187,7 +187,7 @@ bool Game::checkMatchI(std::pair<int, int> firstCell, std::pair<int, int> second
 		if (start > end) swap(start, end);
 		for (int i = start + 1; i < end; i++)
 		{
-			if (_board->getStatus(firstCell.first, i) != DELETED_) return 0;
+			if (_board->getStatus(firstCell.first, i) != DELETED) return 0;
 		}
 		return 1;
 	}
@@ -198,7 +198,7 @@ bool Game::checkMatchI(std::pair<int, int> firstCell, std::pair<int, int> second
 		if (start > end) swap(start, end);
 		for (int i = start + 1; i < end; i++)
 		{
-			if (_board->getStatus(i, firstCell.second) != DELETED_) return 0;
+			if (_board->getStatus(i, firstCell.second) != DELETED) return 0;
 		}
 		return 1;
 	}
@@ -212,14 +212,14 @@ bool Game::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> second
 	tmp.first = firstCell.first;
 	tmp.second = secondCell.second;
 
-	if (_board->getStatus(tmp.first, tmp.second) == DELETED_)
+	if (_board->getStatus(tmp.first, tmp.second) == DELETED)
 	{
 		if (checkMatchI(tmp, secondCell) && checkMatchI(tmp, firstCell)) return 1;
 	}
 
 	tmp.first = secondCell.first;
 	tmp.second = firstCell.second;
-	if (_board->getStatus(tmp.first, tmp.second) == DELETED_)
+	if (_board->getStatus(tmp.first, tmp.second) == DELETED)
 	{
 		if (checkMatchI(tmp, secondCell) && checkMatchI(tmp, firstCell)) return 1;
 	}
@@ -238,8 +238,8 @@ bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> second
 	{
 		A.second = i;
 		B.second = i;
-		if (_board->getStatus(A.first, A.second) != DELETED_ ||
-			_board->getStatus(B.first, B.second) != DELETED_) continue;
+		if (_board->getStatus(A.first, A.second) != DELETED ||
+			_board->getStatus(B.first, B.second) != DELETED) continue;
 
 		if (!checkMatchI(A, firstCell)) continue;
 		if (!checkMatchI(B, secondCell)) continue;
@@ -304,26 +304,19 @@ bool Game::checkMatchU_R(std::pair<int, int>firstCell, std::pair<int, int>second
 	A.second = firstCell.second;
 	B.second = secondCell.second;
 
-	for (int i = firstCell.first - 1; i > 0; i--)
-	{
-		A.first = i;
-		B.first = i;
-		if (_board->getStatus(A.first, A.second) != DELETED_ ||
-			_board->getStatus(B.first, B.second) != DELETED_) break;
-		if (checkMatchI(A, B)) return 1;
+	for (int i = firstCell.first - 1; i >= 0; i--){
+		A.first = B.first = i;
+		if (_board->getStatus(A.first, A.second) != DELETED ||
+			_board->getStatus(B.first, B.second) != DELETED) break;
+		if (i == 0 || checkMatchI(A, B)) return 1;
 	}
-	if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
 
-	for (int i = firstCell.first + 1; i < size; i++)
-	{
-		A.first = i;
-		B.first = i;
-		if (_board->getStatus(A.first, A.second) != DELETED_ ||
-			_board->getStatus(B.first, B.second) != DELETED_) break;
-		if (checkMatchI(A, B)) return 1;
+	for (int i = firstCell.first + 1; i < size; i++){
+		A.first = B.first = i;
+		if (_board->getStatus(A.first, A.second) != DELETED ||
+			_board->getStatus(B.first, B.second) != DELETED) break;
+		if (i == size - 1 || checkMatchI(A, B)) return 1;
 	}
-	if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
-
 
 	return 0;
 }
@@ -333,34 +326,28 @@ bool Game::checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> seco
 
 	if (firstCell.second != secondCell.second) return 0;
 	if (firstCell.second == 0 || firstCell.second == size - 1)//If both cells are at the left or right edge
-	{
 		return 1;
-	}
 
 	std::pair<int, int> A, B;
 
 	A.first = firstCell.first;
 	B.first = secondCell.first;
 
-	for (int i = firstCell.second - 1; i > 0; i--)
-	{
-		A.second = i;
-		B.second = i;
-		if (_board->getStatus(A.first, A.second) != DELETED_ ||
-			_board->getStatus(B.first, B.second) != DELETED_) break;
-		if (checkMatchI(A, B)) return 1;
+	for (int i = firstCell.second - 1; i >= 0; i--){
+		A.second = B.second = i;
+		if (_board->getStatus(A.first, A.second) != DELETED ||
+			_board->getStatus(B.first, B.second) != DELETED) break;
+		if (i == 0 || checkMatchI(A, B)) return 1;
 	}
-	if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
 
 	for (int i = firstCell.second + 1; i < size; i++)
 	{
 		A.second = i;
 		B.second = i;
-		if (_board->getStatus(A.first, A.second) != DELETED_ ||
-			_board->getStatus(B.first, B.second) != DELETED_) break;
-		if (checkMatchI(A, B)) return 1;
+		if (_board->getStatus(A.first, A.second) != DELETED ||
+			_board->getStatus(B.first, B.second) != DELETED) break;
+		if (i == size - 1 || checkMatchI(A, B)) return 1;
 	}
-	if (checkMatchI(A, firstCell) && checkMatchI(B, secondCell)) return 1;
 
 	return 0;
 }
@@ -374,16 +361,14 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 
 	A.first = firstCell.first;
 	A.second = secondCell.second;
-	if (_board->getStatus(A.first, A.second) == DELETED_)
-	{
+	if (_board->getStatus(A.first, A.second) == DELETED){
 		if (checkMatchU_R(firstCell, A) && checkMatchI(A, secondCell)) return 1;
 		if (checkMatchU_C(A, secondCell) && checkMatchI(A, firstCell)) return 1;
 	}
 
 	B.first = secondCell.first;
 	B.second = firstCell.second;
-	if (_board->getStatus(B.first, B.second) == DELETED_)
-	{
+	if (_board->getStatus(B.first, B.second) == DELETED){
 		if (checkMatchU_R(B, secondCell) && checkMatchI(B, firstCell)) return 1;
 		if (checkMatchU_C(firstCell, B) && checkMatchI(B, secondCell)) return 1;
 	}
@@ -393,10 +378,7 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
 	if (!checkMatchEqualChar(firstCell, secondCell)) return 0;
-	if (checkMatchI(firstCell, secondCell))
-	{
-		return Board::outputMatchI();
-	}
+	if (checkMatchI(firstCell, secondCell)) return 1;
  	if (checkMatchL(firstCell, secondCell)) return 1;
 	if (checkMatchZ(firstCell, secondCell)) return 1;
 	if (checkMatchU(firstCell, secondCell)) return 1;
@@ -425,7 +407,7 @@ void Game::deleteCards()
 
 void Game::lockCell()
 {
-	if (_board->getStatus(_r, _c) == LOCK_ || _board->getStatus(_r, _c) == DELETED_) {
+	if (_board->getStatus(_r, _c) == LOCK || _board->getStatus(_r, _c) == DELETED) {
 		Common::playSound(ERROR_SOUND);
 		return;
 	}

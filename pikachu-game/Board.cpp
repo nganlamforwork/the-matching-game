@@ -229,12 +229,12 @@ int Board::getStatus(const int& r, const int& c)
 
 void Board::lockCell(const int& r, const int& c)
 {
-	_dataBoard[r][c].setStatus(LOCK_);
+	_dataBoard[r][c].setStatus(LOCK);
 }
 
 void Board::unlockCell(const int& r, const int& c)
 {
-	_dataBoard[r][c].setStatus(NORMAL_);
+	_dataBoard[r][c].setStatus(NORMAL);
 
 	int x = getXCoor(c), y = getYCoor(r);
 
@@ -251,7 +251,7 @@ void Board::unlockCell(const int& r, const int& c)
 
 void Board::deleteCell(const int& r, const int& c)
 {
-	_dataBoard[r][c].setStatus(DELETED_);
+	_dataBoard[r][c].setStatus(DELETED);
 	_dataBoard[r][c].swapChar();
 
 	int x = getXCoor(c), y = getYCoor(r);
