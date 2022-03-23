@@ -37,7 +37,7 @@ void Menu::renderMainScreen()
 		{_options[1], playMedium},
 		{_options[2], playHard},
 		{_options[3], playEasy},
-		{_options[4], playEasy} };
+		{_options[4], exitGame} };
 
 	bool loadMenu = 1;
 	while (true){
@@ -223,8 +223,9 @@ void Menu::renderOptionsText()
 
 void Menu::renderCurrentOption()
 {
+	Common::playSound(MOVE_SOUND);
 	int left = _xMenu + 8, top = _yMenu + 1;
-	Common::setConsoleColor(BRIGHT_WHITE,RED);
+	Common::setConsoleColor(BRIGHT_WHITE, RED);
 
 	Common::gotoXY(left, top + _curOption * 2);
 	cout << _options[_curOption];
@@ -319,4 +320,10 @@ void Menu::aboutPage()
 	Common::gotoXY(left - 5, top + cnt * 2);
 	for (int i = 0; i < 51; i++)
 		putchar('*');*/
+}
+}
+void Menu::exitGame()
+{
+	Common::clearConsole();
+	exit(0);
 }
