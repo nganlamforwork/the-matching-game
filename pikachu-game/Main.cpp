@@ -1,21 +1,20 @@
 //21127334 - Le Vu Ngan Lam
-// Pham Tien Duc
+//21127598 - Pham Tien Duc
 
 #include <iostream>
 #include "Common.h"
 #include "Board.h"
 #include "Game.h"
-
-#define EASY_ 4
-#define MEDIUM_ 6
-#define HARD_ 8
+#include "Menu.h"
 
 int main()
 {
-	Common::setUpConsole();
+	Common::setUpConsole(18);
 
-	Game testingGame(EASY_);
-	testingGame.startGame();
+	/*Game testingGame(EASY);
+	testingGame.startGame();*/
+	Menu testingMenu;
+	testingMenu.renderMainScreen();
 
 	Sleep(5000);
 

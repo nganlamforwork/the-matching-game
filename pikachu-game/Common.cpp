@@ -3,9 +3,9 @@
 HWND Common::consoleWindow = GetConsoleWindow();
 HANDLE Common::consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
-void Common::setUpConsole()
+void Common::setUpConsole(int fontSize)
 {
-	setFontInfo();
+	setFontInfo(fontSize,fontSize);
 	setAndCenterWindow();
 	disableMaximize();
 	setConsoleTitle();
@@ -23,8 +23,8 @@ void Common::setAndCenterWindow()
 {
 	RECT rectClient, rectWindow;
 	GetClientRect(consoleWindow, &rectClient), GetWindowRect(consoleWindow, &rectWindow);
-	int width = 960;
-	int height = 540;
+	int width = 1152;
+	int height = 648;
 	int posX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
 		posY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
 	MoveWindow(consoleWindow, posX, posY, width, height, TRUE);
@@ -42,7 +42,7 @@ void Common::hideScrollBars()
 
 void Common::setConsoleTitle()
 {
-	SetConsoleTitle(L"PIKACHU GAME");
+	SetConsoleTitle(L"MATCHING GAME");
 }
 
 void Common::disableMaximize()
@@ -57,13 +57,13 @@ void Common::showCursor(bool show)
 	SetConsoleCursorInfo(consoleOutput, &info);
 }
 
-void Common::setFontInfo()
+void Common::setFontInfo(int sizeX, int sizeY)
 {
 	CONSOLE_FONT_INFOEX info;
 	info.cbSize = sizeof(info);
 	GetCurrentConsoleFontEx(consoleOutput, FALSE, &info);
-	info.dwFontSize.X = 12;
-	info.dwFontSize.Y = 24;
+	info.dwFontSize.X = sizeX;
+	info.dwFontSize.Y = sizeY;
 	wcscpy_s(info.FaceName, L"Consolas");
 	SetCurrentConsoleFontEx(consoleOutput, FALSE, &info);
 }

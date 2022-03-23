@@ -24,12 +24,17 @@ private:
 	bool checkMatchI(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
 	bool checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
 	bool checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
+	bool checkMatchU_R(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
+	bool checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
 	bool checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
 	bool checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell);			//Check match tổng
 
 public:
 	Game(int);
 	~Game();
+	
+	void setMode(int mode);
+
 	void startGame();					 //Bắt đầu trò chơi
 	void renderBoard();					//In bảng ban đầu
 	void selectCell(const int& color);
