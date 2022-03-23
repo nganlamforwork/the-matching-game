@@ -22,6 +22,7 @@ void Menu::setCurrentOption(int opt)
 {
 	_curOption = opt;
 }
+
 void Menu::renderMainScreen()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
