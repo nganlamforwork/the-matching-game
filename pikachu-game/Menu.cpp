@@ -321,7 +321,7 @@ void Menu::aboutPage()
 	for (int i = 0; i < 51; i++)
 		putchar('*');*/
 }
-}
+
 void Menu::exitGame()
 {
 	Common::clearConsole();
