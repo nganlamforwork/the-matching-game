@@ -20,6 +20,7 @@ public:
     void removeTail();
     void removeAll();
     bool addPos(Node* data, int pos);
+    Node* getPos(int pos);
     void removePos(int pos);
     void printList();
     int countElements();

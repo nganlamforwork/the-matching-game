@@ -92,6 +92,22 @@ bool LinkedList::addPos(Node* data, int pos)
     p->setNext(tmp);
     return 1;
 }
+Node* LinkedList::getPos(int pos)
+{
+    if (pos == 0 || _head == nullptr) 
+        return _head;
+
+    int i = 0;
+    Node* p = _head;
+    while (p != nullptr && i != pos - 1) {
+        p = p->getNext();
+        ++i;
+    }
+
+    if (i != pos - 1) return nullptr;
+
+    return p->getNext();
+}
 void LinkedList::removePos(int pos)
 {
     if (pos == 0 || _head == nullptr)
