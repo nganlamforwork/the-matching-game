@@ -86,7 +86,7 @@ void LinkedList::removePos(int pos)
 
     Node* tmp = p->getNext()->getNext();
     p->setNext(tmp);
-    printList();
+    //printList();
 }
 bool LinkedList::removeRC(int r, int c)
 {

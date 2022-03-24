@@ -266,7 +266,7 @@ void Board::deleteCell(const int& r, const int& c)
 	//Remove from linked list
 	_dataRow[r].removeRC(r, c);
 	_dataColumn[c].removeRC(r, c);
-	_dataColumn[c].printList();
+	//_dataColumn[c].printList();
 
 	_dataBoard[r][c].setStatus(DELETED);
 	_dataBoard[r][c].swapChar();
