@@ -1,13 +1,13 @@
 #include "LinkedList.h"
 
+#include <fstream>
+
 LinkedList::LinkedList(){}
 LinkedList::~LinkedList(){}
 
 Node* LinkedList::createNode(Node* data)
 {
-    Node* tmp = new Node;
-    tmp->setCharHolder(data->getCharHolder());
-    tmp->setNext();
+    Node* tmp = new Node(data);
     return tmp;
 }
 
@@ -70,6 +70,44 @@ void LinkedList::removeAll()
     }
     _head = nullptr;
 }
+void LinkedList::removePos(int pos)
+{
+    if (pos == 0 || _head == nullptr)
+        removeHead();
+
+    int i = 0;
+    Node* p = _head;
+    while (p->getNext()->getNext() != nullptr && i != pos - 1) {
+        p = p->getNext();
+        ++i;
+    }
+
+    if (i != pos - 1) return; //Not found
+
+    Node* tmp = p->getNext()->getNext();
+    p->setNext(tmp);
+    //printList();
+}
+bool LinkedList::removeRC(int r, int c)
+{
+    if (_head->getR() == r && _head->getC() == c) {
+        removeHead();
+        return 1;
+    }
+    int i = 0;
+    Node* p = _head;
+    while (p->getNext()->getNext() != nullptr && (p->getNext()->getR() != r || p->getNext()->getC() != c)) {
+        p = p->getNext();
+        ++i;
+    }
+
+    if (p->getNext()->getR() != r || p->getNext()->getC() != c) return 0; //Not found
+
+    Node* tmp = p->getNext()->getNext();
+    p->setNext(tmp);
+
+    //printList();
+}
 bool LinkedList::addPos(Node* data, int pos)
 {
     if (pos == 0 || _head == nullptr) {
@@ -92,30 +130,32 @@ bool LinkedList::addPos(Node* data, int pos)
     p->setNext(tmp);
     return 1;
 }
-void LinkedList::removePos(int pos)
+Node* LinkedList::getPos(int pos)
 {
-    if (pos == 0 || _head == nullptr)
-        removeHead();
+    if (pos == 0 || _head == nullptr) 
+        return _head;
 
     int i = 0;
     Node* p = _head;
-    while (p->getNext()->getNext() != nullptr && i != pos - 1) {
+    while (p != nullptr && i != pos - 1) {
         p = p->getNext();
         ++i;
     }
 
-    if (i != pos - 1) return; //Not found
+    if (i != pos - 1) return nullptr;
 
-    Node * tmp = p->getNext()->getNext();
-    p->setNext(tmp);
+    return p->getNext();
 }
 void LinkedList::printList()
 {
+    std::ofstream out("check.txt", std::ios::app);
     Node* p = _head;
     while (p != nullptr) {
-        std::cout << p->getCharHolder() << ' ';
+       out << p->getCharHolder() << ' ';
         p = p->getNext();
     }
+    out << '\n';
+    out.close();
 }
 int LinkedList::countElements()
 {
