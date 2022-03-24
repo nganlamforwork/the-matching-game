@@ -16,5 +16,5 @@ public:
     void removeTail(Node*& pHead);
     void removeAll(Node*& pHead);
     bool addPos(Node*& pHead, Node* data, int pos);
-    void RemovePos(Node*& pHead, int pos);
+    void removePos(Node*& pHead, int pos);
 };

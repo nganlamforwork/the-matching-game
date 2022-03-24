@@ -81,7 +81,7 @@ bool LinkedList::addPos(Node*& pHead, Node* data, int pos)
     p->setNext(tmp);
     return 1;
 }
-void LinkedList::RemovePos(Node*& pHead, int pos)
+void LinkedList::removePos(Node*& pHead, int pos)
 {
     if (pos == 0 || pHead == nullptr)
         removeHead(pHead);
