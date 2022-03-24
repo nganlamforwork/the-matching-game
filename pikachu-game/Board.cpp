@@ -62,7 +62,7 @@ void Board::generateBoardData()
     srand(time(NULL));
 
     bool* checkDuplicate = new bool[_size * _size];
-    int* pos = new int[_size * _size];
+    pos = new int[_size * _size];
 
     //Build random character pair
 	for (int i = 0; i < _size * _size; i += 2)
@@ -110,15 +110,15 @@ void Board::drawBoard()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	//Vẽ biên trên
 	Common::gotoXY(_left + 1, _top);
-	putchar(32);
+	putchar(201);
 	for (int i = 1; i < _size * CELL_LENGTH; i++){
 		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
-			putchar(32);
+			putchar(205);
 		else
-			putchar('-');
+			putchar(205);
 	}
-	putchar(32);
+	putchar(187);
 
 
 	//Vẽ biên phải
@@ -126,12 +126,12 @@ void Board::drawBoard()
 		//Sleep(5);
 		Common::gotoXY(_size * CELL_LENGTH + _left + 1, i + _top);
 		if (i % CELL_HEIGHT == 0)
-			putchar(' ');
+			putchar(186);
 		else
-			putchar('|');
+			putchar(186);
 	}
 	Common::gotoXY(_size * CELL_LENGTH + _left + 1, _size * CELL_HEIGHT + _top);
-	putchar(32);
+	putchar(188);
 
 
 	//Ve biên dưới
@@ -139,21 +139,21 @@ void Board::drawBoard()
 		Common::gotoXY(_size * CELL_LENGTH + _left - i + 1, _size * CELL_HEIGHT + _top);
 		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
-			putchar(32);
+			putchar(205);
 		else
-			putchar('-');
+			putchar(205);
 	}
 	Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top);
-	putchar(32);
+	putchar(200);
 
 	//Ve biên trái
 	for (int i = 1; i < _size * CELL_HEIGHT; i++){
 		//Sleep(5);
 		Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top - i);
 		if (i % CELL_HEIGHT == 0)
-			putchar(32);
+			putchar(186);
 		else
-			putchar('|');
+			putchar(186);
 	}
 
 	//Vẽ đường dọc
@@ -161,7 +161,7 @@ void Board::drawBoard()
 		for (int j = CELL_LENGTH; j < _size * CELL_LENGTH; j += CELL_LENGTH){
 			if (i % CELL_HEIGHT != 0){
 				Common::gotoXY(j + _left + 1, i + _top);
-				putchar('|');
+				putchar(179);
 			}
 		}
 		//Sleep(5);
@@ -174,7 +174,7 @@ void Board::drawBoard()
 			if (i % CELL_LENGTH == 0)
 				putchar(32);
 			else
-				putchar('-');
+				putchar(196);
 		}
 		//Sleep(2);
 	}

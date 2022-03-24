@@ -10,64 +10,75 @@ Node* LinkedList::createNode(Node* data)
     tmp->setNext();
     return tmp;
 }
-void LinkedList::addHead(Node*& pHead, Node* data)
+
+Node* LinkedList::getHead()
+{
+    return _head;
+}
+
+Node* LinkedList::getTail()
+{
+    return _tail;
+}
+
+void LinkedList::addHead(Node* data)
 {
     Node* tmp = createNode(data);
-    if (pHead == nullptr)
-        pHead = tmp;
+    if (_head == nullptr)
+        _head = tmp;
     else {
-        tmp->setNext(pHead);
-        pHead = tmp;
+        tmp->setNext(_head);
+        _head = tmp;
     }
 }
 
-void LinkedList::addTail(Node*& pHead, Node* data)
+void LinkedList::addTail(Node* data)
 {
     Node* tmp, * p;
     tmp = createNode(data);
-    if (pHead == nullptr)
-        pHead = tmp;
+    if (_head == nullptr)
+        _head = tmp;
     else {
-        p = pHead;
+        p = _head;
         while (p->getNext() != nullptr)
             p = p->getNext();
         p->setNext(tmp);
     }
 }
-void LinkedList::removeHead(Node*& pHead)
+void LinkedList::removeHead()
 {
-    if (pHead == nullptr) return;
-    pHead = pHead->getNext();
+    if (_head == nullptr) return;
+    _head = _head->getNext();
 }
-void LinkedList::removeTail(Node*& pHead)
+void LinkedList::removeTail()
 {
-    if (pHead == nullptr) return;
-    if (pHead->getNext() == nullptr) return removeHead(pHead);
-    Node* p = pHead;
+    if (_head == nullptr) return;
+    if (_head->getNext() == nullptr) return removeHead();
+    Node* p = _head;
     while (p->getNext()->getNext() != nullptr) //back-1
         p = p->getNext();
     p->setNext();
 }
-void LinkedList::removeAll(Node*& pHead)
+void LinkedList::removeAll()
 {
-    Node* p = pHead;
+    Node* p = _head;
     Node* tmp;
     while (p != nullptr) {
         tmp = p;
         p = p->getNext();
         delete tmp;
     }
-    pHead = nullptr;
+    _head = nullptr;
 }
-bool LinkedList::addPos(Node*& pHead, Node* data, int pos)
+bool LinkedList::addPos(Node* data, int pos)
 {
-    if (pos == 0 || pHead == nullptr) {
-        addHead(pHead, data);
+    if (pos == 0 || _head == nullptr) {
+        addHead(data);
         return 1;
     }
 
     int i = 0;
-    Node* p = pHead;
+    Node* p = _head;
     while (p != nullptr && i != pos - 1) {
         p = p->getNext();
         ++i;
@@ -81,13 +92,13 @@ bool LinkedList::addPos(Node*& pHead, Node* data, int pos)
     p->setNext(tmp);
     return 1;
 }
-void LinkedList::RemovePos(Node*& pHead, int pos)
+void LinkedList::removePos(int pos)
 {
-    if (pos == 0 || pHead == nullptr)
-        removeHead(pHead);
+    if (pos == 0 || _head == nullptr)
+        removeHead();
 
     int i = 0;
-    Node* p = pHead;
+    Node* p = _head;
     while (p->getNext()->getNext() != nullptr && i != pos - 1) {
         p = p->getNext();
         ++i;
@@ -97,4 +108,22 @@ void LinkedList::RemovePos(Node*& pHead, int pos)
 
     Node * tmp = p->getNext()->getNext();
     p->setNext(tmp);
+}
+void LinkedList::printList()
+{
+    Node* p = _head;
+    while (p != nullptr) {
+        std::cout << p->getCharHolder() << ' ';
+        p = p->getNext();
+    }
+}
+int LinkedList::countElements()
+{
+    Node* p = _head;
+    int cnt = 0;
+    while (p != nullptr) {
+        cnt++;
+        p = p->getNext();
+    }
+    return cnt;
 }
