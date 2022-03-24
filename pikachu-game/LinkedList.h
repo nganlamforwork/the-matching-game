@@ -19,9 +19,10 @@ public:
     void removeHead();
     void removeTail();
     void removeAll();
+    void removePos(int pos);
+    bool removeRC(int r, int c);
     bool addPos(Node* data, int pos);
     Node* getPos(int pos);
-    void removePos(int pos);
     void printList();
     int countElements();
 };

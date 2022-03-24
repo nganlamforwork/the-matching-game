@@ -13,7 +13,8 @@ private:
 	int _remainCouple = 0;				//Số card còn lại - For scoring
 	int* _pairCharacter;
 	Node** _dataBoard;
-	LinkedList _pairCharacterLL;
+	LinkedList* _dataRow;
+	LinkedList* _dataColumn;
 	int* _pos;
 public:
 	Board(int,int,int);

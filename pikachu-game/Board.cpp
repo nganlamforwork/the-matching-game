@@ -15,6 +15,9 @@ Board::Board(int size, int left, int top)
     for (int i = 0; i < _size; i++)
         _dataBoard[i] = new Node[_size];
 
+	//Linked list
+	_dataRow = new LinkedList[_size];
+	_dataColumn = new LinkedList[_size];
 }
 
 Board::~Board()
@@ -23,6 +26,9 @@ Board::~Board()
         delete[] _dataBoard[i];
     delete[] _dataBoard,
         _dataBoard = nullptr;
+
+	delete[] _dataRow, _dataRow = nullptr;
+	delete[] _dataColumn, _dataColumn = nullptr;
 
 	delete[] _pos;
 }
@@ -69,14 +75,9 @@ void Board::generateBoardData()
     //Build random character pair
 	for (int i = 0; i < _size * _size; i += 2) {
 		if (i / 2 > 25)
-			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A';
+			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A' /*rand() % 1 + 'A'*/;
 		else
-			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A';
-		/*if (i / 2 > 25)
-			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 1 + 'A';
-		else
-			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 1 + 'A';*/
-
+			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A' /*rand() % 1 + 'A'*/;
 	}
 
     //Build position array
@@ -191,17 +192,17 @@ void Board::renderBoardData()
 			Common::gotoXY(_left + 5 + CELL_LENGTH * j, _top + 2 + CELL_HEIGHT * i);
 			_dataBoard[i][j].setX(_left + 5 + CELL_LENGTH * j);
 			_dataBoard[i][j].setY(_top + 2 + CELL_HEIGHT * i);
+			_dataBoard[i][j].setR(i);
+			_dataBoard[i][j].setC(j);
 
 			putchar(_dataBoard[i][j].getCharHolder());
 
-			//Linked list - ROW
+			//Add to linked lists
 			Node* tmp = new Node(_dataBoard[i][j]);
-			_pairCharacterLL.addHead(tmp);
+			_dataRow[i].addTail(tmp);
+			_dataColumn[j].addTail(tmp);
+			//_dataRow[i].printList();
 		}
-
-	_pairCharacterLL.printList();
-
-	std::cout << _pairCharacterLL.getPos(4)->getCharHolder();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -262,6 +263,11 @@ void Board::unlockCell(const int& r, const int& c)
 
 void Board::deleteCell(const int& r, const int& c)
 {
+	//Remove from linked list
+	_dataRow[r].removeRC(r, c);
+	_dataColumn[c].removeRC(r, c);
+	_dataColumn[c].printList();
+
 	_dataBoard[r][c].setStatus(DELETED);
 	_dataBoard[r][c].swapChar();
 
