@@ -2,18 +2,16 @@
 
 Node::Node()
 {
-	_next = new Node;
 	_next = nullptr;
 }
 
 Node::Node(char charHolder, int status, int x, int y)
 {
-	_CharHolder = charHolder;
-	_Status = status;
-	_x = x;
-	_y = y;
-	_next = new Node;
-	_next = nullptr;
+	this->_CharHolder = charHolder;
+	this->_Status = status;
+	this->_x = x;
+	this->_y = y;
+	this->_next = nullptr;
 }
 
 char Node::getCharHolder()

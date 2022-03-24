@@ -15,11 +15,12 @@ public:
 
     Node* createNode(Node* data);
     void addHead(Node* data);
-    void addTail(Node*& pHead, Node* data);
-    void removeHead(Node*& pHead);
-    void removeTail(Node*& pHead);
-    void removeAll(Node*& pHead);
-    bool addPos(Node*& pHead, Node* data, int pos);
-    void removePos(Node*& pHead, int pos);
+    void addTail(Node* data);
+    void removeHead();
+    void removeTail();
+    void removeAll();
+    bool addPos(Node* data, int pos);
+    void removePos(int pos);
     void printList();
+    int countElements();
 };
