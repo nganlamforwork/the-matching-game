@@ -10,14 +10,25 @@ Node* LinkedList::createNode(Node* data)
     tmp->setNext();
     return tmp;
 }
-void LinkedList::addHead(Node*& pHead, Node* data)
+
+Node* LinkedList::getHead()
+{
+    return _head;
+}
+
+Node* LinkedList::getTail()
+{
+    return _tail;
+}
+
+void LinkedList::addHead(Node* data)
 {
     Node* tmp = createNode(data);
-    if (pHead == nullptr)
-        pHead = tmp;
+    if (_head == nullptr)
+        _head = tmp;
     else {
-        tmp->setNext(pHead);
-        pHead = tmp;
+        tmp->setNext(_head);
+        _head = tmp;
     }
 }
 
@@ -62,7 +73,7 @@ void LinkedList::removeAll(Node*& pHead)
 bool LinkedList::addPos(Node*& pHead, Node* data, int pos)
 {
     if (pos == 0 || pHead == nullptr) {
-        addHead(pHead, data);
+        addHead(data);
         return 1;
     }
 
@@ -97,4 +108,12 @@ void LinkedList::removePos(Node*& pHead, int pos)
 
     Node * tmp = p->getNext()->getNext();
     p->setNext(tmp);
+}
+void LinkedList::printList()
+{
+    Node* p = _head;
+    while (p != nullptr) {
+        std::cout << p->getCharHolder() << ' ';
+        p = p->getNext();
+    }
 }

@@ -3,9 +3,9 @@
 
 #include <iostream>
 #include "Common.h"
-#include "Board.h"
-#include "Game.h"
 #include "Menu.h"
+#include "Game.h"
+#include "Node.h"
 
 int main()
 {

@@ -13,7 +13,7 @@ private:
 	int _Status = 0;			//Đánh dấu: normal, lock: được chọn và chờ check possible
 	int _x = 0;					//Vị trí x trên console của Node
 	int _y = 0;					//Vị trí y trên console của Node
-	Node* _next;
+	Node* _next = nullptr;
 public:
 	Node();
 	Node(char, int, int, int);
