@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <iostream>
 #include "Node.h"
+#include "LinkedList.h"
 
 #define CELL_LENGTH 8
 #define CELL_HEIGHT 4
@@ -12,6 +13,9 @@ private:
 	int _remainCouple = 0;				//Số card còn lại - For scoring
 	int* _pairCharacter;
 	Node** _dataBoard;
+	LinkedList* _dataRow;
+	LinkedList* _dataColumn;
+	int* _pos;
 public:
 	Board(int,int,int);
 	~Board();
