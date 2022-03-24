@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-#define NORMAL_ 0
-#define LOCK_ 1
-#define DELETED_ -1
+#define NORMAL 0
+#define LOCK 1
+#define DELETED -1
 
 class Node {
 private:

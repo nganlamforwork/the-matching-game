@@ -66,11 +66,14 @@ void Board::generateBoardData()
 
     //Build random character pair
 	for (int i = 0; i < _size * _size; i += 2)
-		if (i / 2 > 25)
+		/*if (i / 2 > 25)
 			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A';
 		else
-			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A';
-
+			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A';*/
+		if (i / 2 > 25)
+			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 1 + 'A';
+		else
+			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 1 + 'A';
     //Build position array
     for (int i = 0; i < _size * _size; i++) checkDuplicate[i] = 0;
     for (int i = 0; i < _size * _size; i++) {
@@ -107,28 +110,28 @@ void Board::drawBoard()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	//Vẽ biên trên
 	Common::gotoXY(_left + 1, _top);
-	putchar(201);
+	putchar(32);
 	for (int i = 1; i < _size * CELL_LENGTH; i++){
 		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
-			putchar(209);
+			putchar(32);
 		else
-			putchar(205);
+			putchar('-');
 	}
-	putchar(187);
+	putchar(32);
 
 
 	//Vẽ biên phải
 	for (int i = 1; i < _size * CELL_HEIGHT; i++){
 		//Sleep(5);
 		Common::gotoXY(_size * CELL_LENGTH + _left + 1, i + _top);
-		if (i % CELL_HEIGHT != 0)
-			putchar(186);
+		if (i % CELL_HEIGHT == 0)
+			putchar(' ');
 		else
-			putchar(182);
+			putchar('|');
 	}
 	Common::gotoXY(_size * CELL_LENGTH + _left + 1, _size * CELL_HEIGHT + _top);
-	putchar(188);
+	putchar(32);
 
 
 	//Ve biên dưới
@@ -136,30 +139,29 @@ void Board::drawBoard()
 		Common::gotoXY(_size * CELL_LENGTH + _left - i + 1, _size * CELL_HEIGHT + _top);
 		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
-			putchar(207);
+			putchar(32);
 		else
-			putchar(205);
+			putchar('-');
 	}
 	Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top);
-	putchar(200);
+	putchar(32);
 
 	//Ve biên trái
 	for (int i = 1; i < _size * CELL_HEIGHT; i++){
 		//Sleep(5);
 		Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top - i);
-		if (i % CELL_HEIGHT != 0)
-			putchar(186);
+		if (i % CELL_HEIGHT == 0)
+			putchar(32);
 		else
-			putchar(199);
+			putchar('|');
 	}
 
 	//Vẽ đường dọc
 	for (int i = 1; i < _size * CELL_HEIGHT; i++){
 		for (int j = CELL_LENGTH; j < _size * CELL_LENGTH; j += CELL_LENGTH){
-			if (i % CELL_HEIGHT != 0)
-			{
+			if (i % CELL_HEIGHT != 0){
 				Common::gotoXY(j + _left + 1, i + _top);
-				putchar(179);
+				putchar('|');
 			}
 		}
 		//Sleep(5);
@@ -170,9 +172,9 @@ void Board::drawBoard()
 		for (int j = CELL_HEIGHT; j < _size * CELL_HEIGHT; j += CELL_HEIGHT){
 			Common::gotoXY(i + _left + 1, j + _top);
 			if (i % CELL_LENGTH == 0)
-				putchar(197);
+				putchar(32);
 			else
-				putchar(196);
+				putchar('-');
 		}
 		//Sleep(2);
 	}
@@ -226,12 +228,12 @@ int Board::getStatus(const int& r, const int& c)
 
 void Board::lockCell(const int& r, const int& c)
 {
-	_dataBoard[r][c].setStatus(LOCK_);
+	_dataBoard[r][c].setStatus(LOCK);
 }
 
 void Board::unlockCell(const int& r, const int& c)
 {
-	_dataBoard[r][c].setStatus(NORMAL_);
+	_dataBoard[r][c].setStatus(NORMAL);
 
 	int x = getXCoor(c), y = getYCoor(r);
 
@@ -248,21 +250,70 @@ void Board::unlockCell(const int& r, const int& c)
 
 void Board::deleteCell(const int& r, const int& c)
 {
-	_dataBoard[r][c].setStatus(DELETED_);
+	_dataBoard[r][c].setStatus(DELETED);
 	_dataBoard[r][c].swapChar();
 
 	int x = getXCoor(c), y = getYCoor(r);
 
-	Common::gotoXY(x,y);
+	Common::gotoXY(x, y);
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	putchar(_dataBoard[r][c].getCharHolder());
 
 	for (int i = y - 1; i <= y + 1; i++)
 		for (int j = x - 3; j <= x + 3; j++) {
 			Common::gotoXY(j, i);
-			if (j == x && i == y) putchar(_dataBoard[r][c].getCharHolder());
-			else putchar(' ');
+			putchar(' ');
 		}
-	Common::gotoXY(x, y);
 
+	//Delete left border
+	if (c > 0 && getStatus(r, c - 1) == DELETED)
+		for (int i = y - 1; i <= y + 1; i++) {
+			Common::gotoXY(x - 4, i);
+			putchar(' ');
+		}
+	//Delete right border
+	if (c < _size - 1 && getStatus(r, c + 1 ) == DELETED)
+		for (int i = y - 1; i <= y + 1; i++) {
+			Common::gotoXY(x + 4, i);
+			putchar(' ');
+		}
+	//Delete top border
+	if (r > 0 && getStatus(r - 1, c) == DELETED)
+		for (int i = x - 3; i <= x + 3; i++) {
+			Common::gotoXY(i, y - 2);
+			putchar(' ');
+		}
+	//Delete bottom border
+	if (r < _size - 1 && getStatus(r + 1, c) == DELETED)
+		for (int i = x - 3; i <= x + 3; i++) {
+			Common::gotoXY(i, y + 2);
+			putchar(' ');
+		}
+
+	//Go back to center
+	Common::gotoXY(x, y);
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+bool Board::outputMatchI()
+{
+	Common::gotoXY(getLeftCoor(), getTopCoor());
+	cout << "hi" << endl;
+	return 1;
+}
+
+bool Board::outputMatchU(int left, int top)
+{
+	return 1;
+}
+
+bool Board::outputMatchL(int left, int top)
+{
+	return 1;
+}
+
+bool Board::outputMatchZ(int left, int top)
+{
+	return 1;
 }

@@ -32,10 +32,14 @@ public:
 	int getRCoor(const int& y);
 	int getCCoor(const int& x);
 	int getStatus(const int& r, const int& c);
-
 	char getCharRC(const int& r, const int& c);
 
 	void lockCell(const int& r, const int& c);
 	void unlockCell(const int& r, const int& c);
 	void deleteCell(const int& r, const int& c);
+
+	bool outputMatchI();
+	bool outputMatchL(int left, int top);
+	bool outputMatchU(int left, int top);
+	bool outputMatchZ(int left, int top);
 };

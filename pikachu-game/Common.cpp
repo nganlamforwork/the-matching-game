@@ -121,14 +121,12 @@ int Common::getConsoleInput()
 	}
 }
 
-
 void Common::playSound(int i)
 {
 	static vector<const wchar_t*> soundFile{ L"win.wav", L"lose.wav",
 		L"move.wav", L"enter.wav", L"error.wav",  L"background.wav", L"effect.wav" };
 	PlaySound(soundFile[i], NULL, SND_FILENAME | SND_ASYNC);
 }
-
 
 int getRandomInt(int begin, int end)
 {
