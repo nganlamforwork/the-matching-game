@@ -76,9 +76,9 @@ void Board::generateBoardData()
     //Build random character pair
 	for (int i = 0; i < _size * _size; i += 2) {
 		if (i / 2 > 25)
-			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A' /*rand() % 1 + 'A'*/;
+			_pairCharacter[i] = _pairCharacter[i + 1] = /*rand() % 26 + 'A'*/ rand() % 1 + 'A';
 		else
-			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A' /*rand() % 1 + 'A'*/;
+			_pairCharacter[i] = _pairCharacter[i + 1] = /*i / 2 + 'A'*/ rand() % 1 + 'A';
 	}
 
     //Build position array
@@ -294,7 +294,9 @@ int Board::getRCoor(const int& y)
 
 char Board::getCharRC(const int& r, const int& c)
 {
-	return _dataBoard[r][c].getCharHolder();
+	Node* tmp = _dataRow[r].getRC(r, c);
+	if (tmp == nullptr) return ' ';			//In hình: image[r][c]???
+	return tmp->_CharHolder;
 }
 
 int Board::getStatus(const int& r, const int& c)
@@ -320,7 +322,7 @@ void Board::unlockCell(const int& r, const int& c)
 	for (int i = y - 1 ; i <= y + 1 ; i++)
 		for (int j = x - 3; j <= x + 3; j++) {
 			Common::gotoXY(j, i);
-			if (j == x && i == y) putchar(_dataBoard[r][c].getCharHolder());
+			if (j == x && i == y) putchar(getCharRC(r,c));
 			else putchar(' ');
 		}
 	Common::gotoXY(x, y);
@@ -334,13 +336,12 @@ void Board::deleteCell(const int& r, const int& c)
 	//_dataColumn[c].printList();
 
 	_dataBoard[r][c].setStatus(DELETED);
-	_dataBoard[r][c].swapChar();
 
 	int x = getXCoor(c), y = getYCoor(r);
 
 	Common::gotoXY(x, y);
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	putchar(_dataBoard[r][c].getCharHolder());
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);	
+	putchar(getCharRC(r, c));						//In hình: image[r][c]???
 
 	for (int i = y - 1; i <= y + 1; i++)
 		for (int j = x - 3; j <= x + 3; j++) {

@@ -23,6 +23,7 @@ struct LinkedList {
     bool removeRC(int r, int c);
     bool addPos(Node* data, int pos);
     Node* getPos(int pos);
+    Node* getRC(int r, int c);
     void printList();
     int countElements();
 };

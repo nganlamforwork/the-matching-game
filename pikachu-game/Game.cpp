@@ -108,7 +108,8 @@ void Game::selectCell(const int& color)
 	for (int i = _y - 1; i <= _y + 1; i++)
 		for (int j = _x - 3; j <= _x + 3; j++) {
 			Common::gotoXY(j, i);
-			if (j == _x && i == _y) putchar(_board->getCharRC(_r, _c));
+			if (j == _x && i == _y) 
+				putchar(_board->getCharRC(_r, _c));
 			else putchar(' ');
 		}
 	Common::gotoXY(_x, _y);
