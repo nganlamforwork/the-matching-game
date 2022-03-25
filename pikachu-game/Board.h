@@ -6,8 +6,7 @@
 #define CELL_LENGTH 8
 #define CELL_HEIGHT 4
 
-class Board {
-private:
+struct Board {
 	int _size = 4;						//Kích cỡ bàn cờ
 	int _left = 0 , _top = 0;			//Tọa độ bắt đầu bàn cờ
 	int _remainCouple = 0;				//Số card còn lại - For scoring
@@ -16,7 +15,8 @@ private:
 	LinkedList* _dataRow;
 	LinkedList* _dataColumn;
 	int* _pos;
-public:
+
+
 	Board(int,int,int);
 	~Board();
 
