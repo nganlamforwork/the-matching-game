@@ -5,6 +5,8 @@
 #define CELL_LENGTH 8
 #define CELL_HEIGHT 4
 
+const int WAIT_TIME = 600;
+
 class Board {
 private:
 	int _size = 4;						//Kích cỡ bàn cờ
@@ -25,6 +27,9 @@ public:
 
 	void generateBoardData();
 	void drawBoard();
+	void drawDuck();
+	void drawCat();
+	void drawScoreBoard();
 	void renderBoardData();
 	
 	int getXCoor(const int& c);
@@ -39,7 +44,8 @@ public:
 	void deleteCell(const int& r, const int& c);
 
 	bool outputMatchI();
-	bool outputMatchL(int left, int top);
-	bool outputMatchU(int left, int top);
-	bool outputMatchZ(int left, int top);
+	bool outputMatchL();
+	bool outputMatchU();
+	bool outputMatchZ();
+	bool outputNoMatch();
 };

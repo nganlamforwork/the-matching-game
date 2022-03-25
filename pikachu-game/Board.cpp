@@ -178,6 +178,70 @@ void Board::drawBoard()
 		}
 		//Sleep(2);
 	}
+
+}
+
+void Board::drawScoreBoard()
+{
+	//Vẽ biên trên
+	for (int i = 1; i < CELL_LENGTH * 3; i++)
+	{
+		Common::gotoXY(CELL_LENGTH * (_size + 1) + i + _left, 0 + _top);
+		putchar('-');
+		//Sleep(5);
+	}
+
+	//Vẽ biên phải
+	for (int i = 1; i < CELL_HEIGHT * 4; i++)
+	{
+		Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, i + _top);
+		putchar('|');
+		//Sleep(5);
+	}
+
+	//Vẽ biên dưới
+	for (int i = 1; i < CELL_LENGTH * 3; i++)
+	{
+		Common::gotoXY(CELL_LENGTH * (_size + 4) - i + _left, CELL_HEIGHT * 4 + _top);
+		putchar('-');
+		//Sleep(5);
+	}
+
+	//Vẽ biên trái
+	for (int i = CELL_HEIGHT * 4 - 1; i >= 1; i--)
+	{
+		Common::gotoXY(CELL_LENGTH * (_size + 1) + _left, i + _top);
+		putchar('|');
+		//Sleep(5);
+	}
+
+	//drawDuck();
+	drawCat();
+	
+}
+
+void Board::drawDuck()
+{
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 10 + _top);
+	cout << "  __";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 11 + _top);
+	cout << "<(o )___";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 12 + _top);
+	cout << " ( ._> /";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 13 + _top);
+	cout << "  `---' ";
+}
+
+void Board::drawCat()
+{
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 10 + _top);
+	cout << "___/|";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 11 + _top);
+	cout << "\\o.O|";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 12 + _top);
+	cout << "(___)";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 13 + _top);
+	cout << "  U";
 }
 
 void Board::renderBoardData()
@@ -298,22 +362,55 @@ void Board::deleteCell(const int& r, const int& c)
 
 bool Board::outputMatchI()
 {
-	Common::gotoXY(getLeftCoor(), getTopCoor());
-	cout << "hi" << endl;
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "I-Matched!!:D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME);
+	cout << "             " << endl;
 	return 1;
 }
 
-bool Board::outputMatchU(int left, int top)
+bool Board::outputMatchU()
 {
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "U-Matched!!:D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME);
+	cout << "             " << endl;
 	return 1;
 }
 
-bool Board::outputMatchL(int left, int top)
+bool Board::outputMatchL()
 {
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "L-Matched!!:D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME);
+	cout << "             " << endl;
 	return 1;
 }
 
-bool Board::outputMatchZ(int left, int top)
+bool Board::outputMatchZ()
 {
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "Z-Matched!!:D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME);
+	cout << "             " << endl;
 	return 1;
+}
+
+bool Board::outputNoMatch()
+{
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "Not a match :(" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME + 100);
+	cout << "              " << endl;
+	return 0;
 }

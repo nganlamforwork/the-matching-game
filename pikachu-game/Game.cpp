@@ -31,6 +31,7 @@ void Game::renderBoard()
 	_board->drawBoard();
 	_board->generateBoardData();
 	_board->renderBoardData();
+	_board->drawScoreBoard();
 
 }
 
@@ -255,7 +256,7 @@ bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> second
 	}
 	return 0;
 }
-bool Game::checkMatchU_R(std::pair<int, int>firstCell, std::pair<int, int>secondCell)
+bool Game::checkMatchU_R(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
 	int size = _board->getSize();
 
@@ -342,11 +343,11 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
 	if (!checkMatchEqualChar(firstCell, secondCell)) return 0;
-	if (checkMatchI(firstCell, secondCell)) return 1;
- 	if (checkMatchL(firstCell, secondCell)) return 1;
-	if (checkMatchZ(firstCell, secondCell)) return 1;
-	if (checkMatchU(firstCell, secondCell)) return 1;
-	return 0;
+	if (checkMatchI(firstCell, secondCell)) return _board->outputMatchI();
+ 	if (checkMatchL(firstCell, secondCell)) return _board->outputMatchL();
+	if (checkMatchZ(firstCell, secondCell)) return _board->outputMatchZ();
+	if (checkMatchU(firstCell, secondCell)) return _board->outputMatchU();
+	return _board->outputNoMatch();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
