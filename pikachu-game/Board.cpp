@@ -15,6 +15,9 @@ Board::Board(int size, int left, int top)
     for (int i = 0; i < _size; i++)
         _dataBoard[i] = new Node[_size];
 
+	//Linked list
+	_dataRow = new LinkedList[_size];
+	_dataColumn = new LinkedList[_size];
 }
 
 Board::~Board()
@@ -23,6 +26,11 @@ Board::~Board()
         delete[] _dataBoard[i];
     delete[] _dataBoard,
         _dataBoard = nullptr;
+
+	delete[] _dataRow, _dataRow = nullptr;
+	delete[] _dataColumn, _dataColumn = nullptr;
+
+	delete[] _pos;
 }
 
 int Board::getSize()
@@ -62,18 +70,16 @@ void Board::generateBoardData()
     srand(time(NULL));
 
     bool* checkDuplicate = new bool[_size * _size];
-    int* pos = new int[_size * _size];
+    _pos = new int[_size * _size];
 
     //Build random character pair
-	for (int i = 0; i < _size * _size; i += 2)
-		/*if (i / 2 > 25)
-			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A';
-		else
-			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A';*/
+	for (int i = 0; i < _size * _size; i += 2) {
 		if (i / 2 > 25)
-			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 1 + 'A';
+			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A' /*rand() % 1 + 'A'*/;
 		else
-			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 1 + 'A';
+			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A' /*rand() % 1 + 'A'*/;
+	}
+
     //Build position array
     for (int i = 0; i < _size * _size; i++) checkDuplicate[i] = 0;
     for (int i = 0; i < _size * _size; i++) {
@@ -84,18 +90,17 @@ void Board::generateBoardData()
         } while (checkDuplicate[tmp]);
 
         checkDuplicate[tmp] = 1;
-        pos[i] = tmp;
+        _pos[i] = tmp;
     }
 
 
     //Build table
     for (int i = 0; i < _size * _size; i++) {
-        int r = pos[i] / _size;
-        int c = pos[i] % _size;
+        int r = _pos[i] / _size;
+        int c = _pos[i] % _size;
         _dataBoard[r][c].setCharHolder(_pairCharacter[i]);
     }
 
-    delete[] pos;
     delete[] checkDuplicate;
 }
 
@@ -110,15 +115,15 @@ void Board::drawBoard()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	//Vẽ biên trên
 	Common::gotoXY(_left + 1, _top);
-	putchar(32);
+	putchar(201);
 	for (int i = 1; i < _size * CELL_LENGTH; i++){
 		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
-			putchar(32);
+			putchar(205);
 		else
-			putchar('-');
+			putchar(205);
 	}
-	putchar(32);
+	putchar(187);
 
 
 	//Vẽ biên phải
@@ -126,12 +131,12 @@ void Board::drawBoard()
 		//Sleep(5);
 		Common::gotoXY(_size * CELL_LENGTH + _left + 1, i + _top);
 		if (i % CELL_HEIGHT == 0)
-			putchar(' ');
+			putchar(186);
 		else
-			putchar('|');
+			putchar(186);
 	}
 	Common::gotoXY(_size * CELL_LENGTH + _left + 1, _size * CELL_HEIGHT + _top);
-	putchar(32);
+	putchar(188);
 
 
 	//Ve biên dưới
@@ -139,21 +144,21 @@ void Board::drawBoard()
 		Common::gotoXY(_size * CELL_LENGTH + _left - i + 1, _size * CELL_HEIGHT + _top);
 		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
-			putchar(32);
+			putchar(205);
 		else
-			putchar('-');
+			putchar(205);
 	}
 	Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top);
-	putchar(32);
+	putchar(200);
 
 	//Ve biên trái
 	for (int i = 1; i < _size * CELL_HEIGHT; i++){
 		//Sleep(5);
 		Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top - i);
 		if (i % CELL_HEIGHT == 0)
-			putchar(32);
+			putchar(186);
 		else
-			putchar('|');
+			putchar(186);
 	}
 
 	//Vẽ đường dọc
@@ -161,7 +166,7 @@ void Board::drawBoard()
 		for (int j = CELL_LENGTH; j < _size * CELL_LENGTH; j += CELL_LENGTH){
 			if (i % CELL_HEIGHT != 0){
 				Common::gotoXY(j + _left + 1, i + _top);
-				putchar('|');
+				putchar(179);
 			}
 		}
 		//Sleep(5);
@@ -174,7 +179,7 @@ void Board::drawBoard()
 			if (i % CELL_LENGTH == 0)
 				putchar(32);
 			else
-				putchar('-');
+				putchar(196);
 		}
 		//Sleep(2);
 	}
@@ -251,8 +256,16 @@ void Board::renderBoardData()
 			Common::gotoXY(_left + 5 + CELL_LENGTH * j, _top + 2 + CELL_HEIGHT * i);
 			_dataBoard[i][j].setX(_left + 5 + CELL_LENGTH * j);
 			_dataBoard[i][j].setY(_top + 2 + CELL_HEIGHT * i);
+			_dataBoard[i][j].setR(i);
+			_dataBoard[i][j].setC(j);
 
 			putchar(_dataBoard[i][j].getCharHolder());
+
+			//Add to linked lists
+			Node* tmp = new Node(_dataBoard[i][j]);
+			_dataRow[i].addTail(tmp);
+			_dataColumn[j].addTail(tmp);
+			//_dataRow[i].printList();
 		}
 }
 
@@ -314,6 +327,11 @@ void Board::unlockCell(const int& r, const int& c)
 
 void Board::deleteCell(const int& r, const int& c)
 {
+	//Remove from linked list
+	_dataRow[r].removeRC(r, c);
+	_dataColumn[c].removeRC(r, c);
+	//_dataColumn[c].printList();
+
 	_dataBoard[r][c].setStatus(DELETED);
 	_dataBoard[r][c].swapChar();
 
