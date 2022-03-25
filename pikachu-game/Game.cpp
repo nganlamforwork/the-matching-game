@@ -342,7 +342,7 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 }
 bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	if (!checkMatchEqualChar(firstCell, secondCell)) return 0;
+	if (!checkMatchEqualChar(firstCell, secondCell)) return _board->outputNoMatch();
 	if (checkMatchI(firstCell, secondCell)) return _board->outputMatchI();
  	if (checkMatchL(firstCell, secondCell)) return _board->outputMatchL();
 	if (checkMatchZ(firstCell, secondCell)) return _board->outputMatchZ();

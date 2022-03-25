@@ -5,6 +5,7 @@
 
 #define CELL_LENGTH 8
 #define CELL_HEIGHT 4
+#define WAIT_TIME 600
 
 struct Board {
 	int _size = 4;						//Kích cỡ bàn cờ
