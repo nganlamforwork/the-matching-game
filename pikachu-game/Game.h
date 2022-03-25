@@ -3,8 +3,8 @@
 #include <vector>
 #include "Board.h"
 
-class Game{
-private:
+struct Game{
+
 	Board* _board;
 	int _mode;				
 	int _x, _y;						//Vị trí x, y cursor trên màn hình console - Init tại ô [0,0] (hiện trên màn hình console)
@@ -29,7 +29,6 @@ private:
 	bool checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
 	bool checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell);			//Check match tổng
 
-public:
 	Game(int);
 	~Game();
 	

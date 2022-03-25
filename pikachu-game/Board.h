@@ -18,7 +18,8 @@ private:
 	LinkedList* _dataRow;
 	LinkedList* _dataColumn;
 	int* _pos;
-public:
+
+
 	Board(int,int,int);
 	~Board();
 

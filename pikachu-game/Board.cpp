@@ -2,6 +2,7 @@
 #include "Node.h"
 #include "Common.h"
 
+
 Board::Board(int size, int left, int top)
 {
 	_size = size;
