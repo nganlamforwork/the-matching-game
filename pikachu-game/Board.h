@@ -1,20 +1,22 @@
 ﻿#pragma once
 #include <iostream>
 #include "Node.h"
+#include "LinkedList.h"
 
 #define CELL_LENGTH 8
 #define CELL_HEIGHT 4
 
-const int WAIT_TIME = 600;
-
-class Board {
-private:
+struct Board {
 	int _size = 4;						//Kích cỡ bàn cờ
 	int _left = 0 , _top = 0;			//Tọa độ bắt đầu bàn cờ
 	int _remainCouple = 0;				//Số card còn lại - For scoring
 	int* _pairCharacter;
 	Node** _dataBoard;
-public:
+	LinkedList* _dataRow;
+	LinkedList* _dataColumn;
+	int* _pos;
+
+
 	Board(int,int,int);
 	~Board();
 

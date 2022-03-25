@@ -11,14 +11,14 @@
 #define MEDIUM 6
 #define HARD 8
 
-class Menu
+struct Menu
 {
-private:
+
 	const string _options[5] = { "Easy","Medium","Hard","About","Exit"};
 	int _optionsSize;
 	int _curOption;
 	int _xMenu, _yMenu;			//Tọa độ x y của menu board
-public:
+
 	Menu();
 	~Menu();
 	int getCurrentOption();
