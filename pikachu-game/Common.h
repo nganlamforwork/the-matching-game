@@ -33,12 +33,11 @@
 
 using namespace std;
 
-class Common
+struct Common
 {
-private:
 	static HWND consoleWindow;    //Con trỏ xử lí cửa sổ console
 	static HANDLE consoleOutput;  //Con trỏ xử lí output console
-public:
+
 	Common() {}
 	~Common() {}
 	static void setUpConsole(int fontSize);				//Thiết lập cửa sổ console

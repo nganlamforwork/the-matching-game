@@ -2,11 +2,11 @@
 #include <iostream>
 #include "Node.h"
 
-class LinkedList {
-private:
+struct LinkedList {
+
 	Node* _head = nullptr;
 	Node* _tail = nullptr;
-public:
+
     LinkedList();
     ~LinkedList();
 
