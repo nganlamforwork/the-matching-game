@@ -3,24 +3,27 @@
 Node::Node()
 {
 	_next = nullptr;
+	_prev = nullptr;
 }
 
 Node::Node(Node* tmp)
 {
-	this->_CharHolder = tmp->getCharHolder();
-	this->_HiddenChar = tmp->getHiddenChar();
-	this->_Status = tmp->getStatus();			
-	this->_x = tmp->getX();					
-	this->_y = tmp->getY();					
-	this->_r = tmp->getR();
-	this->_c = tmp->getC();
-	this->_next = tmp->getNext();
+	_CharHolder = tmp->getCharHolder();
+	_HiddenChar = tmp->getHiddenChar();
+	_Status = tmp->_Status;			
+	_x = tmp->_x;					
+	_y = tmp->_y;
+	_r = tmp->_r;
+	_c = tmp->_c;
+	_next = tmp->getNext();
+	_prev = tmp->getPre();
 }
 Node::Node(char charHolder, int status)
 {
 	this->_CharHolder = charHolder;
 	this->_Status = status;
 	this->_next = nullptr;
+	this->_prev = nullptr;
 }
 Node::Node(char charHolder, int status, int x, int y)
 {
@@ -29,6 +32,7 @@ Node::Node(char charHolder, int status, int x, int y)
 	this->_x = x;
 	this->_y = y;
 	this->_next = nullptr;
+	this->_prev = nullptr;
 }
 Node::Node(char charHolder, int status, int x, int y, int r, int c)
 {
@@ -39,6 +43,7 @@ Node::Node(char charHolder, int status, int x, int y, int r, int c)
 	this->_r = r;
 	this->_c = c;
 	this->_next = nullptr;
+	this->_prev = nullptr;
 }
 
 char Node::getCharHolder()
@@ -51,34 +56,14 @@ char Node::getHiddenChar()
 	return _HiddenChar;
 }
 
-int Node::getStatus()
-{
-	return _Status;
-}
-
-int Node::getX()
-{
-	return _x;
-}
-
-int Node::getY()
-{
-	return _y;
-}
-
-int Node::getR()
-{
-	return _r;
-}
-
-int Node::getC()
-{
-	return _c;
-}
-
 Node* Node::getNext()
 {
 	return _next;
+}
+
+Node* Node::getPre()
+{
+	return _prev;
 }
 
 void Node::setCharHolder(const char& charHolder)

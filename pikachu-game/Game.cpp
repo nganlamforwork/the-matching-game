@@ -176,33 +176,23 @@ void Game::moveRight()
 
 bool Game::checkMatchEqualChar(std::pair<int,int> firstCell, std::pair<int, int> secondCell)
 {
-	return (_board->getCharRC(firstCell.first, firstCell.second) ==
-		_board->getCharRC(secondCell.first, secondCell.second));
+	return _board->getCharRC(firstCell.first, firstCell.second) ==
+		   _board->getCharRC(secondCell.first, secondCell.second);
 }
 
 bool Game::checkMatchI(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	if (firstCell.first == secondCell.first)//Same row
-	{
+	if (firstCell.first == secondCell.first) {				//Same row
 		int start = firstCell.second;
 		int end = secondCell.second;
 		if (start > end) swap(start, end);
-		for (int i = start + 1; i < end; i++)
-		{
-			if (_board->getStatus(firstCell.first, i) != DELETED) return 0;
-		}
-		return 1;
+		return _board->isNextRow(firstCell.first, start, end);
 	}
-	if (firstCell.second == secondCell.second)//Same collumn
-	{
+	if (firstCell.second == secondCell.second) {			//Same collumn
 		int start = firstCell.first;
 		int end = secondCell.first;
 		if (start > end) swap(start, end);
-		for (int i = start + 1; i < end; i++)
-		{
-			if (_board->getStatus(i, firstCell.second) != DELETED) return 0;
-		}
-		return 1;
+		return _board->isNextColumn(firstCell.second, start, end);
 	}
 	
 	return 0;
@@ -215,19 +205,25 @@ bool Game::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> second
 	tmp.second = secondCell.second;
 
 	if (_board->getStatus(tmp.first, tmp.second) == DELETED){
-		if (checkMatchI(tmp, secondCell) && checkMatchI(tmp, firstCell)) return 1;
+		if (_board->isNearRow(tmp.first, tmp.second, firstCell.second) &&
+			_board->isNearColumn(tmp.second,tmp.first, secondCell.first))
+			return 1;
 	}
 
 	tmp.first = secondCell.first;
 	tmp.second = firstCell.second;
 	if (_board->getStatus(tmp.first, tmp.second) == DELETED){
-		if (checkMatchI(tmp, secondCell) && checkMatchI(tmp, firstCell)) return 1;
+		if (_board->isNearRow(tmp.first, tmp.second, secondCell.second) &&
+			_board->isNearColumn(tmp.second, tmp.first, firstCell.first))
+			return 1;
+		//if (checkMatchI(tmp, secondCell) && checkMatchI(tmp, firstCell)) return 1;
 	}
 
 	return 0;
 }
 bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
+	return 0;
 	//First: row - Second: column
 	std::pair<int, int> A, B;
 	if (firstCell.second > secondCell.second) swap(firstCell, secondCell); //Cố định firstCell là ô bên trái
@@ -240,7 +236,7 @@ bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> second
 		int x = _board->getStatus(A.first, A.second);
 		if (_board->getStatus(A.first, A.second) != DELETED) break;
 		if (_board->getStatus(B.first, B.second) != DELETED) continue;
-		if (!checkMatchI(secondCell, B)) continue;
+		if (!_board->isNearRow(B.first, B.second, secondCell.second)) continue;
 		if (checkMatchI(A, B)) return 1;
 	}
 
@@ -252,7 +248,7 @@ bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> second
 		A.first = B.first = i;
 		if (_board->getStatus(A.first, A.second) != DELETED) break;
 		if (_board->getStatus(B.first, B.second) != DELETED) continue;
-		if (!checkMatchI(secondCell, B)) continue;
+		if (!_board->isNearColumn(B.second, B.first, secondCell.first)) continue;
 		if (checkMatchI(A, B)) return 1;
 	}
 	return 0;
@@ -318,6 +314,7 @@ bool Game::checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> seco
 }
 bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
+	return 0;
 	if (checkMatchU_R(firstCell, secondCell) || checkMatchU_C(firstCell, secondCell)) return 1;
 
 	std::pair<int, int>A, B;

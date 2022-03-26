@@ -51,4 +51,9 @@ struct Board {
 	bool outputMatchU();
 	bool outputMatchZ();
 	bool outputNoMatch();
+
+	bool isNextRow(const int& row, const int& start, const int& end);
+	bool isNextColumn(const int& column, const int& start, const int& end);
+	bool isNearRow(const int& row, int col1, int col2);
+	bool isNearColumn(const int& col, int row1, int row2);
 };
