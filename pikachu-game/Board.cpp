@@ -76,9 +76,9 @@ void Board::generateBoardData()
     //Build random character pair
 	for (int i = 0; i < _size * _size; i += 2) {
 		if (i / 2 > 25)
-			_pairCharacter[i] = _pairCharacter[i + 1] = /*rand() % 26 + 'A'*/ rand() % 1 + 'A';
+			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A' /*rand() % 1 + 'A'*/;
 		else
-			_pairCharacter[i] = _pairCharacter[i + 1] = /*i / 2 + 'A'*/ rand() % 1 + 'A';
+			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A' /*rand() % 1 + 'A'*/;
 	}
 
     //Build position array
