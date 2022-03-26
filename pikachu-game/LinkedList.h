@@ -29,4 +29,5 @@ struct LinkedList {
 
     bool isNext(const int& r1, const int& c1, const int& r2, const int& c2);
     bool isBefore(const int& r1, const int& c1, const int& r2, const int& c2);
+    bool isAnyBetween(int r1, int c1, int r2, int c2);
 };

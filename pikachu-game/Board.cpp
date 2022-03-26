@@ -490,3 +490,14 @@ bool Board::isNearColumn(const int& col, int row1, int row2)
 
 	return ans;
 }
+
+bool Board::isAnyBetween(const int& row1, const int& col1, const int& row2, const int& col2)
+{
+	if (row1 == row2) return _dataRow[row1].isAnyBetween(row1, col1, row2, col2);
+	return _dataColumn[col1].isAnyBetween(row1, col1, row2, col2);
+}
+
+bool Board::isAnyBetween(std::pair<int, int> A, std::pair<int, int> B)
+{
+	return isAnyBetween(A.first, A.second, B.first, B.second);
+}

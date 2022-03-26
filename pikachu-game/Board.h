@@ -56,4 +56,6 @@ struct Board {
 	bool isNextColumn(const int& column, const int& start, const int& end);
 	bool isNearRow(const int& row, int col1, int col2);
 	bool isNearColumn(const int& col, int row1, int row2);
+	bool isAnyBetween(const int& row1, const int& col1, const int& row2, const int& col2);
+	bool isAnyBetween(std::pair<int, int> A, std::pair<int, int> B);
 };

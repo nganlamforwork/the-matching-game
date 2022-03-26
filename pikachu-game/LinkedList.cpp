@@ -204,3 +204,26 @@ bool LinkedList::isBefore(const int& r1, const int& c1, const int& r2, const int
     if (r1 == r2) return prevC2 < c2;
     return prevR2 < r2;
 }
+
+bool LinkedList::isAnyBetween(int r1, int c1, int r2, int c2)
+{
+    Node* p = _head;
+
+    //Same row
+    if (r1 == r2) {
+        if (c1 > c2) std::swap(c1, c2);
+        while (p != nullptr) {
+            if (p->_c > c1 && p->_c < c2) return 1;
+            p = p->_next;
+        }
+        return 0;
+    }
+
+    //Same column
+    if (r1 > r2) std::swap(r1, r2);
+    while (p != nullptr) {
+        if (p->_r > r1 && p->_r < r2) return 1;
+        p = p->_next;
+    }
+    return 0;
+}
