@@ -5,6 +5,7 @@
 
 #define CELL_LENGTH 8
 #define CELL_HEIGHT 4
+#define WAIT_TIME 600
 
 struct Board {
 	int _size = 4;						//Kích cỡ bàn cờ
@@ -29,6 +30,9 @@ struct Board {
 
 	void generateBoardData();
 	void drawBoard();
+	void drawDuck();
+	void drawCat();
+	void drawScoreBoard();
 	void renderBoardData();
 	
 	int getXCoor(const int& c);
@@ -43,7 +47,15 @@ struct Board {
 	void deleteCell(const int& r, const int& c);
 
 	bool outputMatchI();
-	bool outputMatchL(int left, int top);
-	bool outputMatchU(int left, int top);
-	bool outputMatchZ(int left, int top);
+	bool outputMatchL();
+	bool outputMatchU();
+	bool outputMatchZ();
+	bool outputNoMatch();
+
+	bool isNextRow(const int& row, const int& start, const int& end);
+	bool isNextColumn(const int& column, const int& start, const int& end);
+	bool isNearRow(const int& row, int col1, int col2);
+	bool isNearColumn(const int& col, int row1, int row2);
+	bool isAnyBetween(const int& row1, const int& col1, const int& row2, const int& col2);
+	bool isAnyBetween(std::pair<int, int> A, std::pair<int, int> B);
 };

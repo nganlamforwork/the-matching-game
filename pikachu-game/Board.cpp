@@ -2,6 +2,7 @@
 #include "Node.h"
 #include "Common.h"
 
+
 Board::Board(int size, int left, int top)
 {
 	_size = size;
@@ -183,6 +184,70 @@ void Board::drawBoard()
 		}
 		//Sleep(2);
 	}
+
+}
+
+void Board::drawScoreBoard()
+{
+	//Vẽ biên trên
+	for (int i = 1; i < CELL_LENGTH * 3; i++)
+	{
+		Common::gotoXY(CELL_LENGTH * (_size + 1) + i + _left, 0 + _top);
+		putchar('-');
+		//Sleep(5);
+	}
+
+	//Vẽ biên phải
+	for (int i = 1; i < CELL_HEIGHT * 4; i++)
+	{
+		Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, i + _top);
+		putchar('|');
+		//Sleep(5);
+	}
+
+	//Vẽ biên dưới
+	for (int i = 1; i < CELL_LENGTH * 3; i++)
+	{
+		Common::gotoXY(CELL_LENGTH * (_size + 4) - i + _left, CELL_HEIGHT * 4 + _top);
+		putchar('-');
+		//Sleep(5);
+	}
+
+	//Vẽ biên trái
+	for (int i = CELL_HEIGHT * 4 - 1; i >= 1; i--)
+	{
+		Common::gotoXY(CELL_LENGTH * (_size + 1) + _left, i + _top);
+		putchar('|');
+		//Sleep(5);
+	}
+
+	//drawDuck();
+	drawCat();
+	
+}
+
+void Board::drawDuck()
+{
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 10 + _top);
+	cout << "  __";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 11 + _top);
+	cout << "<(o )___";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 12 + _top);
+	cout << " ( ._> /";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 13 + _top);
+	cout << "  `---' ";
+}
+
+void Board::drawCat()
+{
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 10 + _top);
+	cout << "___/|";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 11 + _top);
+	cout << "\\o.O|";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 12 + _top);
+	cout << "(___)";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 13 + _top);
+	cout << "  U";
 }
 
 void Board::renderBoardData()
@@ -229,12 +294,14 @@ int Board::getRCoor(const int& y)
 
 char Board::getCharRC(const int& r, const int& c)
 {
-	return _dataBoard[r][c].getCharHolder();
+	Node* tmp = _dataRow[r].getRC(r, c);
+	if (tmp == nullptr) return ' ';			//In hình: image[r][c]???
+	return tmp->_CharHolder;
 }
 
 int Board::getStatus(const int& r, const int& c)
 {
-	return _dataBoard[r][c].getStatus();
+	return _dataBoard[r][c]._Status;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -255,7 +322,7 @@ void Board::unlockCell(const int& r, const int& c)
 	for (int i = y - 1 ; i <= y + 1 ; i++)
 		for (int j = x - 3; j <= x + 3; j++) {
 			Common::gotoXY(j, i);
-			if (j == x && i == y) putchar(_dataBoard[r][c].getCharHolder());
+			if (j == x && i == y) putchar(getCharRC(r,c));
 			else putchar(' ');
 		}
 	Common::gotoXY(x, y);
@@ -269,13 +336,12 @@ void Board::deleteCell(const int& r, const int& c)
 	//_dataColumn[c].printList();
 
 	_dataBoard[r][c].setStatus(DELETED);
-	_dataBoard[r][c].swapChar();
 
 	int x = getXCoor(c), y = getYCoor(r);
 
 	Common::gotoXY(x, y);
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	putchar(_dataBoard[r][c].getCharHolder());
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);	
+	putchar(getCharRC(r, c));						//In hình: image[r][c]???
 
 	for (int i = y - 1; i <= y + 1; i++)
 		for (int j = x - 3; j <= x + 3; j++) {
@@ -316,22 +382,122 @@ void Board::deleteCell(const int& r, const int& c)
 
 bool Board::outputMatchI()
 {
-	Common::gotoXY(getLeftCoor(), getTopCoor());
-	cout << "hi" << endl;
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "I-Matched!!:D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME);
+	cout << "             " << endl;
 	return 1;
 }
 
-bool Board::outputMatchU(int left, int top)
+bool Board::outputMatchU()
 {
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "U-Matched!!:D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME);
+	cout << "             " << endl;
 	return 1;
 }
 
-bool Board::outputMatchL(int left, int top)
+bool Board::outputMatchL()
 {
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "L-Matched!!:D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME);
+	cout << "             " << endl;
 	return 1;
 }
 
-bool Board::outputMatchZ(int left, int top)
+bool Board::outputMatchZ()
 {
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "Z-Matched!!:D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME);
+	cout << "             " << endl;
 	return 1;
+}
+
+bool Board::outputNoMatch()
+{
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "Not a match :(" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	Sleep(WAIT_TIME + 100);
+	cout << "              " << endl;
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+bool Board::isNextRow(const int& row, const int& start, const int& end)
+{
+	Node* tmp = _dataRow[row].getRC(row, start);
+	if (tmp->_next->_c == end) return 1;
+	return 0;
+}
+
+bool Board::isNextColumn(const int& column, const int& start, const int& end)
+{
+	Node* tmp = _dataColumn[column].getRC(start,column);
+	if (tmp->_next->_r == end) return 1;
+	return 0;
+}
+
+bool Board::isNearRow(const int& row, int col1, int col2)
+{
+	//Mặc định ban đầu là col2 là điểm đã bị xóa, cần kiểm tra giữa col1 và col2 có bất kì điểm nào CHƯA bị xóa không
+	//Đồng nghĩa với việc tìm xem trong linked list col1 và col2 có nằm liền kề nhau không
+	//Hoặc col1 là _tail của linked list
+
+	//Nếu col1 là điểm bị xóa, swap col1 và col2
+	if (_dataBoard[row][col1]._Status == DELETED) swap(col1, col2);
+
+	bool ans = 0;
+	//Trường hợp điểm bị xóa nằm bên phải điểm chưa xóa thì cần check col2 is next to col1
+	if (col2 > col1)
+		ans = _dataRow[row].isNext(row, col1, row, col2);
+	//Ngược lại, điểm bị xóa nằm bên trái thì cần check col2 nằm ngay phía trước col1
+	else 
+		ans = _dataRow[row].isBefore(row, col1, row, col2);
+
+	return ans;
+}
+
+bool Board::isNearColumn(const int& col, int row1, int row2)
+{
+	//Mặc định ban đầu là row2 là điểm đã bị xóa, cần kiểm tra giữa row1 và row2 có bất kì điểm nào CHƯA bị xóa không
+	//Đồng nghĩa với việc tìm xem trong linked list row1 và row2 có nằm liền kề nhau không
+	//Hoặc row1 là _tail của linked list
+
+	//Nếu row1 là điểm bị xóa, swap col1 và col2
+	if (_dataBoard[row1][col]._Status == DELETED) swap(row1,row2);
+
+	bool ans = 0;
+	//Trường hợp điểm bị xóa nằm ở dưới điểm chưa xóa thì cần check row1 is next to row2
+	if (row2 > row1)
+		ans = _dataColumn[col].isNext(row1, col, row2, col);
+	//Ngược lại, điểm bị xóa nằm ở trên thì cần check row2 nằm ngay phía trên row1
+	else
+		ans = _dataColumn[col].isBefore(row1, col, row2, col);
+
+	return ans;
+}
+
+bool Board::isAnyBetween(const int& row1, const int& col1, const int& row2, const int& col2)
+{
+	if (row1 == row2) return _dataRow[row1].isAnyBetween(row1, col1, row2, col2);
+	return _dataColumn[col1].isAnyBetween(row1, col1, row2, col2);
+}
+
+bool Board::isAnyBetween(std::pair<int, int> A, std::pair<int, int> B)
+{
+	return isAnyBetween(A.first, A.second, B.first, B.second);
 }

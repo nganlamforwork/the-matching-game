@@ -23,6 +23,11 @@ struct LinkedList {
     bool removeRC(int r, int c);
     bool addPos(Node* data, int pos);
     Node* getPos(int pos);
+    Node* getRC(int r, int c);
     void printList();
     int countElements();
+
+    bool isNext(const int& r1, const int& c1, const int& r2, const int& c2);
+    bool isBefore(const int& r1, const int& c1, const int& r2, const int& c2);
+    bool isAnyBetween(int r1, int c1, int r2, int c2);
 };
