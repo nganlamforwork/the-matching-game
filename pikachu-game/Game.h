@@ -40,6 +40,4 @@ struct Game{
 	void unselectCell();
 	void deleteCards();
 	void lockCell();
-
-	bool findPair();
 };

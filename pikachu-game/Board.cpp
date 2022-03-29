@@ -76,9 +76,9 @@ void Board::generateBoardData()
     //Build random character pair
 	for (int i = 0; i < _size * _size; i += 2) {
 		if (i / 2 > 25)
-			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A' /*rand() % 1 + 'A'*/;
+			_pairCharacter[i] = _pairCharacter[i + 1] = /*rand() % 26 + 'A'*/ rand() % 1 + 'A';
 		else
-			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A' /*rand() % 1 + 'A'*/;
+			_pairCharacter[i] = _pairCharacter[i + 1] = /*i / 2 + 'A'*/ rand() % 1 + 'A';
 	}
 
     //Build position array
@@ -301,7 +301,7 @@ char Board::getCharRC(const int& r, const int& c)
 
 int Board::getStatus(const int& r, const int& c)
 {
-	return _dataBoard[r][c]._Status;
+	return _dataBoard[r][c].getStatus();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -433,71 +433,4 @@ bool Board::outputNoMatch()
 	Sleep(WAIT_TIME + 100);
 	cout << "              " << endl;
 	return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-bool Board::isNextRow(const int& row, const int& start, const int& end)
-{
-	Node* tmp = _dataRow[row].getRC(row, start);
-	if (tmp->_next->_c == end) return 1;
-	return 0;
-}
-
-bool Board::isNextColumn(const int& column, const int& start, const int& end)
-{
-	Node* tmp = _dataColumn[column].getRC(start,column);
-	if (tmp->_next->_r == end) return 1;
-	return 0;
-}
-
-bool Board::isNearRow(const int& row, int col1, int col2)
-{
-	//Mặc định ban đầu là col2 là điểm đã bị xóa, cần kiểm tra giữa col1 và col2 có bất kì điểm nào CHƯA bị xóa không
-	//Đồng nghĩa với việc tìm xem trong linked list col1 và col2 có nằm liền kề nhau không
-	//Hoặc col1 là _tail của linked list
-
-	//Nếu col1 là điểm bị xóa, swap col1 và col2
-	if (_dataBoard[row][col1]._Status == DELETED) swap(col1, col2);
-
-	bool ans = 0;
-	//Trường hợp điểm bị xóa nằm bên phải điểm chưa xóa thì cần check col2 is next to col1
-	if (col2 > col1)
-		ans = _dataRow[row].isNext(row, col1, row, col2);
-	//Ngược lại, điểm bị xóa nằm bên trái thì cần check col2 nằm ngay phía trước col1
-	else 
-		ans = _dataRow[row].isBefore(row, col1, row, col2);
-
-	return ans;
-}
-
-bool Board::isNearColumn(const int& col, int row1, int row2)
-{
-	//Mặc định ban đầu là row2 là điểm đã bị xóa, cần kiểm tra giữa row1 và row2 có bất kì điểm nào CHƯA bị xóa không
-	//Đồng nghĩa với việc tìm xem trong linked list row1 và row2 có nằm liền kề nhau không
-	//Hoặc row1 là _tail của linked list
-
-	//Nếu row1 là điểm bị xóa, swap col1 và col2
-	if (_dataBoard[row1][col]._Status == DELETED) swap(row1,row2);
-
-	bool ans = 0;
-	//Trường hợp điểm bị xóa nằm ở dưới điểm chưa xóa thì cần check row1 is next to row2
-	if (row2 > row1)
-		ans = _dataColumn[col].isNext(row1, col, row2, col);
-	//Ngược lại, điểm bị xóa nằm ở trên thì cần check row2 nằm ngay phía trên row1
-	else
-		ans = _dataColumn[col].isBefore(row1, col, row2, col);
-
-	return ans;
-}
-
-bool Board::isAnyBetween(const int& row1, const int& col1, const int& row2, const int& col2)
-{
-	if (row1 == row2) return _dataRow[row1].isAnyBetween(row1, col1, row2, col2);
-	return _dataColumn[col1].isAnyBetween(row1, col1, row2, col2);
-}
-
-bool Board::isAnyBetween(std::pair<int, int> A, std::pair<int, int> B)
-{
-	return isAnyBetween(A.first, A.second, B.first, B.second);
 }
