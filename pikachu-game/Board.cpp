@@ -42,21 +42,6 @@ int Board::getTopCoor()
 	return _top;
 }
 
-void Board::setSize(const int& size)
-{
-	_size = size;
-}
-
-void Board::setLeftCoor(const int& left)
-{
-	_left = left;
-}
-
-void Board::setTopCoor(const int& top)
-{
-	_top = top;
-}
-
 ////////////////////////////////////////////////////////////////////////////
 
 void Board::generateBoardData()

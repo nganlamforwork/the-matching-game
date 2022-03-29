@@ -15,16 +15,12 @@ struct Board {
 	Node** _dataBoard;
 	int* _pos;
 
-
 	Board(int,int,int);
 	~Board();
 
 	int getSize();
 	int getLeftCoor();
 	int getTopCoor();
-	void setSize(const int& size);
-	void setLeftCoor(const int& left);
-	void setTopCoor(const int& top);
 
 	void generateBoardData();
 	void drawBoard();
