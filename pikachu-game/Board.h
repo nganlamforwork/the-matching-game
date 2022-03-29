@@ -1,7 +1,11 @@
 ﻿#pragma once
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
 #include "Node.h"
 #include "LinkedList.h"
+#include "Players.h"//this might be the reason why i will cry tonight
 
 #define CELL_LENGTH 8
 #define CELL_HEIGHT 4
@@ -17,8 +21,8 @@ struct Board {
 	LinkedList* _dataColumn;
 	int* _pos;
 
-
 	Board(int,int,int);
+	Board();
 	~Board();
 
 	int getSize();
@@ -34,6 +38,9 @@ struct Board {
 	void drawCat();
 	void drawScoreBoard();
 	void renderBoardData();
+	void drawEndgame(int);
+	void drawEnterName();
+	static void drawLeaderBoard();
 	
 	int getXCoor(const int& c);
 	int getYCoor(const int& r);

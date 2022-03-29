@@ -4,7 +4,7 @@
 
 Menu::Menu()
 {
-	_curOption = 0;
+	_curOption = 0	;
 	_optionsSize = 5;
 	_xMenu = 60;
 	_yMenu = 17;
@@ -32,12 +32,14 @@ void Menu::renderMainScreen()
 	renderOptionsMenu();
 	renderOptionsText();
 
+
 	std::unordered_map<std::string, void(*)()> function_map = {
 		{_options[0], playEasy},
 		{_options[1], playMedium},
 		{_options[2], playHard},
-		{_options[3], playEasy},
+		{_options[3], showLeaderboard},
 		{_options[4], exitGame} };
+
 
 	bool loadMenu = 1;
 	while (true){
@@ -188,7 +190,6 @@ void Menu::renderOptionsMenu()
 		putchar(205);
 	putchar(187);
 
-
 	for (int i = 1; i < height; i++){
 		Common::gotoXY(left, top + i);
 		if (i % 2 != 0){
@@ -320,6 +321,11 @@ void Menu::aboutPage()
 	Common::gotoXY(left - 5, top + cnt * 2);
 	for (int i = 0; i < 51; i++)
 		putchar('*');*/
+}
+void Menu::showLeaderboard()
+{
+	int left = 0, top = 0;
+	Board::drawLeaderBoard();
 }
 
 void Menu::exitGame()
