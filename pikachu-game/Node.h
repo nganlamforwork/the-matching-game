@@ -16,7 +16,6 @@ struct Node {
 	int _r = -1;
 	int _c = -1;
 	Node* _next;
-	Node* _prev;
 
 	Node();
 	Node(Node*);
@@ -26,8 +25,12 @@ struct Node {
 
 	char getCharHolder();
 	char getHiddenChar();
+	int getStatus();
+	int getX();
+	int getY();
+	int getR();
+	int getC();
 	Node* getNext();
-	Node* getPre();
 
 	void setCharHolder(const char& charHolder);
 	void setStatus(const int& status);
