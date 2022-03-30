@@ -235,16 +235,18 @@ void Board::drawEndgame(int score)
 	ifstream endgame("GameOver.txt");
 	string s;
 	int i = 0;
-	while (!endgame.eof())
-	{
-		Common::gotoXY(left + 20, top + i);
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	while (!endgame.eof()){
+		Common::gotoXY(left + 20, top + 5 + i);
 		getline(endgame, s);
 		cout << s;
 		i++;
 	}
 	endgame.close();
 
-	Common::gotoXY(left + 55, top + 11);
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(left + 55, top + 5 + 11);
 	cout << "Your score is: " << score << "!!!";
 }
 
@@ -295,15 +297,16 @@ void Board::drawLeaderBoard()
 {
 	Common::clearConsole();
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	int left = 50, top = 10;//left và top của leaderboard
+	int left = 50, top = 14;//left và top của leaderboard
 	int height = 15, width = 30;
 
 	ifstream boardtitle("Leaderboard.txt");
 	string s;
 	int i = 0;
-	while (getline(boardtitle, s))
-	{
-		Common::gotoXY(left - 40, top - 10 + i);
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	while (getline(boardtitle, s)){
+		Common::gotoXY(left - 40, top - 12 + i);
 		cout << s;
 		i++;
 	}
@@ -312,6 +315,7 @@ void Board::drawLeaderBoard()
 	vector<Players> playerList;
 	Players().readPlayersFile(playerList);
 
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	//Vẽ biên trên
 	for (int i = 1; i < width; i++)
 	{
