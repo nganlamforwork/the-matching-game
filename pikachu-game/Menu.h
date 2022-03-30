@@ -39,7 +39,7 @@ struct Menu
 	static void playEasy();
 	static void playMedium();
 	static void playHard();
-	static void showLeaderboard();//để làm sau
+	static void showLeaderboard();
 	static void aboutPage();
 	static void exitGame();
 };

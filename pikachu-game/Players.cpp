@@ -53,10 +53,8 @@ void Players::readPlayersFile(std::vector<Players> &player)
 	{
 		getline(readList, s, '/');
 		tmp._name = s;
-		getline(readList, s, '/');
-		tmp._score = stoi(s);
 		getline(readList, s, '\n');
-		tmp._display_time = s;
+		tmp._score = stoi(s);
 		player.push_back(tmp);
 	}
 
@@ -71,7 +69,6 @@ void Players::writePlayersFile()
 	Players tmp;
 	tmp._score = _score;
 	tmp._name = _name;
-	tmp._time_played = _time_played;
 	playerList.push_back(tmp);
 	
 	for (int i = playerList.size() - 1; i > 0; i--)
@@ -82,36 +79,13 @@ void Players::writePlayersFile()
 
 	ofstream writeList("PlayersList.txt");
 
-	for (int i = 0; i < playerList.size(); i++)
+	int n = 15;
+	if (playerList.size() < n) n = playerList.size();
+	for (int i = 0; i < n; i++)
 	{
-		if (playerList[i]._display_time.empty())
-		{
-			writeList << endl;
-			writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << setprecision(2) << (float)playerList[i]._time_played.count();
-			continue;
-		}
 		writeList << endl;
-		writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << playerList[i]._display_time;
+		writeList << playerList[i]._name << "/" << playerList[i]._score;
 	}
 
 	writeList.close();
-}
-
-void Players::sortPlayers(vector<Players>& playerList)//working on ideas
-{
-	for (int i = 1; i < playerList.size(); i++)
-	{
-		if (playerList[i]._score > playerList[i - 1]._score)
-		{
-			int index = i - 1;
-			int score = playerList[i]._score;
-			Players key = playerList[i];
-			while (index >= 0 && score > playerList[index]._score)
-			{
-				playerList[i + 1] = playerList[i];
-				index--;
-			}
-			playerList[index + 1] = key;
-		}
-	}
 }

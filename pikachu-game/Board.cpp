@@ -376,17 +376,6 @@ void Board::drawLeaderBoard()
 	Common::gotoXY(left, top);
 	putchar(201);
 
-	//chia cột 1
-	Common::gotoXY(left + 16, top);
-	putchar(203);
-	for (int i = 1; i < height; i++)
-	{
-		Common::gotoXY(left + 16, top + i);
-		putchar(186);
-	}
-	Common::gotoXY(left + 16, top + height);
-	putchar(202);
-
 	//chia cột 2
 	Common::gotoXY(left + 22, top);
 	putchar(203);
@@ -408,17 +397,13 @@ void Board::drawLeaderBoard()
 	}
 	Common::gotoXY(left + width, top + 2);
 	putchar(185);
-	Common::gotoXY(left + 16, top + 2);
-	putchar(206); 
 	Common::gotoXY(left + 22, top + 2);
 	putchar(206);
 
 	Common::gotoXY(left + 1, top + 1);
 	std::cout << "Player name";
-	Common::gotoXY(left + 17, top + 1);
-	std::cout << "Score";
 	Common::gotoXY(left + 24, top + 1);
-	std::cout << "Time";
+	std::cout << "Score";
 
 	int n = 10;
 	if (playerList.size() < n) n = playerList.size();
@@ -426,10 +411,8 @@ void Board::drawLeaderBoard()
 	{
 		Common::gotoXY(left + 1, top + 3 + i);
 		cout << playerList[i]._name;
-		Common::gotoXY(left + 18, top + 3 + i);
-		cout << playerList[i]._score;
 		Common::gotoXY(left + 24, top + 3 + i);
-		cout << playerList[i]._display_time << 's';
+		cout << playerList[i]._score;
 	}
 
 }
