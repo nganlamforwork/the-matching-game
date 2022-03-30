@@ -54,9 +54,9 @@ void Players::readPlayersFile(std::vector<Players> &player)
 		getline(readList, s, '/');
 		tmp._name = s;
 		getline(readList, s, '/');
-		tmp._display_score = s;
+		tmp._score = stoi(s);
 		getline(readList, s, '\n');
-		tmp._display_time = s + 's';
+		tmp._display_time = s;
 		player.push_back(tmp);
 	}
 
@@ -65,10 +65,34 @@ void Players::readPlayersFile(std::vector<Players> &player)
 
 void Players::writePlayersFile()
 {
-	ofstream writeList("PlayersList.txt", ios::app);
+	vector<Players> playerList;
+	Players::readPlayersFile(playerList);
+	
+	Players tmp;
+	tmp._score = _score;
+	tmp._name = _name;
+	tmp._time_played = _time_played;
+	playerList.push_back(tmp);
+	
+	for (int i = playerList.size() - 1; i > 0; i--)
+	{
+		if (playerList[i]._score > playerList[i - 1]._score) swap(playerList[i], playerList[i - 1]);
+		else break;
+	}
 
-	writeList << endl;
-	writeList << _name << "/" << _score << "/" << setprecision(2) << (float)_time_played.count();
+	ofstream writeList("PlayersList.txt");
+
+	for (int i = 0; i < playerList.size(); i++)
+	{
+		if (playerList[i]._display_time.empty())
+		{
+			writeList << endl;
+			writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << setprecision(2) << (float)playerList[i]._time_played.count();
+			continue;
+		}
+		writeList << endl;
+		writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << playerList[i]._display_time;
+	}
 
 	writeList.close();
 }

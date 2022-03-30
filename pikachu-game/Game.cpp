@@ -88,13 +88,12 @@ void Game::startGame()
 	
 	_player->_time_played = end - start;
 	_player->calculateScore(_player->_time_played, _remainCards);
-	//testing zone
+
 	_player->writePlayersFile();
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);//phải để dòng này ở đây thì nó mới fix được ô đen
 	_board->drawEndgame(_player->_score);
-	Sleep(5000);
+	Sleep(1000);
 	_board->drawLeaderBoard();
-	//Sleep(5000);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

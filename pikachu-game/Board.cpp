@@ -340,7 +340,6 @@ void Board::drawLeaderBoard()
 
 	vector<Players> playerList;
 	Players().readPlayersFile(playerList);
-	//Players().sortPlayers(playerList);
 
 	//Vẽ biên trên
 	for (int i = 1; i < width; i++)
@@ -428,9 +427,9 @@ void Board::drawLeaderBoard()
 		Common::gotoXY(left + 1, top + 3 + i);
 		cout << playerList[i]._name;
 		Common::gotoXY(left + 18, top + 3 + i);
-		cout << playerList[i]._display_score;
+		cout << playerList[i]._score;
 		Common::gotoXY(left + 24, top + 3 + i);
-		cout << playerList[i]._display_time;
+		cout << playerList[i]._display_time << 's';
 	}
 
 }

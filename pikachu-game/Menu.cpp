@@ -324,7 +324,6 @@ void Menu::aboutPage()
 }
 void Menu::showLeaderboard()
 {
-	int left = 0, top = 0;
 	Board::drawLeaderBoard();
 }
 

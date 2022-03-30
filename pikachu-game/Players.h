@@ -16,7 +16,6 @@ struct Players {
 	std::string _name = "<Unknown>";
 	int _score = 0;
 	duration<double> _time_played;
-	std::string _display_score;
 	std::string _display_time;
 
 	Players();
