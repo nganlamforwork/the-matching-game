@@ -12,6 +12,7 @@ int main()
 {
 	Common::setUpConsole(18);
 
+
 	/*Game testingGame(EASY);
 	testingGame.startGame();*/
 	Menu testingMenu;

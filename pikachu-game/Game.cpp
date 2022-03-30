@@ -1,12 +1,14 @@
 ﻿#include "Game.h"
 #include "Common.h"
 #include "Board.h"
+#include <chrono>
 
 
 Game::Game(int mode)
 {
 	_mode = mode;
 	_board = new Board(_mode, _left, _top);
+	_player = new Players(_mode, _left, _top);
 	_r = _c = 0;
 	_x = _board->getXCoor(_c);
 	_y = _board->getYCoor(_r);
@@ -19,6 +21,8 @@ Game::~Game()
 {
 	delete _board;
 	_board = nullptr;
+	delete _player;
+	_player = nullptr;
 }
 
 void Game::setMode(int mode)
@@ -32,11 +36,16 @@ void Game::renderBoard()
 	_board->generateBoardData();
 	_board->renderBoardData();
 	_board->drawScoreBoard();
-
 }
 
 void Game::startGame()
 {
+	Common::clearConsole();
+	_board->drawEnterName();
+	_player->getPlayerName();
+
+	time_point<system_clock> start, end;
+
 	Common::clearConsole();
 	renderBoard();
 
@@ -50,6 +59,7 @@ void Game::startGame()
 	_x = _board->getXCoor(0);
 	selectCell(GREEN);
 
+	start = system_clock::now();
 	while (!_finish && _remainCards) {
 		switch (Common::getConsoleInput())
 		{
@@ -83,6 +93,16 @@ void Game::startGame()
 				break;
 		}
 	}
+	end = system_clock::now();
+	
+	_player->_time_played = end - start;
+	_player->calculateScore(_player->_time_played, _remainCards);
+
+	_player->writePlayersFile();
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);//phải để dòng này ở đây thì nó mới fix được ô đen
+	_board->drawEndgame(_player->_score);
+	Sleep(1000);
+	_board->drawLeaderBoard();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

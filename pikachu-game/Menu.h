@@ -4,8 +4,11 @@
 #include <unordered_map>
 #include <filesystem>
 #include <fstream>
+#include <vector>
+#include "Players.h"
 #include "Common.h"
 #include "Game.h"
+#include "Board.h"
 
 #define EASY 4
 #define MEDIUM 6
@@ -14,10 +17,11 @@
 struct Menu
 {
 
-	const string _options[5] = { "Easy","Medium","Hard","About","Exit"};
+	const string _options[5] = { "Easy","Medium","Hard","Leaderboard","Exit"};
 	int _optionsSize;
 	int _curOption;
-	int _xMenu, _yMenu;			//Tọa độ x y của menu board
+	int _xMenu, _yMenu;					//Tọa độ x y của menu board
+	int _left, _top;
 
 	Menu();
 	~Menu();
@@ -35,6 +39,7 @@ struct Menu
 	static void playEasy();
 	static void playMedium();
 	static void playHard();
+	static void showLeaderboard();//để làm sau
 	static void aboutPage();
 	static void exitGame();
 };
