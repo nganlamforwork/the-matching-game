@@ -17,7 +17,7 @@
 struct Menu
 {
 
-	const string _options[5] = { "Easy","Medium","Hard","Leaderboard","Exit"};
+	const string _options[5] = { "Easy Mode (4x4)","Easy Mode (6x6)","Difficult Mode (4x4)","Leaderboard","Exit"};
 	int _optionsSize;
 	int _curOption;
 	int _xMenu, _yMenu;					//Tọa độ x y của menu board

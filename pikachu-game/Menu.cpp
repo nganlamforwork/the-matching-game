@@ -6,7 +6,7 @@ Menu::Menu()
 {
 	_curOption = 0	;
 	_optionsSize = 5;
-	_xMenu = 60;
+	_xMenu = 50;
 	_yMenu = 17;
 }
 Menu::~Menu()
@@ -182,7 +182,7 @@ void Menu::renderOptionsMenu()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	int left = _xMenu, top = _yMenu;
-	int length = 20, height = _optionsSize*2;
+	int length = 35, height = _optionsSize*2;
 
 	Common::gotoXY(left, top);
 	putchar(201);
@@ -233,7 +233,7 @@ void Menu::renderCurrentOption()
 
 	Common::gotoXY(left - 11, top + _curOption * 2);
 	putchar(175);
-	Common::gotoXY(left + 15, top + _curOption * 2);
+	Common::gotoXY(left + 29, top + _curOption * 2);
 	putchar(174);
 
 }
@@ -248,7 +248,7 @@ void Menu::offCurrentOption()
 
 	Common::gotoXY(left - 11, top + _curOption * 2);
 	putchar(' ');
-	Common::gotoXY(left + 15, top + _curOption * 2);
+	Common::gotoXY(left + 29, top + _curOption * 2);
 	putchar(' ');
 
 }
