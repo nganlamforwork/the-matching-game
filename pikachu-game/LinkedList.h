@@ -1,29 +1,36 @@
 #pragma once
 #include <iostream>
-#include "Node.h"
+#include "NodeLinkedList.h"
 
 struct LinkedList {
 
-	Node* _head = nullptr;
-	Node* _tail = nullptr;
+	NodeLL* _head = nullptr;
+	NodeLL* _tail = nullptr;
 
     LinkedList();
     ~LinkedList();
 
-    Node* getHead();
-    Node* getTail();
+    NodeLL* getHead();
+    NodeLL* getTail();
 
-    Node* createNode(Node* data);
-    void addHead(Node* data);
-    void addTail(Node* data);
+    NodeLL* createNodeLL(NodeLL* data);
+
+    void addHead(NodeLL* data);
+    void addTail(NodeLL* data);
+
     void removeHead();
     void removeTail();
+
     void removeAll();
+
+    NodeLL* getPos(int pos);
+    bool addPos(NodeLL* data, int pos);
     void removePos(int pos);
+
+    NodeLL* getRC(int r, int c);
+    bool addRC(NodeLL* data, int r, int c);
     bool removeRC(int r, int c);
-    bool addPos(Node* data, int pos);
-    Node* getPos(int pos);
-    Node* getRC(int r, int c);
+
     void printList();
     int countElements();
 };
