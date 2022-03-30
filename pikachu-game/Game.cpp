@@ -44,32 +44,25 @@ void Game::startGame()
 	_board->drawEnterName();
 	_player->getPlayerName();
 
-	time_point<system_clock> start, end;
 
 	Common::clearConsole();
 	renderBoard();
 
-	if (!findPair(0)) {
-		Common::clearConsole();
-		cout << "NO MORE WAYS";
-		exit(0);
-	}
+	_timeStart = system_clock::now();
 
-	_y = _board->getYCoor(0);
-	_x = _board->getXCoor(0);
-	selectCell(GREEN);
+	if (findPair(0)) {
+		_y = _board->getYCoor(0);
+		_x = _board->getXCoor(0);
+		selectCell(GREEN);
 
-	start = system_clock::now();
-	while (!_finish && _remainCards) {
-		switch (Common::getConsoleInput())
-		{
+		while (!_finish && _remainCards) {
+			switch (Common::getConsoleInput())
+			{
 			case 0:
 				Common::playSound(4);
-				_finish = 0;
 				break;
 			case 1:
 				Common::playSound(4);
-				Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 				_finish = 1;
 				break;
 			case 2:
@@ -91,15 +84,23 @@ void Game::startGame()
 			case 7:
 				findPair(1);
 				break;
+			}
 		}
 	}
-	end = system_clock::now();
-	
-	_player->_time_played = end - start;
+	endGame();
+}
+
+void Game::endGame()
+{
+	_timeEnd = system_clock::now();
+
+	_player->_time_played = _timeEnd - _timeStart;
 	_player->calculateScore(_player->_time_played, _remainCards);
 
 	_player->writePlayersFile();
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);//phải để dòng này ở đây thì nó mới fix được ô đen
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);					//phải để dòng này ở đây thì nó mới fix được ô đen
+
 	_board->drawEndgame(_player->_score);
 	Sleep(1000);
 	_board->drawLeaderBoard();
@@ -407,11 +408,7 @@ void Game::deleteCards()
 	}
 	_lockedCardsArr.clear();
 
-	if (!findPair(0)) {
-		Common::clearConsole();
-		cout << "NO MORE WAYS";
-		exit(0);
-	}
+	if (!findPair(0)) _finish = 1;
 }
 
 void Game::lockCell()

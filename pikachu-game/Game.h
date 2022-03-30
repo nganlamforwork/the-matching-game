@@ -16,6 +16,7 @@ struct Game{
 	int _remainCards;
 	int _lockedCards;				//Biến đếm số card đã được lock. Chỉ nằm trong khoảng: 0..2
 	std::vector<std::pair<int, int> > _lockedCardsArr; //First: row - Second: column
+	time_point<system_clock> _timeStart, _timeEnd;
 
 	void moveRight();					 //Di chuyển phải
 	void moveLeft();					 //Di chuyển trái
@@ -38,6 +39,7 @@ struct Game{
 	void setMode(int mode);
 
 	void startGame();					 //Bắt đầu trò chơi
+	void endGame();
 	void renderBoard();					//In bảng ban đầu
 	void selectCell(const int& color);
 	void unselectCell();
