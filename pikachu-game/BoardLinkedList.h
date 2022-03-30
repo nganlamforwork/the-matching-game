@@ -15,7 +15,7 @@ struct BoardLL {
 	int _size = 4;						//Kích cỡ bàn cờ
 	int _left = 0, _top = 0;			//Tọa độ bắt đầu bàn cờ
 	int _remainCouple = 0;				//Số card còn lại - For scoring
-	int* _pairCharacter, * _pos;
+	int * _pos;
 	LinkedList* _dataColumn;
 	std::string* _imageBoard;
 

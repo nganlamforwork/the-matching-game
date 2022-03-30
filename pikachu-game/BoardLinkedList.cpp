@@ -6,7 +6,7 @@ BoardLL::BoardLL(int size, int left, int top)
 	_left = left;
 	_top = top;
 	_remainCouple = _size * _size / 2;
-	_pairCharacter = new int[_size * _size];
+	_pos = new int[_size];
 
 	//Board
 	_dataColumn = new LinkedList [_size];
@@ -53,34 +53,27 @@ void BoardLL::generateBoardData()
 {
 	srand(time(NULL));
 
-	bool* checkDuplicate = new bool[_size * _size];
-	_pos = new int[_size * _size];
+	for (int i = 0; i < _size; i++)
+		_pos[i] = 0;
 
-	//Build random character pair
-	for (int i = 0; i < _size * _size; i += 2)
-		_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A'/* rand() % 1 + 'A'*/;
+	for (int i = 0; i < _size * _size; i += 2) {
+		char tmp = rand() % 26 + 'A';
+		
+		for (int j = 0; j < 2; j++) {
+			int tmpRand = 0;
+			do {
+				tmpRand = rand() % _size;
+			} while (_pos[tmpRand] >= _size);
 
-	//Build position array
-	for (int i = 0; i < _size * _size; i++) checkDuplicate[i] = 0;
-	for (int i = 0; i < _size * _size; i++) {
-		int tmp = 0;
+			_pos[tmpRand]++;
 
-		do {
-			tmp = rand() % (_size * _size);
-		} while (checkDuplicate[tmp]);
+			NodeLL* tmpNodeLL = new NodeLL(tmp, NORMAL);
 
-		checkDuplicate[tmp] = 1;
-		_pos[i] = tmp;
+			_dataColumn[tmpRand].addHead(tmpNodeLL);
+
+			delete tmpNodeLL;
+		}
 	}
-
-
-	//Build table
-	for (int i = 0; i < _size * _size; i++) {
-		int r = _pos[i] / _size;
-		int c = _pos[i] % _size;
-	}
-
-	delete[] checkDuplicate;
 }
 
 void BoardLL::drawBoard()
