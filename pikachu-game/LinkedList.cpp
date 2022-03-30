@@ -145,7 +145,7 @@ NodeLL* LinkedList::getRC(int r, int c)
         return p;
     return nullptr;
 }
-bool addRC(NodeLL* data, int r, int c){}
+bool addRC(NodeLL* data, int r, int c) { return 1; }
 bool LinkedList::removeRC(int r, int c)
 {
     if (_head->_r == r && _head->_c == c) {
