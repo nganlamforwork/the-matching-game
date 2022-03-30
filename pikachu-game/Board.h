@@ -18,6 +18,7 @@ struct Board {
 	int* _pairCharacter;
 	Node** _dataBoard;
 	int* _pos;
+	std::string* _imageBoard;
 
 	Board(int,int,int);
 	Board();
@@ -33,6 +34,7 @@ struct Board {
 	void drawCat();
 	void drawScoreBoard();
 	void renderBoardData();
+	void initBoardBackground();
 	void drawEndgame(int);
 	void drawEnterName();
 	static void drawLeaderBoard();

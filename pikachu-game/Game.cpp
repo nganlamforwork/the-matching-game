@@ -34,6 +34,7 @@ void Game::renderBoard()
 {
 	_board->drawBoard();
 	_board->generateBoardData();
+	_board->initBoardBackground();
 	_board->renderBoardData();
 	_board->drawScoreBoard();
 }
@@ -97,6 +98,8 @@ void Game::endGame()
 	_player->_time_played = _timeEnd - _timeStart;
 	_player->calculateScore(_player->_time_played, _remainCards);
 
+	Sleep(1500);
+
 	_player->writePlayersFile();
 
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);					//phải để dòng này ở đây thì nó mới fix được ô đen
@@ -122,6 +125,10 @@ void Game::unselectCell()
 	for (int i = _y - 1; i <= _y + 1; i++)
 		for (int j = _x - 3; j <= _x + 3; j++) {
 			Common::gotoXY(j, i);
+			if (_board->_dataBoard[_r][_c]._Status == DELETED) {
+				putchar(_board->_imageBoard[i - _top][j - _left]);
+				continue;
+			}
 			if (j == _x && i == _y) putchar(_board->getCharRC(_r, _c));
 			else putchar(' ');
 		}
@@ -138,6 +145,10 @@ void Game::selectCell(const int& color)
 	for (int i = _y - 1; i <= _y + 1; i++)
 		for (int j = _x - 3; j <= _x + 3; j++) {
 			Common::gotoXY(j, i);
+			if (_board->_dataBoard[_r][_c]._Status == DELETED) {
+				putchar(_board->_imageBoard[i - _top][j - _left]);
+				continue;
+			}
 			if (j == _x && i == _y) 
 				putchar(_board->getCharRC(_r, _c));
 			else putchar(' ');

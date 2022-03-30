@@ -15,6 +15,9 @@ Board::Board(int size, int left, int top)
     _dataBoard = new Node* [_size];
     for (int i = 0; i < _size; i++)
         _dataBoard[i] = new Node[_size];
+
+	//Image board
+	_imageBoard = new string[_size * 10];
 }
 
 Board::~Board()
@@ -23,6 +26,8 @@ Board::~Board()
         delete[] _dataBoard[i];
     delete[] _dataBoard,
         _dataBoard = nullptr;
+	delete[] _imageBoard,
+		_imageBoard = nullptr;
 
 	delete[] _pos;
 }
@@ -182,6 +187,21 @@ void Board::drawBoard()
 
 }
 
+void Board::initBoardBackground()
+{
+	std::ifstream bg;
+	if (_size == 4) bg.open("images\\plane.txt");
+	else if (_size == 6) bg.open("images\\house.txt");
+
+	int i = 0;
+	while (!bg.eof()){
+		getline(bg, _imageBoard[i]);
+		int tmp = _imageBoard[i].size();
+		i++;
+	}
+	bg.close();
+}
+
 void Board::drawScoreBoard()
 {
 	//Vẽ biên trên
@@ -247,7 +267,7 @@ void Board::drawEndgame(int score)
 
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(left + 55, top + 5 + 11);
-	cout << "Your score is: " << score << "!!!";
+	cout << "Your score is: " << score << " !!!";
 }
 
 //https://patorjk.com/software/taag/#p=testall&f=Blocks&t=The%20Matching%20Game%0A
@@ -479,32 +499,37 @@ void Board::deleteCell(const int& r, const int& c)
 	for (int i = y - 1; i <= y + 1; i++)
 		for (int j = x - 3; j <= x + 3; j++) {
 			Common::gotoXY(j, i);
-			putchar(' ');
+			//putchar(' ');
+			putchar(_imageBoard[i - _top][j - _left]);
 		}
 
 	//Delete left border
 	if (c > 0 && getStatus(r, c - 1) == DELETED)
 		for (int i = y - 1; i <= y + 1; i++) {
 			Common::gotoXY(x - 4, i);
-			putchar(' ');
+			//putchar(' ');
+			putchar(_imageBoard[i - _top][x - 4 - _left]);
 		}
 	//Delete right border
 	if (c < _size - 1 && getStatus(r, c + 1 ) == DELETED)
 		for (int i = y - 1; i <= y + 1; i++) {
 			Common::gotoXY(x + 4, i);
-			putchar(' ');
+			//putchar(' ');
+			putchar(_imageBoard[i - _top][x + 4 - _left]);
 		}
 	//Delete top border
 	if (r > 0 && getStatus(r - 1, c) == DELETED)
 		for (int i = x - 3; i <= x + 3; i++) {
 			Common::gotoXY(i, y - 2);
-			putchar(' ');
+			//putchar(' ');
+			putchar(_imageBoard[y - 2 - _top][i - _left]);
 		}
 	//Delete bottom border
 	if (r < _size - 1 && getStatus(r + 1, c) == DELETED)
 		for (int i = x - 3; i <= x + 3; i++) {
 			Common::gotoXY(i, y + 2);
-			putchar(' ');
+			//putchar(' ');
+			putchar(_imageBoard[y + 2 - _top][i - _left]);
 		}
 
 	//Go back to center
