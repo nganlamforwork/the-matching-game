@@ -29,7 +29,7 @@ struct Game{
 	bool checkMatchU_R(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
 	bool checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
 	bool checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
-	bool checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell);			//Check match tổng
+	bool checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell, const bool& outputNofitication);			//Check match tổng
 
 
 	Game(int);
@@ -43,4 +43,7 @@ struct Game{
 	void unselectCell();
 	void deleteCards();
 	void lockCell();
+
+	void renderSuggestion(const int& r1, const int& c1, const int& r2, const int& c2);
+	bool findPair(const bool& suggestion);
 };

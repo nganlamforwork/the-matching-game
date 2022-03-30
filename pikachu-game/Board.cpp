@@ -15,14 +15,6 @@ Board::Board(int size, int left, int top)
     _dataBoard = new Node* [_size];
     for (int i = 0; i < _size; i++)
         _dataBoard[i] = new Node[_size];
-
-	//Linked list
-	_dataRow = new LinkedList[_size];
-	_dataColumn = new LinkedList[_size];
-}
-
-Board::Board()
-{
 }
 
 Board::~Board()
@@ -31,9 +23,6 @@ Board::~Board()
         delete[] _dataBoard[i];
     delete[] _dataBoard,
         _dataBoard = nullptr;
-
-	delete[] _dataRow, _dataRow = nullptr;
-	delete[] _dataColumn, _dataColumn = nullptr;
 
 	delete[] _pos;
 }
@@ -53,21 +42,6 @@ int Board::getTopCoor()
 	return _top;
 }
 
-void Board::setSize(const int& size)
-{
-	_size = size;
-}
-
-void Board::setLeftCoor(const int& left)
-{
-	_left = left;
-}
-
-void Board::setTopCoor(const int& top)
-{
-	_top = top;
-}
-
 ////////////////////////////////////////////////////////////////////////////
 
 void Board::generateBoardData()
@@ -80,9 +54,9 @@ void Board::generateBoardData()
     //Build random character pair
 	for (int i = 0; i < _size * _size; i += 2) {
 		if (i / 2 > 25)
-			_pairCharacter[i] = _pairCharacter[i + 1] = rand() % 26 + 'A' /*rand() % 1 + 'A'*/;
+			_pairCharacter[i] = _pairCharacter[i + 1] = /*rand() % 26 + 'A'*/ rand() % 1 + 'A';
 		else
-			_pairCharacter[i] = _pairCharacter[i + 1] = i / 2 + 'A' /*rand() % 1 + 'A'*/;
+			_pairCharacter[i] = _pairCharacter[i + 1] = /*i / 2 + 'A'*/ rand() % 1 + 'A';
 	}
 
     //Build position array
@@ -113,7 +87,10 @@ void Board::drawBoard()
 {
 	Common::clearConsole();
 
-	Common::gotoXY(122, 30);
+	Common::gotoXY(120, 28);
+	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
+	cout << "H: MOVE SUGGESTION";
+	Common::gotoXY(120, 30);
 	Common::setConsoleColor(BRIGHT_WHITE, YELLOW);
 	cout << "ESC: EXIT";
 
@@ -189,26 +166,6 @@ void Board::drawBoard()
 		//Sleep(2);
 	}
 
-}
-
-void Board::renderBoardData()
-{
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < _size; j++) {
-			Common::gotoXY(_left + 5 + CELL_LENGTH * j, _top + 2 + CELL_HEIGHT * i);
-			_dataBoard[i][j].setX(_left + 5 + CELL_LENGTH * j);
-			_dataBoard[i][j].setY(_top + 2 + CELL_HEIGHT * i);
-			_dataBoard[i][j].setR(i);
-			_dataBoard[i][j].setC(j);
-
-			putchar(_dataBoard[i][j].getCharHolder());
-
-			//Add to linked lists
-			Node* tmp = new Node(_dataBoard[i][j]);
-			_dataRow[i].addTail(tmp);
-			_dataColumn[j].addTail(tmp);
-			//_dataRow[i].printList();
-		}
 }
 
 void Board::drawScoreBoard()
@@ -458,7 +415,8 @@ int Board::getRCoor(const int& y)
 
 char Board::getCharRC(const int& r, const int& c)
 {
-	return _dataBoard[r][c].getCharHolder();
+	if (_dataBoard[r][c]._Status == DELETED) return ' ';
+	return _dataBoard[r][c]._CharHolder;
 }
 
 int Board::getStatus(const int& r, const int& c)
@@ -484,7 +442,7 @@ void Board::unlockCell(const int& r, const int& c)
 	for (int i = y - 1 ; i <= y + 1 ; i++)
 		for (int j = x - 3; j <= x + 3; j++) {
 			Common::gotoXY(j, i);
-			if (j == x && i == y) putchar(_dataBoard[r][c].getCharHolder());
+			if (j == x && i == y) putchar(getCharRC(r,c));
 			else putchar(' ');
 		}
 	Common::gotoXY(x, y);
@@ -492,19 +450,13 @@ void Board::unlockCell(const int& r, const int& c)
 
 void Board::deleteCell(const int& r, const int& c)
 {
-	//Remove from linked list
-	_dataRow[r].removeRC(r, c);
-	_dataColumn[c].removeRC(r, c);
-	//_dataColumn[c].printList();
-
 	_dataBoard[r][c].setStatus(DELETED);
-	_dataBoard[r][c].swapChar();
 
 	int x = getXCoor(c), y = getYCoor(r);
 
 	Common::gotoXY(x, y);
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	putchar(_dataBoard[r][c].getCharHolder());
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);	
+	putchar(getCharRC(r, c));						//In hình: image[r][c]???
 
 	for (int i = y - 1; i <= y + 1; i++)
 		for (int j = x - 3; j <= x + 3; j++) {
@@ -547,10 +499,10 @@ bool Board::outputMatchI()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "I-Matched!!:D" << endl;
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "I-Matched!! :D" << endl;
+	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	Sleep(WAIT_TIME);
-	cout << "             " << endl;
+	cout << "             " << endl;*/
 	return 1;
 }
 
@@ -558,10 +510,10 @@ bool Board::outputMatchU()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "U-Matched!!:D" << endl;
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "U-Matched!! :D" << endl;
+	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	Sleep(WAIT_TIME);
-	cout << "             " << endl;
+	cout << "             " << endl;*/
 	return 1;
 }
 
@@ -569,10 +521,10 @@ bool Board::outputMatchL()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "L-Matched!!:D" << endl;
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "L-Matched!! :D" << endl;
+	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	Sleep(WAIT_TIME);
-	cout << "             " << endl;
+	cout << "             " << endl;*/
 	return 1;
 }
 
@@ -580,10 +532,10 @@ bool Board::outputMatchZ()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "Z-Matched!!:D" << endl;
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	cout << "Z-Matched!! :D" << endl;
+	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	Sleep(WAIT_TIME);
-	cout << "             " << endl;
+	cout << "             " << endl;*/
 	return 1;
 }
 
@@ -592,8 +544,8 @@ bool Board::outputNoMatch()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	cout << "Not a match :(" << endl;
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
+	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	Sleep(WAIT_TIME + 100);
-	cout << "              " << endl;
+	cout << "              " << endl;*/
 	return 0;
 }
