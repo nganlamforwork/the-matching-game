@@ -83,6 +83,20 @@ void Board::generateBoardData()
     delete[] checkDuplicate;
 }
 
+void Board::renderBoardData()
+{
+	for (int i = 0; i < _size; i++)
+		for (int j = 0; j < _size; j++) {
+			Common::gotoXY(_left + 5 + CELL_LENGTH * j, _top + 2 + CELL_HEIGHT * i);
+			_dataBoard[i][j].setX(_left + 5 + CELL_LENGTH * j);
+			_dataBoard[i][j].setY(_top + 2 + CELL_HEIGHT * i);
+			_dataBoard[i][j].setR(i);
+			_dataBoard[i][j].setC(j);
+
+			putchar(_dataBoard[i][j].getCharHolder());
+		}
+}
+
 void Board::drawBoard() 
 {
 	Common::clearConsole();
