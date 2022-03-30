@@ -1,7 +1,4 @@
 ﻿#include "Board.h"
-#include "Node.h"
-#include "Common.h"
-
 
 Board::Board(int size, int left, int top)
 {
@@ -32,19 +29,37 @@ Board::~Board()
 	delete[] _pos;
 }
 
-int Board::getSize()
+////////////////////////////////////////////////////////////////////////////
+
+int Board::getXCoor(const int& c)
 {
-	return _size;
+	return _left + 5 + CELL_LENGTH * c;
 }
 
-int Board::getLeftCoor()
+int Board::getYCoor(const int& r)
 {
-	return _left;
+	return _top + 2 + CELL_HEIGHT * r;
 }
 
-int Board::getTopCoor()
+int Board::getCCoor(const int& x)
 {
-	return _top;
+	return (x - _left - 5) / CELL_LENGTH;
+}
+
+int Board::getRCoor(const int& y)
+{
+	return (y - _top - 2) / CELL_HEIGHT;
+}
+
+char Board::getCharRC(const int& r, const int& c)
+{
+	if (_dataBoard[r][c]._Status == DELETED) return ' ';
+	return _dataBoard[r][c]._CharHolder;
+}
+
+int Board::getStatus(const int& r, const int& c)
+{
+	return _dataBoard[r][c]._Status;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -84,21 +99,7 @@ void Board::generateBoardData()
     delete[] checkDuplicate;
 }
 
-void Board::renderBoardData()
-{
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < _size; j++) {
-			Common::gotoXY(_left + 5 + CELL_LENGTH * j, _top + 2 + CELL_HEIGHT * i);
-			_dataBoard[i][j].setX(_left + 5 + CELL_LENGTH * j);
-			_dataBoard[i][j].setY(_top + 2 + CELL_HEIGHT * i);
-			_dataBoard[i][j].setR(i);
-			_dataBoard[i][j].setC(j);
-
-			putchar(_dataBoard[i][j].getCharHolder());
-		}
-}
-
-void Board::drawBoard() 
+void Board::drawBoard()
 {
 	Common::clearConsole();
 
@@ -113,7 +114,7 @@ void Board::drawBoard()
 	//Vẽ biên trên
 	Common::gotoXY(_left + 1, _top);
 	putchar(201);
-	for (int i = 1; i < _size * CELL_LENGTH; i++){
+	for (int i = 1; i < _size * CELL_LENGTH; i++) {
 		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
 			putchar(205);
@@ -124,7 +125,7 @@ void Board::drawBoard()
 
 
 	//Vẽ biên phải
-	for (int i = 1; i < _size * CELL_HEIGHT; i++){
+	for (int i = 1; i < _size * CELL_HEIGHT; i++) {
 		//Sleep(5);
 		Common::gotoXY(_size * CELL_LENGTH + _left + 1, i + _top);
 		if (i % CELL_HEIGHT == 0)
@@ -137,7 +138,7 @@ void Board::drawBoard()
 
 
 	//Ve biên dưới
-	for (int i = 1; i < _size * CELL_LENGTH; i++){
+	for (int i = 1; i < _size * CELL_LENGTH; i++) {
 		Common::gotoXY(_size * CELL_LENGTH + _left - i + 1, _size * CELL_HEIGHT + _top);
 		//Sleep(2);
 		if (i % CELL_LENGTH == 0)
@@ -149,7 +150,7 @@ void Board::drawBoard()
 	putchar(200);
 
 	//Ve biên trái
-	for (int i = 1; i < _size * CELL_HEIGHT; i++){
+	for (int i = 1; i < _size * CELL_HEIGHT; i++) {
 		//Sleep(5);
 		Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top - i);
 		if (i % CELL_HEIGHT == 0)
@@ -159,9 +160,9 @@ void Board::drawBoard()
 	}
 
 	//Vẽ đường dọc
-	for (int i = 1; i < _size * CELL_HEIGHT; i++){
-		for (int j = CELL_LENGTH; j < _size * CELL_LENGTH; j += CELL_LENGTH){
-			if (i % CELL_HEIGHT != 0){
+	for (int i = 1; i < _size * CELL_HEIGHT; i++) {
+		for (int j = CELL_LENGTH; j < _size * CELL_LENGTH; j += CELL_LENGTH) {
+			if (i % CELL_HEIGHT != 0) {
 				Common::gotoXY(j + _left + 1, i + _top);
 				putchar(179);
 			}
@@ -170,8 +171,8 @@ void Board::drawBoard()
 	}
 
 	//Vẽ đường ngang
-	for (int i = 1; i < _size * CELL_LENGTH; i++){
-		for (int j = CELL_HEIGHT; j < _size * CELL_HEIGHT; j += CELL_HEIGHT){
+	for (int i = 1; i < _size * CELL_LENGTH; i++) {
+		for (int j = CELL_HEIGHT; j < _size * CELL_HEIGHT; j += CELL_HEIGHT) {
 			Common::gotoXY(i + _left + 1, j + _top);
 			if (i % CELL_LENGTH == 0)
 				putchar(32);
@@ -181,6 +182,20 @@ void Board::drawBoard()
 		//Sleep(2);
 	}
 
+}
+
+void Board::renderBoardData()
+{
+	for (int i = 0; i < _size; i++)
+		for (int j = 0; j < _size; j++) {
+			Common::gotoXY(_left + 5 + CELL_LENGTH * j, _top + 2 + CELL_HEIGHT * i);
+			_dataBoard[i][j].setX(_left + 5 + CELL_LENGTH * j);
+			_dataBoard[i][j].setY(_top + 2 + CELL_HEIGHT * i);
+			_dataBoard[i][j].setR(i);
+			_dataBoard[i][j].setC(j);
+
+			putchar(_dataBoard[i][j].getCharHolder());
+		}
 }
 
 void Board::initBoardBackground()
@@ -196,6 +211,32 @@ void Board::initBoardBackground()
 		i++;
 	}
 	bg.close();
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+void Board::drawDuck()
+{
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 10 + _top);
+	cout << "  __";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 11 + _top);
+	cout << "<(o )___";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 12 + _top);
+	cout << " ( ._> /";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 13 + _top);
+	cout << "  `---' ";
+}
+
+void Board::drawCat()
+{
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 10 + _top);
+	cout << "___/|";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 11 + _top);
+	cout << "\\o.O|";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 12 + _top);
+	cout << "(___)";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 13 + _top);
+	cout << "  U";
 }
 
 void Board::drawScoreBoard()
@@ -244,28 +285,7 @@ void Board::drawScoreBoard()
 
 }
 
-void Board::drawEndgame(int score)
-{
-	int left = 0, top = 0;
-	Common::clearConsole();
-	ifstream endgame("GameOver.txt");
-	string s;
-	int i = 0;
-
-	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
-	while (!endgame.eof()){
-		Common::gotoXY(left + 20, top + 5 + i);
-		getline(endgame, s);
-		cout << s;
-		i++;
-	}
-	endgame.close();
-
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	Common::gotoXY(left + 55, top + 5 + 11);
-	cout << "Your score is: " << score << " !!!";
-}
-
+////////////////////////////////////////////////////////////////////////////
 //https://patorjk.com/software/taag/#p=testall&f=Blocks&t=The%20Matching%20Game%0A
 
 void Board::drawEnterName()
@@ -285,28 +305,26 @@ void Board::drawEnterName()
 	inName.close();
 }
 
-void Board::drawDuck()
+void Board::drawEndgame(int score)
 {
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 10 + _top);
-	cout << "  __";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 11 + _top);
-	cout << "<(o )___";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 12 + _top);
-	cout << " ( ._> /";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 13 + _top);
-	cout << "  `---' ";
-}
+	int left = 0, top = 0;
+	Common::clearConsole();
+	ifstream endgame("GameOver.txt");
+	string s;
+	int i = 0;
 
-void Board::drawCat()
-{
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 10 + _top);
-	cout << "___/|";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 11 + _top);
-	cout << "\\o.O|";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 12 + _top);
-	cout << "(___)";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 13 + _top);
-	cout << "  U";
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	while (!endgame.eof()) {
+		Common::gotoXY(left + 20, top + 5 + i);
+		getline(endgame, s);
+		cout << s;
+		i++;
+	}
+	endgame.close();
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(left + 55, top + 5 + 11);
+	cout << "Your score is: " << score << " !!!";
 }
 
 void Board::drawLeaderBoard()
@@ -423,39 +441,6 @@ void Board::drawLeaderBoard()
 		cout << playerList[i]._display_time << 's';
 	}
 
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-int Board::getXCoor(const int& c)
-{
-	return _left + 5 + CELL_LENGTH * c;
-}
-
-int Board::getYCoor(const int& r)
-{
-	return _top + 2 + CELL_HEIGHT * r;
-}
-
-int Board::getCCoor(const int& x)
-{
-	return (x - _left - 5) / CELL_LENGTH;
-}
-
-int Board::getRCoor(const int& y)
-{
-	return (y - _top - 2) / CELL_HEIGHT;
-}
-
-char Board::getCharRC(const int& r, const int& c)
-{
-	if (_dataBoard[r][c]._Status == DELETED) return ' ';
-	return _dataBoard[r][c]._CharHolder;
-}
-
-int Board::getStatus(const int& r, const int& c)
-{
-	return _dataBoard[r][c].getStatus();
 }
 
 ////////////////////////////////////////////////////////////////////////////

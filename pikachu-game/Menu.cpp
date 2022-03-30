@@ -1,6 +1,4 @@
 ﻿#include "Menu.h"
-#include "Common.h"
-#include "Game.h"
 
 Menu::Menu()
 {
@@ -13,15 +11,7 @@ Menu::~Menu()
 {
 }
 
-int Menu::getCurrentOption()
-{
-	return _curOption;
-}
-
-void Menu::setCurrentOption(int opt)
-{
-	_curOption = opt;
-}
+////////////////////////////////////////////////////////////////////////////
 
 void Menu::renderMainScreen()
 {
@@ -238,6 +228,18 @@ void Menu::renderCurrentOption()
 
 }
 
+////////////////////////////////////////////////////////////////////////////
+
+int Menu::getCurrentOption()
+{
+	return _curOption;
+}
+
+void Menu::setCurrentOption(int opt)
+{
+	_curOption = opt;
+}
+
 void Menu::offCurrentOption()
 {
 	int left = _xMenu + 8, top = _yMenu + 1;
@@ -266,62 +268,34 @@ void Menu::changeOption(int direction) //-1: Up - 1: Down
 
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 void Menu::playEasy()
 {
 	Common::clearConsole();
 	Game game(EASY);
 	game.startGame();
 }
+
 void Menu::playMedium()
 {
 	Common::clearConsole();
 	Game game(MEDIUM);
 	game.startGame();
 }
+
 void Menu::playHard()
 {
 	Common::clearConsole();
 	Game game(HARD);
 	game.startGame();
 }
+
 void Menu::aboutPage()
 {
-	int top = 2, left = 35;
-	ifstream about;
-	about.open("tutorial.txt");
-	Common::clearConsole();
-	Common::setUpConsole(22);
-	Common::hideScrollBars();
-
-	/*Common::setConsoleColor(BRIGHT_WHITE, PURPLE);
-	Common::gotoXY(left-5, top -2 );
-	for (int i = 0; i < 51; i++)
-		putchar('_');
-	Common::gotoXY(left - 5, top - 1);
-	for (int i = 0; i < 22; i++) {
-		putchar('|');
-		Common::gotoXY(left - 5, top - 1 + i);
-	}
-	Common::gotoXY(left - 5 + 50, top - 1);
-	for (int i = 0; i < 22; i++) {
-		putchar('|');
-		Common::gotoXY(left - 5 + 50, top - 1 + i);
-	}*/
-
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	std::string line;
-	int cnt = 0;
-	while (!about.eof()) {
-		Common::gotoXY(left, top + (cnt++) * 2);
-		std::getline(about, line);
-		cout << line;
-	}
-
-	/*Common::setConsoleColor(BRIGHT_WHITE, PURPLE);
-	Common::gotoXY(left - 5, top + cnt * 2);
-	for (int i = 0; i < 51; i++)
-		putchar('*');*/
+	
 }
+
 void Menu::showLeaderboard()
 {
 	Board::drawLeaderBoard();

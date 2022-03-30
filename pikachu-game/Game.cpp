@@ -1,8 +1,4 @@
 ﻿#include "Game.h"
-#include "Common.h"
-#include "Board.h"
-#include <chrono>
-
 
 Game::Game(int mode)
 {
@@ -12,9 +8,9 @@ Game::Game(int mode)
 	_r = _c = 0;
 	_x = _board->getXCoor(_c);
 	_y = _board->getYCoor(_r);
-	_remainCards = _mode * _mode;
-	_lockedCards = 0;
-	_lockedCardsArr.clear();
+	_remainCells = _mode * _mode;
+	_lockedCells = 0;
+	_lockedCellsArr.clear();
 }
 
 Game::~Game()
@@ -25,10 +21,7 @@ Game::~Game()
 	_player = nullptr;
 }
 
-void Game::setMode(int mode)
-{
-	_mode = mode;
-}
+////////////////////////////////////////////////////////////////////////////////
 
 void Game::renderBoard()
 {
@@ -56,7 +49,7 @@ void Game::startGame()
 		_x = _board->getXCoor(0);
 		selectCell(GREEN);
 
-		while (!_finish && _remainCards) {
+		while (!_finish && _remainCells) {
 			switch (Common::getConsoleInput())
 			{
 			case 0:
@@ -96,7 +89,7 @@ void Game::endGame()
 	_timeEnd = system_clock::now();
 
 	_player->_time_played = _timeEnd - _timeStart;
-	_player->calculateScore(_player->_time_played, _remainCards);
+	_player->calculateScore(_player->_time_played, _remainCells);
 
 	Sleep(1500);
 
@@ -111,83 +104,9 @@ void Game::endGame()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Game::unselectCell()
-{
-	_y = _board->getYCoor(_r);
-	_x = _board->getXCoor(_c);
-	Common::gotoXY(_x, _y);
-	
-	if (_board->getStatus(_r,_c)==1)
-		Common::setConsoleColor(RED, BRIGHT_WHITE);
-	else 
-		Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-
-	for (int i = _y - 1; i <= _y + 1; i++)
-		for (int j = _x - 3; j <= _x + 3; j++) {
-			Common::gotoXY(j, i);
-			if (_board->_dataBoard[_r][_c]._Status == DELETED) {
-				putchar(_board->_imageBoard[i - _top][j - _left]);
-				continue;
-			}
-			if (j == _x && i == _y) putchar(_board->getCharRC(_r, _c));
-			else putchar(' ');
-		}
-	Common::gotoXY(_x, _y);
-}
-
-void Game::selectCell(const int& color)
-{
-	_y = _board->getYCoor(_r);
-	_x = _board->getXCoor(_c);
-	Common::gotoXY(_x, _y);
-	Common::setConsoleColor(color, BRIGHT_WHITE);
-
-	for (int i = _y - 1; i <= _y + 1; i++)
-		for (int j = _x - 3; j <= _x + 3; j++) {
-			Common::gotoXY(j, i);
-			if (_board->_dataBoard[_r][_c]._Status == DELETED) {
-				putchar(_board->_imageBoard[i - _top][j - _left]);
-				continue;
-			}
-			if (j == _x && i == _y) 
-				putchar(_board->getCharRC(_r, _c));
-			else putchar(' ');
-		}
-	Common::gotoXY(_x, _y);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void Game::moveDown()
-{
-	if (_r < _board->getSize()-1){
-		unselectCell();
-		_r++;
-		selectCell(GREEN);
-
-		Common::playSound(MOVE_SOUND);
-	}
-	else{
-		Common::playSound(ERROR_SOUND);
-	}
-}
-
-void Game::moveUp()
-{
-	if (_r > 0){
-		unselectCell();
-		_r--;
-		selectCell(GREEN);
-
-		Common::playSound(MOVE_SOUND);
-	}
-	else {
-		Common::playSound(ERROR_SOUND);
-	}
-}
-
 void Game::moveLeft()
 {
-	if (_c > 0){
+	if (_c > 0) {
 		unselectCell();
 		_c--;
 		selectCell(GREEN);
@@ -201,9 +120,37 @@ void Game::moveLeft()
 
 void Game::moveRight()
 {
-	if (_c < _board->getSize() - 1){
+	if (_c < _board->_size - 1) {
 		unselectCell();
 		_c++;
+		selectCell(GREEN);
+
+		Common::playSound(MOVE_SOUND);
+	}
+	else {
+		Common::playSound(ERROR_SOUND);
+	}
+}
+
+void Game::moveUp()
+{
+	if (_r > 0) {
+		unselectCell();
+		_r--;
+		selectCell(GREEN);
+
+		Common::playSound(MOVE_SOUND);
+	}
+	else {
+		Common::playSound(ERROR_SOUND);
+	}
+}
+
+void Game::moveDown()
+{
+	if (_r < _board->_size - 1) {
+		unselectCell();
+		_r++;
 		selectCell(GREEN);
 
 		Common::playSound(MOVE_SOUND);
@@ -248,6 +195,7 @@ bool Game::checkMatchI(std::pair<int, int> firstCell, std::pair<int, int> second
 	
 	return 0;
 }
+
 bool Game::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
 	std::pair<int, int> tmp;
@@ -267,6 +215,7 @@ bool Game::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> second
 
 	return 0;
 }
+
 bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
 	//First: row - Second: column
@@ -298,9 +247,10 @@ bool Game::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> second
 	}
 	return 0;
 }
+
 bool Game::checkMatchU_R(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	int size = _board->getSize();
+	int size = _board->_size;
 
 	if (firstCell.first != secondCell.first) return 0;
 	if (firstCell.first == 0 || firstCell.first == size - 1) return 1;//If both cells are at the top or bottom edge
@@ -326,9 +276,10 @@ bool Game::checkMatchU_R(std::pair<int, int> firstCell, std::pair<int, int> seco
 
 	return 0;
 }
+
 bool Game::checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	int size = _board->getSize();
+	int size = _board->_size;
 
 	if (firstCell.second != secondCell.second) return 0;
 	if (firstCell.second == 0 || firstCell.second == size - 1)//If both cells are at the left or right edge
@@ -357,6 +308,7 @@ bool Game::checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> seco
 
 	return 0;
 }
+
 bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
 	if (checkMatchU_R(firstCell, secondCell) || checkMatchU_C(firstCell, secondCell)) return 1;
@@ -382,6 +334,7 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 
 	return 0;
 }
+
 bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell, const bool& outputNofitication)
 {
 	if (!outputNofitication) {
@@ -402,22 +355,67 @@ bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondC
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Game::deleteCards()
+void Game::unselectCell()
 {
-	_lockedCards = 0;
-	if (!checkMatch(_lockedCardsArr[0], _lockedCardsArr[1],1)) {
+	_y = _board->getYCoor(_r);
+	_x = _board->getXCoor(_c);
+	Common::gotoXY(_x, _y);
+
+	if (_board->getStatus(_r, _c) == 1)
+		Common::setConsoleColor(RED, BRIGHT_WHITE);
+	else
+		Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+
+	for (int i = _y - 1; i <= _y + 1; i++)
+		for (int j = _x - 3; j <= _x + 3; j++) {
+			Common::gotoXY(j, i);
+			if (_board->_dataBoard[_r][_c]._Status == DELETED) {
+				putchar(_board->_imageBoard[i - _top][j - _left]);
+				continue;
+			}
+			if (j == _x && i == _y) putchar(_board->getCharRC(_r, _c));
+			else putchar(' ');
+		}
+	Common::gotoXY(_x, _y);
+}
+
+void Game::selectCell(const int& color)
+{
+	_y = _board->getYCoor(_r);
+	_x = _board->getXCoor(_c);
+	Common::gotoXY(_x, _y);
+	Common::setConsoleColor(color, BRIGHT_WHITE);
+
+	for (int i = _y - 1; i <= _y + 1; i++)
+		for (int j = _x - 3; j <= _x + 3; j++) {
+			Common::gotoXY(j, i);
+			if (_board->_dataBoard[_r][_c]._Status == DELETED) {
+				putchar(_board->_imageBoard[i - _top][j - _left]);
+				continue;
+			}
+			if (j == _x && i == _y)
+				putchar(_board->getCharRC(_r, _c));
+			else putchar(' ');
+		}
+	Common::gotoXY(_x, _y);
+}
+
+void Game::deleteCells()
+{
+	_lockedCells = 0;
+	if (!checkMatch(_lockedCellsArr[0], _lockedCellsArr[1],1)) {
 		Common::playSound(ERROR_SOUND);
-		for (auto card : _lockedCardsArr)
+		for (auto card : _lockedCellsArr)
 			_board->unlockCell(card.first, card.second);
-		_lockedCardsArr.clear();
+		_lockedCellsArr.clear();
 		return;
 	}
 
-	_remainCards -= 2;
-	for (auto card : _lockedCardsArr) {
+	_remainCells -= 2;
+	for (auto card : _lockedCellsArr) {
 		_board->deleteCell(card.first, card.second);		//First: row - Second: column
 	}
-	_lockedCardsArr.clear();
+	_lockedCellsArr.clear();
 
 	if (!findPair(0)) _finish = 1;
 }
@@ -431,16 +429,18 @@ void Game::lockCell()
 
 	selectCell(RED);
 	_board->lockCell(_r, _c);
-	_lockedCardsArr.push_back(std::pair<int, int>(_r, _c));
-	_lockedCards++;
+	_lockedCellsArr.push_back(std::pair<int, int>(_r, _c));
+	_lockedCells++;
 
-	if (_lockedCards == 2) {
-		deleteCards();
+	if (_lockedCells == 2) {
+		deleteCells();
 		Common::gotoXY(_x, _y);
 		selectCell(GREEN);
 	}
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::renderSuggestion(const int& r1, const int& c1, const int& r2, const int& c2)
 {
 	const int BGcolor[] = { AQUA, BRIGHT_WHITE };
@@ -480,6 +480,7 @@ void Game::renderSuggestion(const int& r1, const int& c1, const int& r2, const i
 	}
 	selectCell(GREEN);
 }
+
 bool Game::findPair(const bool& suggestion)
 {
 	for (int r1 = 0; r1 < _mode; r1++)

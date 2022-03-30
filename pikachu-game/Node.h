@@ -15,7 +15,6 @@ struct Node {
 	int _y = 0;					//Vị trí y trên console của Node
 	int _r = -1;
 	int _c = -1;
-	Node* _next;
 
 	Node();
 	Node(Node*);
@@ -30,7 +29,6 @@ struct Node {
 	int getY();
 	int getR();
 	int getC();
-	Node* getNext();
 
 	void setCharHolder(const char& charHolder);
 	void setStatus(const int& status);
@@ -38,7 +36,5 @@ struct Node {
 	void setY(const int& y);
 	void setR(const int& r);
 	void setC(const int& c);
-	void setNext();
-	void setNext(Node*& next);
 	void swapChar();
 };
