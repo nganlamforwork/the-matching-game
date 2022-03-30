@@ -49,6 +49,12 @@ void Game::startGame()
 	Common::clearConsole();
 	renderBoard();
 
+	if (!findPair(0)) {
+		Common::clearConsole();
+		cout << "NO MORE WAYS";
+		exit(0);
+	}
+
 	_y = _board->getYCoor(0);
 	_x = _board->getXCoor(0);
 	selectCell(GREEN);
@@ -81,6 +87,9 @@ void Game::startGame()
 			case 6:
 				Common::playSound(3);
 				lockCell();
+				break;
+			case 7:
+				findPair(1);
 				break;
 		}
 	}
@@ -128,7 +137,8 @@ void Game::selectCell(const int& color)
 	for (int i = _y - 1; i <= _y + 1; i++)
 		for (int j = _x - 3; j <= _x + 3; j++) {
 			Common::gotoXY(j, i);
-			if (j == _x && i == _y) putchar(_board->getCharRC(_r, _c));
+			if (j == _x && i == _y) 
+				putchar(_board->getCharRC(_r, _c));
 			else putchar(' ');
 		}
 	Common::gotoXY(_x, _y);
@@ -360,8 +370,16 @@ bool Game::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> second
 
 	return 0;
 }
-bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
+bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell, const bool& outputNofitication)
 {
+	if (!outputNofitication) {
+		if (!checkMatchEqualChar(firstCell, secondCell)) return 0;
+		if (checkMatchI(firstCell, secondCell)) return 1;
+		if (checkMatchL(firstCell, secondCell)) return 1;
+		if (checkMatchZ(firstCell, secondCell)) return 1;
+		if (checkMatchU(firstCell, secondCell)) return 1;
+		return 0;
+	}
 	if (!checkMatchEqualChar(firstCell, secondCell)) return _board->outputNoMatch();
 	if (checkMatchI(firstCell, secondCell)) return _board->outputMatchI();
  	if (checkMatchL(firstCell, secondCell)) return _board->outputMatchL();
@@ -375,7 +393,7 @@ bool Game::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondC
 void Game::deleteCards()
 {
 	_lockedCards = 0;
-	if (!checkMatch(_lockedCardsArr[0], _lockedCardsArr[1])) {
+	if (!checkMatch(_lockedCardsArr[0], _lockedCardsArr[1],1)) {
 		Common::playSound(ERROR_SOUND);
 		for (auto card : _lockedCardsArr)
 			_board->unlockCell(card.first, card.second);
@@ -388,6 +406,12 @@ void Game::deleteCards()
 		_board->deleteCell(card.first, card.second);		//First: row - Second: column
 	}
 	_lockedCardsArr.clear();
+
+	if (!findPair(0)) {
+		Common::clearConsole();
+		cout << "NO MORE WAYS";
+		exit(0);
+	}
 }
 
 void Game::lockCell()
@@ -407,4 +431,70 @@ void Game::lockCell()
 		Common::gotoXY(_x, _y);
 		selectCell(GREEN);
 	}
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+void Game::renderSuggestion(const int& r1, const int& c1, const int& r2, const int& c2)
+{
+	const int BGcolor[] = { AQUA, BRIGHT_WHITE };
+	const int TXcolor[] = { BRIGHT_WHITE, BLACK };
+
+	int cnt = 0, loop = 2;
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_board->_size + 1) + 6 + _left, 2 + _top);
+	cout << '(' << r1 << ',' << c1 << ") and (" << r2 << ',' << c2 << ')';
+
+	while (cnt < loop) {
+		Common::setConsoleColor(BGcolor[cnt], TXcolor[cnt]);
+
+		int x = _board->getXCoor(c1), y = _board->getYCoor(r1);
+
+		for (int i = y - 1; i <= y + 1; i++)
+			for (int j = x - 3; j <= x + 3; j++) {
+				Common::gotoXY(j, i);
+				if (j == x && i == y)
+					putchar(_board->getCharRC(r1,c1));
+				else putchar(' ');
+			}
+
+		x = _board->getXCoor(c2); y = _board->getYCoor(r2);
+		for (int i = y - 1; i <= y + 1; i++)
+			for (int j = x - 3; j <= x + 3; j++) {
+				Common::gotoXY(j, i);
+				if (j == x && i == y)
+					putchar(_board->getCharRC(r2, c2));
+				else putchar(' ');
+			}
+
+		++cnt;
+
+		if (cnt<loop) Sleep(500);
+	}
+	selectCell(GREEN);
+}
+bool Game::findPair(const bool& suggestion)
+{
+	for (int r1 = 0; r1 < _mode; r1++)
+		for (int c1 = 0; c1 < _mode; c1++) {
+
+			if (_board->_dataBoard[r1][c1]._Status == DELETED) continue;
+			char charHolder1 = _board->_dataBoard[r1][c1]._CharHolder;
+
+			for (int r2 = r1; r2 < _mode; r2++)
+				for (int c2 = 0; c2 < _mode; c2++) {
+
+					if (r1 == r2 && c2 <= c1) continue;
+
+					if (_board->_dataBoard[r2][c2]._Status == DELETED) continue;
+					char charHolder2 = _board->_dataBoard[r2][c2]._CharHolder;
+
+					if (charHolder1 != charHolder2) continue;
+
+					if (checkMatch(std::make_pair(r1, c1), std::make_pair(r2, c2), 0)) {
+						if (suggestion) renderSuggestion(r1,c1,r2,c2);
+						return 1;
+					}
+				}
+		}
+	return 0;
 }
