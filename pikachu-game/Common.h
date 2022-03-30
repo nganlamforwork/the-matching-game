@@ -4,6 +4,7 @@
 #include <vector>
 #include <conio.h>
 #include <Random>
+#include <fstream>
 #pragma comment(lib, "Winmm.lib")
 
 #define BLACK 0

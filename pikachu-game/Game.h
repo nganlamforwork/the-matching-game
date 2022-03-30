@@ -2,18 +2,21 @@
 #include <iostream>
 #include <vector>
 #include "Board.h"
+#include "Players.h"
 
 struct Game{
 
 	Board* _board;
+	Players* _player;
 	int _mode;				
 	int _x, _y;						//Vị trí x, y cursor trên màn hình console - Init tại ô [0,0] (hiện trên màn hình console)
 	int _r, _c;						//Vị trí i,j của cursor trên dataBoard (ẩn)
-	int _left = 0, _top = 0;		//Vị trí board game
+	int _left = 15, _top = 2;		//Vị trí board game
 	bool _loop = 1,_finish = 0;
 	int _remainCards;
 	int _lockedCards;				//Biến đếm số card đã được lock. Chỉ nằm trong khoảng: 0..2
 	std::vector<std::pair<int, int> > _lockedCardsArr; //First: row - Second: column
+	time_point<system_clock> _timeStart, _timeEnd;
 
 	void moveRight();					 //Di chuyển phải
 	void moveLeft();					 //Di chuyển trái
@@ -27,7 +30,8 @@ struct Game{
 	bool checkMatchU_R(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
 	bool checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
 	bool checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> secondCell);
-	bool checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell);			//Check match tổng
+	bool checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell, const bool& outputNofitication);			//Check match tổng
+
 
 	Game(int);
 	~Game();
@@ -35,9 +39,13 @@ struct Game{
 	void setMode(int mode);
 
 	void startGame();					 //Bắt đầu trò chơi
+	void endGame();
 	void renderBoard();					//In bảng ban đầu
 	void selectCell(const int& color);
 	void unselectCell();
 	void deleteCards();
 	void lockCell();
+
+	void renderSuggestion(const int& r1, const int& c1, const int& r2, const int& c2);
+	bool findPair(const bool& suggestion);
 };
