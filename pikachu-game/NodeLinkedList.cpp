@@ -35,6 +35,8 @@ NodeLL::NodeLL(char charHolder, int status, int x, int y, int r, int c)
 	this->_y = y;
 	this->_r = r;
 	this->_c = c;
+	this->_prev = nullptr;
+	this->_next = nullptr;
 }
 
 

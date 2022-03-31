@@ -209,8 +209,10 @@ void GameLL::unselectCell()
 	_x = _board->getXCoor(_c);
 	Common::gotoXY(_x, _y);
 
-	int status = _board->_dataColumn[_c].getPos(_mode - _r - 1)->_status;
-	char charHolder = _board->_dataColumn[_c].getPos(_mode - _r - 1)->_charHolder;
+	char charHolder;
+	int status = (_mode - _board->_dataColumn[_c]._size) > _r ? DELETED : _board->_dataColumn[_c].getPos(_mode - _r - 1)->_status;
+	if (status != DELETED)
+		charHolder = _board->_dataColumn[_c].getPos(_mode - _r - 1)->_charHolder;
 
 	if (status == 1)
 		Common::setConsoleColor(RED, BRIGHT_WHITE);
@@ -237,8 +239,10 @@ void GameLL::selectCell(const int& color)
 	Common::gotoXY(_x, _y);
 	Common::setConsoleColor(color, BRIGHT_WHITE);
 
-	int status = _board->_dataColumn[_c].getPos(_mode - _r - 1)->_status;
-	char charHolder = _board->_dataColumn[_c].getPos(_mode - _r - 1)->_charHolder;
+	char charHolder;
+	int status = (_mode - _board->_dataColumn[_c]._size) > _r ? DELETED : _board->_dataColumn[_c].getPos(_mode - _r - 1)->_status;
+	if (status != DELETED)
+		charHolder = _board->_dataColumn[_c].getPos(_mode - _r - 1)->_charHolder;
 
 	for (int i = _y - 1; i <= _y + 1; i++)
 		for (int j = _x - 3; j <= _x + 3; j++) {
@@ -276,8 +280,7 @@ void GameLL::deleteCells()
 
 void GameLL::lockCell()
 {
-	int status = _board->_dataColumn[_c].getPos(_mode - _r - 1)->_status;
-	char charHolder = _board->_dataColumn[_c].getPos(_mode - _r - 1)->_charHolder;
+	int status = (_mode - _board->_dataColumn[_c]._size) > _r ? DELETED : _board->_dataColumn[_c].getPos(_mode - _r - 1)->_status;
 
 	if (status == LOCK || status == DELETED) {
 		Common::playSound(ERROR_SOUND);
@@ -290,6 +293,7 @@ void GameLL::lockCell()
 	_lockedCells++;
 
 	if (_lockedCells == 2) {
+		sort(_lockedCellsArr.begin(), _lockedCellsArr.end());
 		deleteCells();
 		Common::gotoXY(_x, _y);
 		selectCell(GREEN);

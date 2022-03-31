@@ -424,7 +424,36 @@ void BoardLL::drawLeaderBoard()
 
 void BoardLL::repaintColumn(const int& c)
 {
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 
+	NodeLL* tmp = _dataColumn[c]._head;
+	for (int i = 0; i < _dataColumn[c]._size; i++) {
+		tmp->_r = _size - i - 1;
+		tmp->_y = getYCoor(tmp->_r);
+
+		int x = tmp->_x, y = tmp->_y;
+		Common::gotoXY(x,y);
+
+		for (int i = y - 1; i <= y + 1; i++)
+			for (int j = x - 3; j <= x + 3; j++) {
+				Common::gotoXY(j, i);
+				if (j == x && i == y) putchar(tmp->_charHolder);
+				else putchar(' ');
+			}
+		
+		tmp = tmp->_next;
+	}
+	for (int i = _size - _dataColumn[c]._size - 1; i >= 0; i--) {
+		int x = getXCoor(c), y = getYCoor(i);
+
+		Common::gotoXY(x, y);
+
+		for (int i = y - 1; i <= y + 1; i++)
+			for (int j = x - 3; j <= x + 3; j++) {
+				Common::gotoXY(j, i);
+				putchar(_imageBoard[i - _top][j - _left]);
+			}
+	}
 }
 
 void BoardLL::lockCell(const int& r, const int& c)
@@ -452,50 +481,16 @@ void BoardLL::unlockCell(const int& r, const int& c)
 
 void BoardLL::deleteCell(const int& r, const int& c)
 {
-	//_dataColumn[c].removeRC(r, c);
-	setStatus(r, c, DELETED);
+	_dataColumn[c].removePos(_size - r - 1);
+	repaintColumn(c);
+	//setStatus(r, c, DELETED);
 
 	int x = getXCoor(c), y = getYCoor(r);
 
 	Common::gotoXY(x, y);
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 
-	for (int i = y - 1; i <= y + 1; i++)
-		for (int j = x - 3; j <= x + 3; j++) {
-			Common::gotoXY(j, i);
-			putchar(_imageBoard[i - _top][j - _left]);
-		}
-
-	//Delete left border
-	if (c > 0 && getStatus(r, c - 1) == DELETED)
-		for (int i = y - 1; i <= y + 1; i++) {
-			Common::gotoXY(x - 4, i);
-			//putchar(' ');
-			putchar(_imageBoard[i - _top][x - 4 - _left]);
-		}
-	//Delete right border
-	if (c < _size - 1 && getStatus(r, c + 1) == DELETED)
-		for (int i = y - 1; i <= y + 1; i++) {
-			Common::gotoXY(x + 4, i);
-			//putchar(' ');
-			putchar(_imageBoard[i - _top][x + 4 - _left]);
-		}
-	//Delete top border
-	if (r > 0 && getStatus(r - 1, c) == DELETED)
-		for (int i = x - 3; i <= x + 3; i++) {
-			Common::gotoXY(i, y - 2);
-			//putchar(' ');
-			putchar(_imageBoard[y - 2 - _top][i - _left]);
-		}
-	//Delete bottom border
-	if (r < _size - 1 && getStatus(r + 1, c) == DELETED)
-		for (int i = x - 3; i <= x + 3; i++) {
-			Common::gotoXY(i, y + 2);
-			//putchar(' ');
-			putchar(_imageBoard[y + 2 - _top][i - _left]);
-		}
-
-	//Go back to center
+	//Go back to original
 	Common::gotoXY(x, y);
 }
 

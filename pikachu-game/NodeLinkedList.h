@@ -12,7 +12,8 @@ struct NodeLL {
 	int _status = 0;					
 	int _x = 0, _y = 0;					//Vị trí x, y trên console của Node
 	int _r = -1, _c = -1;
-	NodeLL* _next, * _prev;
+	NodeLL* _next = nullptr;
+	NodeLL* _prev = nullptr;
 
 	NodeLL();
 	NodeLL(NodeLL*);

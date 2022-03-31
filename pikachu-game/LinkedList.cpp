@@ -62,7 +62,7 @@ void LinkedList::removeHead()
 {
     if (_head == nullptr) return;
     _head = _head->_next;
-    _head->_prev = nullptr;
+    if (_head != nullptr)_head->_prev = nullptr;
     _size--;
 }
 
@@ -71,7 +71,7 @@ void LinkedList::removeTail()
     if (_head == nullptr) return;
     
     _tail = _tail->_prev;
-    _tail->_next = nullptr;
+    if (_tail != nullptr)  _tail->_next = nullptr;
 
     _size--;
 }
@@ -129,8 +129,10 @@ bool LinkedList::addPos(NodeLL* data, int pos)
 }
 void LinkedList::removePos(int pos)
 {
-    if (pos == 0 || _head == nullptr)
+    if (pos == 0 || _head == nullptr) {
         removeHead();
+        return;
+    }
 
     int i = 0;
     NodeLL* p = _head;
@@ -142,8 +144,9 @@ void LinkedList::removePos(int pos)
     if (i != pos - 1) return; //Not found
 
     NodeLL* tmp = p->_next->_next;
-    if (tmp != nullptr) tmp->_prev = p;
-    else tmp->_prev = p;
+    if (tmp != nullptr)
+        tmp->_prev = p;
+    else _tail = p;
     p->_next = tmp;
 
     _size--;
@@ -178,8 +181,9 @@ bool LinkedList::removeRC(int r, int c)
     if (p->_next->_r != r || p->_next->_c != c) return 0; //Not found
 
     NodeLL* tmp = p->_next->_next;
-    if (tmp != nullptr) tmp->_prev = p;
-    else tmp->_prev = p;
+    if (tmp != nullptr)
+        tmp->_prev = p;
+    else _tail = p;
     p->_next = tmp;
 
     _size--;
