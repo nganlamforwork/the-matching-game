@@ -163,42 +163,110 @@ void GameLL::moveDown()
 
 bool GameLL::checkMatchEqualChar(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	return 1;
+	char tmp1 = _board->_dataColumn[firstCell.second].getPos(_mode - firstCell.first - 1)->_charHolder;
+	char tmp2 = _board->_dataColumn[secondCell.second].getPos(_mode - secondCell.first - 1)->_charHolder;
+	return tmp1 == tmp2;
 }
 
 bool GameLL::checkMatchI(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	return 1;
+	if (firstCell.second == secondCell.second && abs(firstCell.first - secondCell.first) == 1) return 1;
+
+	if (firstCell.first == secondCell.first) {
+		if (secondCell.second < firstCell.second) swap(firstCell, secondCell);
+		for (int i = firstCell.second + 1; i < secondCell.second; i++)
+			if (_board->getTopRow(i) <= firstCell.first)
+				return 0;
+		return 1;
+	}
+	return 0;
 }
 
 bool GameLL::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
+	if (firstCell.first > secondCell.first && _board->_dataColumn[firstCell.second]._tail->_r != firstCell.first) return 0;
+	if (firstCell.first < secondCell.first && _board->_dataColumn[secondCell.second]._tail->_r != secondCell.first) return 0;
+
+	if (secondCell.second < firstCell.second) swap(firstCell, secondCell);
+
+	for (int i = firstCell.second + 1; i < secondCell.second; i++)
+		if (_board->getTopRow(i) <= min(firstCell.first,secondCell.first))
+			return 0;
 	return 1;
 }
 
 bool GameLL::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	return 1;
-}
+	if (firstCell.second > secondCell.second) swap(firstCell, secondCell);
 
-bool GameLL::checkMatchU_R(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
-{
-	return 1;
-}
+	for (int i = firstCell.second + 1; i < secondCell.second; i++)
+		if (_board->getTopRow(i) <= min(firstCell.first, secondCell.first))
+			return 0;
 
-bool GameLL::checkMatchU_C(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
-{
-	return 1;
+	if (firstCell.first > secondCell.first && _board->getTopRow(firstCell.second + 1) > firstCell.first) return 1;
+	if (firstCell.first < secondCell.first && _board->getTopRow(secondCell.second - 1) > secondCell.first) return 1;
+
+	return 0;
 }
 
 bool GameLL::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
-	return 1;
+	//Up - down
+	if (_board->_dataColumn[firstCell.second]._head->_r == firstCell.first &&
+		_board->_dataColumn[secondCell.second]._head->_r == secondCell.first)
+			return 1;
+	if (_board->_dataColumn[firstCell.second]._tail->_r == firstCell.first &&
+		_board->_dataColumn[secondCell.second]._tail->_r == secondCell.first)
+			return 1;
+
+	//Left - right
+	if (firstCell.second > secondCell.second) swap(firstCell, secondCell);
+
+	//Same column
+	if (firstCell.second == secondCell.second) {
+		if (firstCell.second == 0 || firstCell.second == _mode - 1 ||
+			_mode - _board->_dataColumn[firstCell.second - 1]._size > max(firstCell.first, secondCell.first) ||
+			_mode - _board->_dataColumn[firstCell.second + 1]._size > max(firstCell.first, secondCell.first))
+			return 1;
+	}
+
+	//U Left
+	if (firstCell.first > secondCell.first) {
+		for (int i = firstCell.second; i < secondCell.second; i++)
+			if (_board->getTopRow(i) <= secondCell.first)
+				return 0;
+		if (firstCell.second == 0 || _board->getTopRow(firstCell.second - 1) > firstCell.first)
+			return 1;
+	}
+	
+	//U Right
+	if (secondCell.first > firstCell.first) {
+		for (int i = firstCell.second + 1; i <= secondCell.second; i++)
+			if (_board->getTopRow(i) <= firstCell.first)
+				return 0;
+		if (secondCell.second == _mode - 1 || _board->getTopRow(secondCell.second + 1) > secondCell.first)
+			return 1;
+	}
+
+	return 0;
 }
 
 bool GameLL::checkMatch(std::pair<int, int> firstCell, std::pair<int, int> secondCell, const bool& outputNofitication)
 {
-	return 1;
+	if (outputNofitication) {
+		if (!checkMatchEqualChar(firstCell, secondCell)) return _board->outputNoMatch();
+		if (checkMatchI(firstCell, secondCell)) return _board->outputMatchI();
+		if (checkMatchL(firstCell, secondCell)) return _board->outputMatchL();
+		if (checkMatchZ(firstCell, secondCell)) return _board->outputMatchZ();
+		if (checkMatchU(firstCell, secondCell)) return _board->outputMatchU();
+		return _board->outputNoMatch();
+	}
+	if (!checkMatchEqualChar(firstCell, secondCell)) return 0;
+	if (checkMatchI(firstCell, secondCell)) return 1;
+	if (checkMatchL(firstCell, secondCell)) return 1;
+	if (checkMatchZ(firstCell, secondCell)) return 1;
+	if (checkMatchU(firstCell, secondCell)) return 1;
+	return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

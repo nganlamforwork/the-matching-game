@@ -30,6 +30,9 @@ struct BoardLL {
 	int getStatus(const int& r, const int& c);
 	void setStatus(const int& r, const int& c, const int& status);
 
+	//Return the coordination (row) of the top of the specific c column in the board
+	int getTopRow(const int& c);
+
 	void generateBoardData();
 	void drawBoard();
 	void renderBoardData();

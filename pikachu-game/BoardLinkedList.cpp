@@ -54,32 +54,42 @@ void BoardLL::setStatus(const int& r, const int& c, const int& status)
 	_dataColumn[c].getPos(_size - r - 1)->_status = status;
 }
 
+int BoardLL::getTopRow(const int& c)
+{
+	return _size - _dataColumn[c]._size;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 void BoardLL::generateBoardData()
 {
 	srand(time(NULL));
 
+	char* pairCharacter = new char[_size * _size];
+	bool* pos = new bool[_size * _size];
 
-	for (int i = 0; i < _size * _size; i += 2) {
-		char tmp = rand() % 26 + 'A';
-		
-		for (int j = 0; j < 2; j++) {
-			int tmpRand = 0;
-			do {
-				tmpRand = rand() % _size;
-			} while (_dataColumn[tmpRand]._size >= _size);
+	for (int i = 0; i < _size * _size; i += 2) 
+		pairCharacter[i] = pairCharacter[i + 1] = rand() % 26 + 'A';
 
-			int r = _dataColumn[tmpRand]._size;
-			int c = tmpRand;
+	for (int i = 0; i < _size * _size; i++)
+		pos[i] = 0;
 
-			NodeLL* tmpNodeLL = new NodeLL(tmp, NORMAL, getXCoor(c), getYCoor(r), r, c);
+	for (int i = 0; i < _size * _size; i ++) {
+		int tmp;
+		do {
+			tmp = rand() % (_size * _size);
+		} while (pos[tmp] == 1);
+		pos[tmp] = 1;
 
-			_dataColumn[tmpRand].addHead(tmpNodeLL);
+		int c = i % _size;
+		int r = _dataColumn[c]._size;
 
-			delete tmpNodeLL;
-		}
+		NodeLL* tmpNodeLL = new NodeLL(pairCharacter[tmp], NORMAL, getXCoor(c), getYCoor(r), r, c);
+
+		_dataColumn[c].addHead(tmpNodeLL);
 	}
+	delete[] pairCharacter;
+	delete[] pos;
 }
 
 void BoardLL::drawBoard()
