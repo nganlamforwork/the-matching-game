@@ -453,6 +453,25 @@ void BoardLL::repaintColumn(const int& c)
 				Common::gotoXY(j, i);
 				putchar(_imageBoard[i - _top][j - _left]);
 			}
+
+		//Delete top border
+		if (i != 0)
+			for (int i = x - 3; i <= x + 3; i++) {
+				Common::gotoXY(i, y - 2);
+				putchar(_imageBoard[y - 2 - _top][i - _left]);
+			}
+		//Delete right border
+		if (c != _size - 1 && _size - _dataColumn[c+1]._size > i) 
+			for (int i = y - 1; i <= y + 1; i++) {
+				Common::gotoXY(x + 4, i);
+				putchar(_imageBoard[i - _top][x + 4 - _left]);
+			}
+		//Delete left border
+		if (c != 0 && _size - _dataColumn[c - 1]._size > i)
+			for (int i = y - 1; i <= y + 1; i++) {
+				Common::gotoXY(x - 4, i);
+				putchar(_imageBoard[i - _top][x - 4 - _left]);
+			}
 	}
 }
 
