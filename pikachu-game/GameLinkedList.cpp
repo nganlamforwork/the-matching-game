@@ -372,11 +372,73 @@ void GameLL::lockCell()
 
 void GameLL::renderSuggestion(const int& r1, const int& c1, const int& r2, const int& c2)
 {
-	
+	const int BGcolor[] = { AQUA, BRIGHT_WHITE };
+	const int TXcolor[] = { BRIGHT_WHITE, BLACK };
+
+	int cnt = 0, loop = 2;
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(CELL_LENGTH * (_board->_size + 1) + 6 + _left, 2 + _top);
+	cout << '(' << r1 << ',' << c1 << ") and (" << r2 << ',' << c2 << ')';
+
+	while (cnt < loop) {
+		Common::setConsoleColor(BGcolor[cnt], TXcolor[cnt]);
+
+		int x = _board->getXCoor(c1), y = _board->getYCoor(r1);
+
+		for (int i = y - 1; i <= y + 1; i++)
+			for (int j = x - 3; j <= x + 3; j++) {
+				Common::gotoXY(j, i);
+				if (j == x && i == y)
+					putchar(_board->_dataColumn[c1].getPos(_mode-r1-1)->_charHolder);
+				else putchar(' ');
+			}
+
+		x = _board->getXCoor(c2); y = _board->getYCoor(r2);
+		for (int i = y - 1; i <= y + 1; i++)
+			for (int j = x - 3; j <= x + 3; j++) {
+				Common::gotoXY(j, i);
+				if (j == x && i == y)
+					putchar(_board->_dataColumn[c2].getPos(_mode-r2-1)->_charHolder);
+				else putchar(' ');
+			}
+
+		++cnt;
+
+		if (cnt < loop) Sleep(500);
+	}
+	selectCell(GREEN);
 }
 
 bool GameLL::findPair(const bool& suggestion)
 {
-	
-	return 1;
+	for (int c1 = 0; c1 < _mode; c1++) {
+
+		NodeLL* tmp = _board->_dataColumn[c1]._head;
+		int size = _board->_dataColumn[c1]._size;
+
+		for (int i = 0; i < size; i++) {
+			int r1 = _mode - i - 1;
+
+			for (int c2 = c1; c2 < _mode; c2++) {
+				NodeLL* tmp2 = _board->_dataColumn[c2]._head;
+				int size2 = _board->_dataColumn[c2]._size;
+
+				for (int j = 0; j < size2; j++) {
+					if (c1 == c2 && j <= i) continue;
+
+					int r2 = _mode - j - 1;
+
+					if (checkMatch(std::make_pair(r1, c1), std::make_pair(r2, c2), 0)) {
+						if (suggestion) renderSuggestion(r1, c1, r2, c2);
+						return 1;
+					}
+
+					tmp2 = tmp2->_next;
+				}
+			}
+			tmp = tmp->_next;
+		}
+	}
+	return 0;
 }
