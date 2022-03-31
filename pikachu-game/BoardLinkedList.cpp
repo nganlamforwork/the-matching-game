@@ -6,7 +6,6 @@ BoardLL::BoardLL(int size, int left, int top)
 	_left = left;
 	_top = top;
 	_remainCouple = _size * _size / 2;
-	_pos = new int[_size];
 
 	//Board
 	_dataColumn = new LinkedList [_size];
@@ -21,8 +20,6 @@ BoardLL::~BoardLL()
 		_dataColumn = nullptr;
 	delete[] _imageBoard,
 		_imageBoard = nullptr;
-
-	delete[] _pos;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -47,14 +44,22 @@ int BoardLL::getRCoor(const int& y)
 	return (y - _top - 2) / CELL_HEIGHT;
 }
 
+int BoardLL::getStatus(const int& r, const int& c)
+{
+	return _dataColumn[c].getPos(_size - r - 1)->_status;
+}
+
+void BoardLL::setStatus(const int& r, const int& c, const int& status)
+{
+	_dataColumn[c].getPos(_size - r - 1)->_status = status;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 void BoardLL::generateBoardData()
 {
 	srand(time(NULL));
 
-	for (int i = 0; i < _size; i++)
-		_pos[i] = 0;
 
 	for (int i = 0; i < _size * _size; i += 2) {
 		char tmp = rand() % 26 + 'A';
@@ -63,11 +68,12 @@ void BoardLL::generateBoardData()
 			int tmpRand = 0;
 			do {
 				tmpRand = rand() % _size;
-			} while (_pos[tmpRand] >= _size);
+			} while (_dataColumn[tmpRand]._size >= _size);
 
-			_pos[tmpRand]++;
+			int r = _dataColumn[tmpRand]._size;
+			int c = tmpRand;
 
-			NodeLL* tmpNodeLL = new NodeLL(tmp, NORMAL);
+			NodeLL* tmpNodeLL = new NodeLL(tmp, NORMAL, getXCoor(c), getYCoor(r), r, c);
 
 			_dataColumn[tmpRand].addHead(tmpNodeLL);
 
@@ -164,11 +170,14 @@ void BoardLL::drawBoard()
 
 void BoardLL::renderBoardData()
 {
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < _size; j++) {
-			Common::gotoXY(_left + 5 + CELL_LENGTH * j, _top + 2 + CELL_HEIGHT * i);
-			
+	for (int j = 0; j < _size; j++) {	//Column
+		NodeLL* tmp = _dataColumn[j]._head;
+		for (int i = 0; i < _dataColumn[j]._size; i++) {
+			Common::gotoXY(tmp->_x, tmp->_y);
+			putchar(tmp->_charHolder);
+			tmp = tmp->_next;
 		}
+	}
 }
 
 void BoardLL::initBoardBackground()
@@ -299,7 +308,7 @@ void BoardLL::drawLeaderBoard()
 {
 	Common::clearConsole();
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	int left = 50, top = 14;//left và top của leaderboard
+	int left = 50, top = 14;						//left và top của leaderboard
 	int height = 15, width = 30;
 
 	ifstream boardtitle("Leaderboard.txt");
@@ -413,18 +422,81 @@ void BoardLL::drawLeaderBoard()
 
 ////////////////////////////////////////////////////////////////////////////
 
+void BoardLL::repaintColumn(const int& c)
+{
+
+}
+
 void BoardLL::lockCell(const int& r, const int& c)
 {
-	//_dataBoard[r][c].setStatus(LOCK);
+	setStatus(r, c, LOCK);
 }
 
 void BoardLL::unlockCell(const int& r, const int& c)
 {
-	
+	setStatus(r, c, NORMAL);
+	char charHolder = _dataColumn[c].getPos(_size - r - 1)->_charHolder;
+
+	int x = getXCoor(c), y = getYCoor(r);
+
+	Common::gotoXY(x, y);
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	for (int i = y - 1; i <= y + 1; i++)
+		for (int j = x - 3; j <= x + 3; j++) {
+			Common::gotoXY(j, i);
+			if (j == x && i == y) putchar(charHolder);
+			else putchar(' ');
+		}
+	Common::gotoXY(x, y);
 }
 
 void BoardLL::deleteCell(const int& r, const int& c)
 {
+	//_dataColumn[c].removeRC(r, c);
+	setStatus(r, c, DELETED);
+
+	int x = getXCoor(c), y = getYCoor(r);
+
+	Common::gotoXY(x, y);
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+
+	for (int i = y - 1; i <= y + 1; i++)
+		for (int j = x - 3; j <= x + 3; j++) {
+			Common::gotoXY(j, i);
+			putchar(_imageBoard[i - _top][j - _left]);
+		}
+
+	//Delete left border
+	if (c > 0 && getStatus(r, c - 1) == DELETED)
+		for (int i = y - 1; i <= y + 1; i++) {
+			Common::gotoXY(x - 4, i);
+			//putchar(' ');
+			putchar(_imageBoard[i - _top][x - 4 - _left]);
+		}
+	//Delete right border
+	if (c < _size - 1 && getStatus(r, c + 1) == DELETED)
+		for (int i = y - 1; i <= y + 1; i++) {
+			Common::gotoXY(x + 4, i);
+			//putchar(' ');
+			putchar(_imageBoard[i - _top][x + 4 - _left]);
+		}
+	//Delete top border
+	if (r > 0 && getStatus(r - 1, c) == DELETED)
+		for (int i = x - 3; i <= x + 3; i++) {
+			Common::gotoXY(i, y - 2);
+			//putchar(' ');
+			putchar(_imageBoard[y - 2 - _top][i - _left]);
+		}
+	//Delete bottom border
+	if (r < _size - 1 && getStatus(r + 1, c) == DELETED)
+		for (int i = x - 3; i <= x + 3; i++) {
+			Common::gotoXY(i, y + 2);
+			//putchar(' ');
+			putchar(_imageBoard[y + 2 - _top][i - _left]);
+		}
+
+	//Go back to center
+	Common::gotoXY(x, y);
 }
 
 ////////////////////////////////////////////////////////////////////////////

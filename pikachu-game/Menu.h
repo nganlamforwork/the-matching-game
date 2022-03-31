@@ -9,7 +9,9 @@
 #include "Players.h"
 #include "Common.h"
 #include "Game.h"
+#include "GameLinkedList.h"
 #include "Board.h"
+#include "BoardLinkedList.h"
 
 #define EASY 4
 #define MEDIUM 6
@@ -38,7 +40,7 @@ struct Menu
 
 	static void playEasy();
 	static void playMedium();
-	static void playHard();
+	static void playEasyDifficult();
 	static void showLeaderboard();
 	static void aboutPage();		//Haven't done
 	static void exitGame();

@@ -30,42 +30,50 @@ NodeLL* LinkedList::createNodeLL(NodeLL* data)
 void LinkedList::addHead(NodeLL* data)
 {
     NodeLL* tmp = createNodeLL(data);
-    if (_head == nullptr)
+    _size++;
+    if (_head == nullptr) {
         _head = tmp;
-    else {
-        tmp->_next = _head;
-        _head = tmp;
+        _tail = tmp;
+        return;
     }
+    _head->_prev = tmp;
+    tmp->_next = _head;
+    _head = tmp;
 }
 
 void LinkedList::addTail(NodeLL* data)
 {
-    NodeLL* tmp, * p;
-    tmp = createNodeLL(data);
-    if (_head == nullptr)
+    NodeLL* tmp = createNodeLL(data);
+
+    _size++;
+
+    if (_head == nullptr) {
         _head = tmp;
-    else {
-        p = _head;
-        while (p->_next != nullptr)
-            p = p->_next;
-        p->_next = tmp;
+        _tail = tmp;
+        return;
     }
+
+    _tail->_next = tmp;
+    tmp->_prev = _tail;
+    _tail = tmp;
 }
 
 void LinkedList::removeHead()
 {
     if (_head == nullptr) return;
     _head = _head->_next;
+    _head->_prev = nullptr;
+    _size--;
 }
 
 void LinkedList::removeTail()
 {
     if (_head == nullptr) return;
-    if (_head->_next == nullptr) return removeHead();
-    NodeLL* p = _head;
-    while (p->_next->_next != nullptr) //back-1
-        p = p->_next;
-    p->_next = nullptr;
+    
+    _tail = _tail->_prev;
+    _tail->_next = nullptr;
+
+    _size--;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -80,6 +88,7 @@ void LinkedList::removeAll()
         delete tmp;
     }
     _head = nullptr;
+    _size = 0;
 }
 
 NodeLL* LinkedList::getPos(int pos)
@@ -113,6 +122,9 @@ bool LinkedList::addPos(NodeLL* data, int pos)
     NodeLL* tmp = createNodeLL(data);
     tmp->_next = p->_next;
     p->_next = tmp;
+
+    _size++;
+
     return 1;
 }
 void LinkedList::removePos(int pos)
@@ -130,7 +142,11 @@ void LinkedList::removePos(int pos)
     if (i != pos - 1) return; //Not found
 
     NodeLL* tmp = p->_next->_next;
+    if (tmp != nullptr) tmp->_prev = p;
+    else tmp->_prev = p;
     p->_next = tmp;
+
+    _size--;
     //printList();
 }
 
@@ -161,7 +177,12 @@ bool LinkedList::removeRC(int r, int c)
 
     if (p->_next->_r != r || p->_next->_c != c) return 0; //Not found
 
-    p->_next = p->_next->_next;
+    NodeLL* tmp = p->_next->_next;
+    if (tmp != nullptr) tmp->_prev = p;
+    else tmp->_prev = p;
+    p->_next = tmp;
+
+    _size--;
 
     //printList();
 }
@@ -173,7 +194,7 @@ void LinkedList::printList()
     std::ofstream out("check.txt", std::ios::app);
     NodeLL* p = _head;
     while (p != nullptr) {
-       out << p->_charHolder << ' ';
+        out << p->_charHolder << ' ';
         p = p->_next;
     }
     out << '\n';

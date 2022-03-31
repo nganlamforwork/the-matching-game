@@ -26,7 +26,7 @@ void Menu::renderMainScreen()
 	std::unordered_map<std::string, void(*)()> function_map = {
 		{_options[0], playEasy},
 		{_options[1], playMedium},
-		{_options[2], playHard},
+		{_options[2], playEasyDifficult},
 		{_options[3], showLeaderboard},
 		{_options[4], exitGame} };
 
@@ -284,10 +284,10 @@ void Menu::playMedium()
 	game.startGame();
 }
 
-void Menu::playHard()
+void Menu::playEasyDifficult()
 {
 	Common::clearConsole();
-	Game game(HARD);
+	GameLL game(EASY);
 	game.startGame();
 }
 

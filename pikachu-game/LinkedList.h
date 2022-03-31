@@ -6,6 +6,7 @@ struct LinkedList {
 
 	NodeLL* _head = nullptr;
 	NodeLL* _tail = nullptr;
+    int _size = 0;
 
     LinkedList();
     ~LinkedList();

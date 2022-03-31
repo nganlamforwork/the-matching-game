@@ -15,7 +15,6 @@ struct BoardLL {
 	int _size = 4;						//Kích cỡ bàn cờ
 	int _left = 0, _top = 0;			//Tọa độ bắt đầu bàn cờ
 	int _remainCouple = 0;				//Số card còn lại - For scoring
-	int * _pos;
 	LinkedList* _dataColumn;
 	std::string* _imageBoard;
 
@@ -27,6 +26,9 @@ struct BoardLL {
 	int getYCoor(const int& r);
 	int getRCoor(const int& y);
 	int getCCoor(const int& x);
+
+	int getStatus(const int& r, const int& c);
+	void setStatus(const int& r, const int& c, const int& status);
 
 	void generateBoardData();
 	void drawBoard();
@@ -40,6 +42,8 @@ struct BoardLL {
 	void drawEnterName();
 	void drawEndgame(int);
 	static void drawLeaderBoard();
+
+	void repaintColumn(const int& c);
 
 	void lockCell(const int& r, const int& c);
 	void unlockCell(const int& r, const int& c);
