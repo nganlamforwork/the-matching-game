@@ -197,6 +197,7 @@ bool GameLL::checkMatchL(std::pair<int, int> firstCell, std::pair<int, int> seco
 
 bool GameLL::checkMatchZ(std::pair<int, int> firstCell, std::pair<int, int> secondCell)
 {
+	if (firstCell.second == secondCell.second) return 0;
 	if (firstCell.second > secondCell.second) swap(firstCell, secondCell);
 
 	for (int i = firstCell.second + 1; i < secondCell.second; i++)
