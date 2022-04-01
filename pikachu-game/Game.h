@@ -14,10 +14,10 @@ struct Game{
 	int _mode;				
 	int _x, _y;						//Vị trí x, y cursor trên màn hình console - Init tại ô [0,0] (hiện trên màn hình console)
 	int _r, _c;						//Vị trí i,j của cursor trên dataBoard (ẩn)
-	int _left = 15, _top = 2;		//Vị trí board game
+	int _left = 20, _top = 3;		//Vị trí board game
 	bool _finish = 0;
-	int _remainCells, _lockedCells;				//Biến đếm số card đã được lock. Chỉ nằm trong khoảng: 0..2
-	std::vector<std::pair<int, int> > _lockedCellsArr; //First: row - Second: column
+	int _remainCells, _lockedCells;						//Biến đếm số card đã được lock. Chỉ nằm trong khoảng: 0..2
+	std::vector<std::pair<int, int> > _lockedCellsArr;	//First: row - Second: column
 	time_point<system_clock> _timeStart, _timeEnd;
 
 
