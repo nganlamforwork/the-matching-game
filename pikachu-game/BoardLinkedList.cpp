@@ -69,7 +69,7 @@ void BoardLL::generateBoardData()
 	bool* pos = new bool[_size * _size];
 
 	for (int i = 0; i < _size * _size; i += 2) 
-		pairCharacter[i] = pairCharacter[i + 1] = /*rand() % 26 +*/ 'A';
+		pairCharacter[i] = pairCharacter[i + 1] = rand() % 26 + 'A';
 
 	for (int i = 0; i < _size * _size; i++)
 		pos[i] = 0;

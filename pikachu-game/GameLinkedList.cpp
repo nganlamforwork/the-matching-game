@@ -226,9 +226,9 @@ bool GameLL::checkMatchU(std::pair<int, int> firstCell, std::pair<int, int> seco
 	//Same column
 	if (firstCell.second == secondCell.second) {
 		if (firstCell.second == 0 || firstCell.second == _mode - 1 ||
-			_mode - _board->_dataColumn[firstCell.second - 1]._size > max(firstCell.first, secondCell.first) ||
-			_mode - _board->_dataColumn[firstCell.second + 1]._size > max(firstCell.first, secondCell.first))
-			return 1;
+			_board->getTopRow(firstCell.second - 1) > max(firstCell.first, secondCell.first) ||
+			_board->getTopRow(firstCell.second + 1) > max(firstCell.first, secondCell.first))
+				return 1;
 	}
 
 	//U Left
