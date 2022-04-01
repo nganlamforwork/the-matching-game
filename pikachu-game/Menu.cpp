@@ -3,7 +3,7 @@
 Menu::Menu()
 {
 	_curOption = 0	;
-	_optionsSize = 5;
+	_optionsSize = 6;
 	_xMenu = 50;
 	_yMenu = 17;
 }
@@ -26,9 +26,10 @@ void Menu::renderMainScreen()
 	std::unordered_map<std::string, void(*)()> function_map = {
 		{_options[0], playEasy},
 		{_options[1], playMedium},
-		{_options[2], playHard},
-		{_options[3], showLeaderboard},
-		{_options[4], exitGame} };
+		{_options[2], playEasyDifficult},
+		{_options[3], playMediumDifficult},
+		{_options[4], showLeaderboard},
+		{_options[5], exitGame} };
 
 
 	bool loadMenu = 1;
@@ -205,7 +206,7 @@ void Menu::renderOptionsMenu()
 void Menu::renderOptionsText()
 {
 	int left = _xMenu + 8, top = _yMenu + 1;
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 6; i++) {
 		Common::gotoXY(left, top + i*2 );
 		cout << _options[i];
 	}
@@ -284,10 +285,17 @@ void Menu::playMedium()
 	game.startGame();
 }
 
-void Menu::playHard()
+void Menu::playEasyDifficult()
 {
 	Common::clearConsole();
-	Game game(HARD);
+	GameLL game(EASY);
+	game.startGame();
+}
+
+void Menu::playMediumDifficult()
+{
+	Common::clearConsole();
+	GameLL game(MEDIUM);
 	game.startGame();
 }
 
