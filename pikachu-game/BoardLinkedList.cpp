@@ -1,35 +1,62 @@
 ﻿#include "BoardLinkedList.h"
 
-
 BoardLL::BoardLL(int size, int left, int top)
 {
 	_size = size;
 	_left = left;
 	_top = top;
 	_remainCouple = _size * _size / 2;
-	_pairCharacter = new int[_size * _size];
 
 	//Board
-	_dataBoard = new Node * [_size];
-	for (int i = 0; i < _size; i++)
-		_dataBoard[i] = new Node[_size];
+	_dataColumn = new LinkedList [_size];
 
-	//Linked list
-	_dataRow = new LinkedList[_size];
-	_dataColumn = new LinkedList[_size];
+	//Image board
+	_imageBoard = new string[_size * 10];
 }
 
 BoardLL::~BoardLL()
 {
-	for (int i = 0; i < _size; i++)
-		delete[] _dataBoard[i];
-	delete[] _dataBoard,
-		_dataBoard = nullptr;
+	delete[] _dataColumn,
+		_dataColumn = nullptr;
+	delete[] _imageBoard,
+		_imageBoard = nullptr;
+}
 
-	delete[] _dataRow, _dataRow = nullptr;
-	delete[] _dataColumn, _dataColumn = nullptr;
+////////////////////////////////////////////////////////////////////////////
 
-	delete[] _pos;
+int BoardLL::getXCoor(const int& c)
+{
+	return _left + 5 + CELL_LENGTH * c;
+}
+
+int BoardLL::getYCoor(const int& r)
+{
+	return _top + 2 + CELL_HEIGHT * r;
+}
+
+int BoardLL::getCCoor(const int& x)
+{
+	return (x - _left - 5) / CELL_LENGTH;
+}
+
+int BoardLL::getRCoor(const int& y)
+{
+	return (y - _top - 2) / CELL_HEIGHT;
+}
+
+int BoardLL::getStatus(const int& r, const int& c)
+{
+	return _dataColumn[c].getPos(_size - r - 1)->_status;
+}
+
+void BoardLL::setStatus(const int& r, const int& c, const int& status)
+{
+	_dataColumn[c].getPos(_size - r - 1)->_status = status;
+}
+
+int BoardLL::getTopRow(const int& c)
+{
+	return _size - _dataColumn[c]._size;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -38,35 +65,31 @@ void BoardLL::generateBoardData()
 {
 	srand(time(NULL));
 
-	bool* checkDuplicate = new bool[_size * _size];
-	_pos = new int[_size * _size];
+	char* pairCharacter = new char[_size * _size];
+	bool* pos = new bool[_size * _size];
 
-	//Build random character pair
 	for (int i = 0; i < _size * _size; i += 2) 
-		_pairCharacter[i] = rand() % 26 + 'A';
+		pairCharacter[i] = pairCharacter[i + 1] = rand() % 26 + 'A';
 
-	//Build position array
-	for (int i = 0; i < _size * _size; i++) checkDuplicate[i] = 0;
-	for (int i = 0; i < _size * _size; i++) {
-		int tmp = 0;
+	for (int i = 0; i < _size * _size; i++)
+		pos[i] = 0;
 
+	for (int i = 0; i < _size * _size; i ++) {
+		int tmp;
 		do {
 			tmp = rand() % (_size * _size);
-		} while (checkDuplicate[tmp]);
+		} while (pos[tmp] == 1);
+		pos[tmp] = 1;
 
-		checkDuplicate[tmp] = 1;
-		_pos[i] = tmp;
+		int c = i % _size;
+		int r = _dataColumn[c]._size;
+
+		NodeLL* tmpNodeLL = new NodeLL(pairCharacter[tmp], NORMAL, getXCoor(c), getYCoor(r), r, c);
+
+		_dataColumn[c].addHead(tmpNodeLL);
 	}
-
-
-	//Build table
-	for (int i = 0; i < _size * _size; i++) {
-		int r = _pos[i] / _size;
-		int c = _pos[i] % _size;
-		_dataBoard[r][c].setCharHolder(_pairCharacter[i]);
-	}
-
-	delete[] checkDuplicate;
+	delete[] pairCharacter;
+	delete[] pos;
 }
 
 void BoardLL::drawBoard()
@@ -81,6 +104,7 @@ void BoardLL::drawBoard()
 	cout << "ESC: EXIT";
 
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+
 	//Vẽ biên trên
 	Common::gotoXY(_left + 1, _top);
 	putchar(201);
@@ -154,44 +178,34 @@ void BoardLL::drawBoard()
 
 }
 
-void BoardLL::drawScoreBoard()
+void BoardLL::renderBoardData()
 {
-	//Vẽ biên trên
-	for (int i = 1; i < CELL_LENGTH * 3; i++)
-	{
-		Common::gotoXY(CELL_LENGTH * (_size + 1) + i + _left, 0 + _top);
-		putchar('-');
-		//Sleep(5);
+	for (int j = 0; j < _size; j++) {	//Column
+		NodeLL* tmp = _dataColumn[j]._head;
+		for (int i = 0; i < _dataColumn[j]._size; i++) {
+			Common::gotoXY(tmp->_x, tmp->_y);
+			putchar(tmp->_charHolder);
+			tmp = tmp->_next;
+		}
 	}
-
-	//Vẽ biên phải
-	for (int i = 1; i < CELL_HEIGHT * 4; i++)
-	{
-		Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, i + _top);
-		putchar('|');
-		//Sleep(5);
-	}
-
-	//Vẽ biên dưới
-	for (int i = 1; i < CELL_LENGTH * 3; i++)
-	{
-		Common::gotoXY(CELL_LENGTH * (_size + 4) - i + _left, CELL_HEIGHT * 4 + _top);
-		putchar('-');
-		//Sleep(5);
-	}
-
-	//Vẽ biên trái
-	for (int i = CELL_HEIGHT * 4 - 1; i >= 1; i--)
-	{
-		Common::gotoXY(CELL_LENGTH * (_size + 1) + _left, i + _top);
-		putchar('|');
-		//Sleep(5);
-	}
-
-	//drawDuck();
-	drawCat();
-
 }
+
+void BoardLL::initBoardBackground()
+{
+	std::ifstream bg;
+	if (_size == 4) bg.open("images\\plane.txt");
+	else if (_size == 6) bg.open("images\\house.txt");
+
+	int i = 0;
+	while (!bg.eof()) {
+		getline(bg, _imageBoard[i]);
+		int tmp = _imageBoard[i].size();
+		i++;
+	}
+	bg.close();
+}
+
+////////////////////////////////////////////////////////////////////////////
 
 void BoardLL::drawDuck()
 {
@@ -217,69 +231,269 @@ void BoardLL::drawCat()
 	cout << "  U";
 }
 
-void BoardLL::renderBoardData()
+void BoardLL::drawScoreBoard()
 {
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < _size; j++) {
-			Common::gotoXY(_left + 5 + CELL_LENGTH * j, _top + 2 + CELL_HEIGHT * i);
-			_dataBoard[i][j].setX(_left + 5 + CELL_LENGTH * j);
-			_dataBoard[i][j].setY(_top + 2 + CELL_HEIGHT * i);
-			_dataBoard[i][j].setR(i);
-			_dataBoard[i][j].setC(j);
+	//Vẽ biên trên
+	for (int i = 1; i < CELL_LENGTH * 3; i++){
+		Common::gotoXY(CELL_LENGTH * (_size + 1) + i + _left, 0 + _top);
+		putchar(205);
+		//Sleep(5);
+	}
+	putchar(187);
 
-			putchar(_dataBoard[i][j].getCharHolder());
+	//Vẽ biên phải
+	for (int i = 1; i < CELL_HEIGHT * 4; i++){
+		Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, i + _top);
+		putchar(186);
+		//Sleep(5);
+	}
+	Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, CELL_HEIGHT * 4 + _top);
+	putchar(188);
 
-			//Add to linked lists
-			Node* tmp = new Node(_dataBoard[i][j]);
-			_dataRow[i].addTail(tmp);
-			_dataColumn[j].addTail(tmp);
-			//_dataRow[i].printList();
-		}
+	//Vẽ biên dưới
+	for (int i = 1; i < CELL_LENGTH * 3; i++){
+		Common::gotoXY(CELL_LENGTH * (_size + 4) - i + _left, CELL_HEIGHT * 4 + _top);
+		putchar(205);
+		//Sleep(5);
+	}
+	Common::gotoXY(CELL_LENGTH * (_size + 4) - CELL_LENGTH * 3 + _left, CELL_HEIGHT * 4 + _top);
+	putchar(200);
+
+	//Vẽ biên trái
+	for (int i = CELL_HEIGHT * 4 - 1; i >= 1; i--){
+		Common::gotoXY(CELL_LENGTH * (_size + 1) + _left, i + _top);
+		putchar(186);
+		//Sleep(5);
+	}
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left, 0 + _top);
+	putchar(201);
+
+	drawDuck();
+	//drawCat();
+
+}
+
+////////////////////////////////////////////////////////////////////////////
+//https://patorjk.com/software/taag/#p=testall&f=Blocks&t=The%20Matching%20Game%0A
+
+void BoardLL::drawEnterName()
+{
+	int left = 0, top = 0;
+	ifstream inName("EnterName.txt");
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	string s;
+	int i = 0;
+	while (!inName.eof()){
+		Common::gotoXY(left + 20, top + 2 + i);
+		getline(inName, s);
+		cout << s << endl;
+		i++;
+	}
+	inName.close();
+}
+
+void BoardLL::drawEndgame(int score)
+{
+	int left = 0, top = 0;
+	Common::clearConsole();
+	ifstream endgame("GameOver.txt");
+	string s;
+	int i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	while (!endgame.eof()) {
+		Common::gotoXY(left + 20, top + 5 + i);
+		getline(endgame, s);
+		cout << s;
+		i++;
+	}
+	endgame.close();
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::gotoXY(left + 55, top + 5 + 11);
+	cout << "Your score is: " << score << " !!!";
+}
+
+void BoardLL::drawLeaderBoard()
+{
+	Common::clearConsole();
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	int left = 50, top = 14;						//left và top của leaderboard
+	int height = 15, width = 30;
+
+	ifstream boardtitle("Leaderboard.txt");
+	string s;
+	int i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	while (getline(boardtitle, s)) {
+		Common::gotoXY(left - 40, top - 12 + i);
+		cout << s;
+		i++;
+	}
+	boardtitle.close();
+
+	vector<Players> playerList;
+	Players().readPlayersFile(playerList);
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	//Vẽ biên trên
+	for (int i = 1; i < width; i++)
+	{
+		Common::gotoXY(left + i, top);
+		putchar(205);
+	}
+	putchar(187);
+
+	//Vẽ biên phải
+	for (int i = 1; i < height; i++)
+	{
+		Common::gotoXY(left + width, i + top);
+		putchar(186);
+	}
+	Common::gotoXY(left + width, top + height);
+	putchar(188);
+
+	//Vẽ biên dưới
+	for (int i = width - 1; i >= 1; i--)
+	{
+		Common::gotoXY(i + left, top + height);
+		putchar(205);
+	}
+	Common::gotoXY(left, top + height);
+	putchar(200);
+
+	//Vẽ biên trái
+	for (int i = height - 1; i >= 1; i--)
+	{
+		Common::gotoXY(left, top + i);
+		putchar(186);
+	}
+	Common::gotoXY(left, top);
+	putchar(201);
+
+	//chia cột 1
+	Common::gotoXY(left + 16, top);
+	putchar(203);
+	for (int i = 1; i < height; i++)
+	{
+		Common::gotoXY(left + 16, top + i);
+		putchar(186);
+	}
+	Common::gotoXY(left + 16, top + height);
+	putchar(202);
+
+	//chia cột 2
+	Common::gotoXY(left + 22, top);
+	putchar(203);
+	for (int i = 1; i < height; i++)
+	{
+		Common::gotoXY(left + 22, top + i);
+		putchar(186);
+	}
+	Common::gotoXY(left + 22, top + height);
+	putchar(202);
+
+	//chia hàng ngang
+	Common::gotoXY(left, top + 2);
+	putchar(204);
+	for (int i = 1; i < width; i++)
+	{
+		Common::gotoXY(left + i, top + 2);
+		putchar(205);
+	}
+	Common::gotoXY(left + width, top + 2);
+	putchar(185);
+	Common::gotoXY(left + 16, top + 2);
+	putchar(206);
+	Common::gotoXY(left + 22, top + 2);
+	putchar(206);
+
+	Common::gotoXY(left + 1, top + 1);
+	std::cout << "Player name";
+	Common::gotoXY(left + 17, top + 1);
+	std::cout << "Score";
+	Common::gotoXY(left + 24, top + 1);
+	std::cout << "Time";
+
+	int n = 10;
+	if (playerList.size() < n) n = playerList.size();
+	for (int i = 0; i < n; i++)
+	{
+		Common::gotoXY(left + 1, top + 3 + i);
+		cout << playerList[i]._name;
+		Common::gotoXY(left + 18, top + 3 + i);
+		cout << playerList[i]._score;
+		Common::gotoXY(left + 24, top + 3 + i);
+		cout << playerList[i]._display_time << 's';
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-int BoardLL::getXCoor(const int& c)
+void BoardLL::repaintColumn(const int& c)
 {
-	return _left + 5 + CELL_LENGTH * c;
-}
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 
-int BoardLL::getYCoor(const int& r)
-{
-	return _top + 2 + CELL_HEIGHT * r;
-}
+	NodeLL* tmp = _dataColumn[c]._head;
+	for (int i = 0; i < _dataColumn[c]._size; i++) {
+		tmp->_r = _size - i - 1;
+		tmp->_y = getYCoor(tmp->_r);
 
-int BoardLL::getCCoor(const int& x)
-{
-	return (x - _left - 5) / CELL_LENGTH;
-}
+		int x = tmp->_x, y = tmp->_y;
+		Common::gotoXY(x,y);
 
-int BoardLL::getRCoor(const int& y)
-{
-	return (y - _top - 2) / CELL_HEIGHT;
-}
+		for (int i = y - 1; i <= y + 1; i++)
+			for (int j = x - 3; j <= x + 3; j++) {
+				Common::gotoXY(j, i);
+				if (j == x && i == y) putchar(tmp->_charHolder);
+				else putchar(' ');
+			}
+		
+		tmp = tmp->_next;
+	}
+	for (int i = _size - _dataColumn[c]._size - 1; i >= 0; i--) {
+		int x = getXCoor(c), y = getYCoor(i);
 
-char BoardLL::getCharRC(const int& r, const int& c)
-{
-	if (_dataBoard[r][c]._Status == DELETED) return ' ';
-	return _dataBoard[r][c]._CharHolder;
-}
+		Common::gotoXY(x, y);
 
-int BoardLL::getStatus(const int& r, const int& c)
-{
-	return _dataBoard[r][c].getStatus();
-}
+		for (int i = y - 1; i <= y + 1; i++)
+			for (int j = x - 3; j <= x + 3; j++) {
+				Common::gotoXY(j, i);
+				putchar(_imageBoard[i - _top][j - _left]);
+			}
 
-////////////////////////////////////////////////////////////////////////////
+		//Delete top border
+		if (i != 0)
+			for (int i = x - 3; i <= x + 3; i++) {
+				Common::gotoXY(i, y - 2);
+				putchar(_imageBoard[y - 2 - _top][i - _left]);
+			}
+		//Delete right border
+		if (c != _size - 1 && _size - _dataColumn[c+1]._size > i) 
+			for (int i = y - 1; i <= y + 1; i++) {
+				Common::gotoXY(x + 4, i);
+				putchar(_imageBoard[i - _top][x + 4 - _left]);
+			}
+		//Delete left border
+		if (c != 0 && _size - _dataColumn[c - 1]._size > i)
+			for (int i = y - 1; i <= y + 1; i++) {
+				Common::gotoXY(x - 4, i);
+				putchar(_imageBoard[i - _top][x - 4 - _left]);
+			}
+	}
+}
 
 void BoardLL::lockCell(const int& r, const int& c)
 {
-	_dataBoard[r][c].setStatus(LOCK);
+	setStatus(r, c, LOCK);
 }
 
 void BoardLL::unlockCell(const int& r, const int& c)
 {
-	_dataBoard[r][c].setStatus(NORMAL);
+	setStatus(r, c, NORMAL);
+	char charHolder = _dataColumn[c].getPos(_size - r - 1)->_charHolder;
 
 	int x = getXCoor(c), y = getYCoor(r);
 
@@ -288,7 +502,7 @@ void BoardLL::unlockCell(const int& r, const int& c)
 	for (int i = y - 1; i <= y + 1; i++)
 		for (int j = x - 3; j <= x + 3; j++) {
 			Common::gotoXY(j, i);
-			if (j == x && i == y) putchar(getCharRC(r, c));
+			if (j == x && i == y) putchar(charHolder);
 			else putchar(' ');
 		}
 	Common::gotoXY(x, y);
@@ -296,46 +510,16 @@ void BoardLL::unlockCell(const int& r, const int& c)
 
 void BoardLL::deleteCell(const int& r, const int& c)
 {
-	_dataBoard[r][c].setStatus(DELETED);
+	_dataColumn[c].removePos(_size - r - 1);
+	repaintColumn(c);
+	//setStatus(r, c, DELETED);
 
 	int x = getXCoor(c), y = getYCoor(r);
 
 	Common::gotoXY(x, y);
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	putchar(getCharRC(r, c));						//In hình: image[r][c]???
 
-	for (int i = y - 1; i <= y + 1; i++)
-		for (int j = x - 3; j <= x + 3; j++) {
-			Common::gotoXY(j, i);
-			putchar(' ');
-		}
-
-	//Delete left border
-	if (c > 0 && getStatus(r, c - 1) == DELETED)
-		for (int i = y - 1; i <= y + 1; i++) {
-			Common::gotoXY(x - 4, i);
-			putchar(' ');
-		}
-	//Delete right border
-	if (c < _size - 1 && getStatus(r, c + 1) == DELETED)
-		for (int i = y - 1; i <= y + 1; i++) {
-			Common::gotoXY(x + 4, i);
-			putchar(' ');
-		}
-	//Delete top border
-	if (r > 0 && getStatus(r - 1, c) == DELETED)
-		for (int i = x - 3; i <= x + 3; i++) {
-			Common::gotoXY(i, y - 2);
-			putchar(' ');
-		}
-	//Delete bottom border
-	if (r < _size - 1 && getStatus(r + 1, c) == DELETED)
-		for (int i = x - 3; i <= x + 3; i++) {
-			Common::gotoXY(i, y + 2);
-			putchar(' ');
-		}
-
-	//Go back to center
+	//Go back to original
 	Common::gotoXY(x, y);
 }
 
@@ -346,9 +530,6 @@ bool BoardLL::outputMatchI()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	cout << "I-Matched!! :D" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME);
-	cout << "             " << endl;*/
 	return 1;
 }
 
@@ -357,9 +538,6 @@ bool BoardLL::outputMatchU()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	cout << "U-Matched!! :D" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME);
-	cout << "             " << endl;*/
 	return 1;
 }
 
@@ -368,9 +546,6 @@ bool BoardLL::outputMatchL()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	cout << "L-Matched!! :D" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME);
-	cout << "             " << endl;*/
 	return 1;
 }
 
@@ -379,9 +554,6 @@ bool BoardLL::outputMatchZ()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	cout << "Z-Matched!! :D" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME);
-	cout << "             " << endl;*/
 	return 1;
 }
 
@@ -390,8 +562,5 @@ bool BoardLL::outputNoMatch()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
 	cout << "Not a match :(" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME + 100);
-	cout << "              " << endl;*/
 	return 0;
 }

@@ -3,9 +3,10 @@
 #include <fstream>
 #include <string>
 #include <vector>
+
+#include "Common.h"
 #include "Node.h"
-#include "LinkedList.h"
-#include "Players.h"//this might be the reason why i will cry tonight
+#include "Players.h"		//this might be the reason why i will cry tonight
 
 #define CELL_LENGTH 8
 #define CELL_HEIGHT 4
@@ -15,34 +16,33 @@ struct Board {
 	int _size = 4;						//Kích cỡ bàn cờ
 	int _left = 0 , _top = 0;			//Tọa độ bắt đầu bàn cờ
 	int _remainCouple = 0;				//Số card còn lại - For scoring
-	int* _pairCharacter;
+	int* _pairCharacter, * _pos;
 	Node** _dataBoard;
-	int* _pos;
+	std::string* _imageBoard;
 
 	Board(int,int,int);
 	Board();
 	~Board();
 
-	int getSize();
-	int getLeftCoor();
-	int getTopCoor();
-
-	void generateBoardData();
-	void drawBoard();
-	void drawDuck();
-	void drawCat();
-	void drawScoreBoard();
-	void renderBoardData();
-	void drawEndgame(int);
-	void drawEnterName();
-	static void drawLeaderBoard();
-	
 	int getXCoor(const int& c);
 	int getYCoor(const int& r);
 	int getRCoor(const int& y);
 	int getCCoor(const int& x);
 	int getStatus(const int& r, const int& c);
 	char getCharRC(const int& r, const int& c);
+
+	void generateBoardData();
+	void drawBoard();
+	void renderBoardData();
+	void initBoardBackground();
+
+	void drawDuck();
+	void drawCat();
+	void drawScoreBoard();
+
+	void drawEnterName();
+	void drawEndgame(int);
+	static void drawLeaderBoard();
 
 	void lockCell(const int& r, const int& c);
 	void unlockCell(const int& r, const int& c);

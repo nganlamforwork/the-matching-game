@@ -1,11 +1,9 @@
 ﻿#include "Menu.h"
-#include "Common.h"
-#include "Game.h"
 
 Menu::Menu()
 {
 	_curOption = 0	;
-	_optionsSize = 5;
+	_optionsSize = 6;
 	_xMenu = 50;
 	_yMenu = 17;
 }
@@ -13,15 +11,7 @@ Menu::~Menu()
 {
 }
 
-int Menu::getCurrentOption()
-{
-	return _curOption;
-}
-
-void Menu::setCurrentOption(int opt)
-{
-	_curOption = opt;
-}
+////////////////////////////////////////////////////////////////////////////
 
 void Menu::renderMainScreen()
 {
@@ -36,9 +26,10 @@ void Menu::renderMainScreen()
 	std::unordered_map<std::string, void(*)()> function_map = {
 		{_options[0], playEasy},
 		{_options[1], playMedium},
-		{_options[2], playHard},
-		{_options[3], showLeaderboard},
-		{_options[4], exitGame} };
+		{_options[2], playEasyDifficult},
+		{_options[3], playMediumDifficult},
+		{_options[4], showLeaderboard},
+		{_options[5], exitGame} };
 
 
 	bool loadMenu = 1;
@@ -215,7 +206,7 @@ void Menu::renderOptionsMenu()
 void Menu::renderOptionsText()
 {
 	int left = _xMenu + 8, top = _yMenu + 1;
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 6; i++) {
 		Common::gotoXY(left, top + i*2 );
 		cout << _options[i];
 	}
@@ -236,6 +227,18 @@ void Menu::renderCurrentOption()
 	Common::gotoXY(left + 29, top + _curOption * 2);
 	putchar(174);
 
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+int Menu::getCurrentOption()
+{
+	return _curOption;
+}
+
+void Menu::setCurrentOption(int opt)
+{
+	_curOption = opt;
 }
 
 void Menu::offCurrentOption()
@@ -266,62 +269,41 @@ void Menu::changeOption(int direction) //-1: Up - 1: Down
 
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 void Menu::playEasy()
 {
 	Common::clearConsole();
 	Game game(EASY);
 	game.startGame();
 }
+
 void Menu::playMedium()
 {
 	Common::clearConsole();
 	Game game(MEDIUM);
 	game.startGame();
 }
-void Menu::playHard()
+
+void Menu::playEasyDifficult()
 {
 	Common::clearConsole();
-	Game game(HARD);
+	GameLL game(EASY);
 	game.startGame();
 }
+
+void Menu::playMediumDifficult()
+{
+	Common::clearConsole();
+	GameLL game(MEDIUM);
+	game.startGame();
+}
+
 void Menu::aboutPage()
 {
-	int top = 2, left = 35;
-	ifstream about;
-	about.open("tutorial.txt");
-	Common::clearConsole();
-	Common::setUpConsole(22);
-	Common::hideScrollBars();
-
-	/*Common::setConsoleColor(BRIGHT_WHITE, PURPLE);
-	Common::gotoXY(left-5, top -2 );
-	for (int i = 0; i < 51; i++)
-		putchar('_');
-	Common::gotoXY(left - 5, top - 1);
-	for (int i = 0; i < 22; i++) {
-		putchar('|');
-		Common::gotoXY(left - 5, top - 1 + i);
-	}
-	Common::gotoXY(left - 5 + 50, top - 1);
-	for (int i = 0; i < 22; i++) {
-		putchar('|');
-		Common::gotoXY(left - 5 + 50, top - 1 + i);
-	}*/
-
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	std::string line;
-	int cnt = 0;
-	while (!about.eof()) {
-		Common::gotoXY(left, top + (cnt++) * 2);
-		std::getline(about, line);
-		cout << line;
-	}
-
-	/*Common::setConsoleColor(BRIGHT_WHITE, PURPLE);
-	Common::gotoXY(left - 5, top + cnt * 2);
-	for (int i = 0; i < 51; i++)
-		putchar('*');*/
+	
 }
+
 void Menu::showLeaderboard()
 {
 	Board::drawLeaderBoard();

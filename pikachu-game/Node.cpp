@@ -2,7 +2,6 @@
 
 Node::Node()
 {
-	_next = nullptr;
 }
 
 Node::Node(Node* tmp)
@@ -14,13 +13,11 @@ Node::Node(Node* tmp)
 	this->_y = tmp->getY();					
 	this->_r = tmp->getR();
 	this->_c = tmp->getC();
-	this->_next = tmp->getNext();
 }
 Node::Node(char charHolder, int status)
 {
 	this->_CharHolder = charHolder;
 	this->_Status = status;
-	this->_next = nullptr;
 }
 Node::Node(char charHolder, int status, int x, int y)
 {
@@ -28,7 +25,6 @@ Node::Node(char charHolder, int status, int x, int y)
 	this->_Status = status;
 	this->_x = x;
 	this->_y = y;
-	this->_next = nullptr;
 }
 Node::Node(char charHolder, int status, int x, int y, int r, int c)
 {
@@ -38,7 +34,6 @@ Node::Node(char charHolder, int status, int x, int y, int r, int c)
 	this->_y = y;
 	this->_r = r;
 	this->_c = c;
-	this->_next = nullptr;
 }
 
 char Node::getCharHolder()
@@ -76,11 +71,6 @@ int Node::getC()
 	return _c;
 }
 
-Node* Node::getNext()
-{
-	return _next;
-}
-
 void Node::setCharHolder(const char& charHolder)
 {
 	_CharHolder = charHolder;
@@ -109,16 +99,6 @@ void Node::setR(const int& r)
 void Node::setC(const int& c)
 {
 	_c = c;
-}
-
-void Node::setNext()
-{
-	_next = nullptr;
-}
-
-void Node::setNext(Node*& next)
-{
-	_next = next;
 }
 
 void Node::swapChar()

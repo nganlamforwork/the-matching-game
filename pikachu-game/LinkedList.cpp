@@ -5,132 +5,95 @@
 LinkedList::LinkedList(){}
 LinkedList::~LinkedList(){}
 
-Node* LinkedList::createNode(Node* data)
-{
-    Node* tmp = new Node(data);
-    return tmp;
-}
+////////////////////////////////////////////////////////////////////////////
 
-Node* LinkedList::getHead()
+NodeLL* LinkedList::getHead()
 {
     return _head;
 }
 
-Node* LinkedList::getTail()
+NodeLL* LinkedList::getTail()
 {
     return _tail;
 }
 
-void LinkedList::addHead(Node* data)
+////////////////////////////////////////////////////////////////////////////
+
+NodeLL* LinkedList::createNodeLL(NodeLL* data)
 {
-    Node* tmp = createNode(data);
-    if (_head == nullptr)
-        _head = tmp;
-    else {
-        tmp->_next = _head;
-        _head = tmp;
-    }
+    NodeLL* tmp = new NodeLL(data);
+    return tmp;
 }
 
-void LinkedList::addTail(Node* data)
+////////////////////////////////////////////////////////////////////////////
+
+void LinkedList::addHead(NodeLL* data)
 {
-    Node* tmp, * p;
-    tmp = createNode(data);
-    if (_head == nullptr)
+    NodeLL* tmp = createNodeLL(data);
+    _size++;
+    if (_head == nullptr) {
         _head = tmp;
-    else {
-        p = _head;
-        while (p->_next != nullptr)
-            p = p->_next;
-        p->_next = tmp;
+        _tail = tmp;
+        return;
     }
+    _head->_prev = tmp;
+    tmp->_next = _head;
+    _head = tmp;
 }
+
+void LinkedList::addTail(NodeLL* data)
+{
+    NodeLL* tmp = createNodeLL(data);
+
+    _size++;
+
+    if (_head == nullptr) {
+        _head = tmp;
+        _tail = tmp;
+        return;
+    }
+
+    _tail->_next = tmp;
+    tmp->_prev = _tail;
+    _tail = tmp;
+}
+
 void LinkedList::removeHead()
 {
     if (_head == nullptr) return;
     _head = _head->_next;
+    if (_head != nullptr)_head->_prev = nullptr;
+    _size--;
 }
+
 void LinkedList::removeTail()
 {
     if (_head == nullptr) return;
-    if (_head->_next == nullptr) return removeHead();
-    Node* p = _head;
-    while (p->_next->_next != nullptr) //back-1
-        p = p->_next;
-    p->_next = nullptr;
+    
+    _tail = _tail->_prev;
+    if (_tail != nullptr)  _tail->_next = nullptr;
+
+    _size--;
 }
+
+////////////////////////////////////////////////////////////////////////////
+
 void LinkedList::removeAll()
 {
-    Node* p = _head;
-    Node* tmp;
+    NodeLL* p = _head;
+    NodeLL* tmp;
     while (p != nullptr) {
         tmp = p;
         p = p->_next;
         delete tmp;
     }
     _head = nullptr;
+    _size = 0;
 }
-void LinkedList::removePos(int pos)
+
+NodeLL* LinkedList::getPos(int pos)
 {
-    if (pos == 0 || _head == nullptr)
-        removeHead();
-
-    int i = 0;
-    Node* p = _head;
-    while (p->_next->_next != nullptr && i != pos - 1) {
-        p = p->_next;
-        ++i;
-    }
-
-    if (i != pos - 1) return; //Not found
-
-    Node* tmp = p->_next->_next;
-    p->_next = tmp;
-    //printList();
-}
-bool LinkedList::removeRC(int r, int c)
-{
-    if (_head->_r == r && _head->_c == c) {
-        removeHead();
-        return 1;
-    }
-    int i = 0;
-    Node* p = _head;
-    while (p->_next->_next != nullptr && (p->_next->_r != r || p->_next->_c != c)) {
-        p = p->_next;
-        ++i;
-    }
-
-    if (p->_next->_r != r || p->_next->_c != c) return 0; //Not found
-
-    p->_next = p->_next->_next;
-
-    //printList();
-}
-bool LinkedList::addPos(Node* data, int pos)
-{
-    if (pos == 0 || _head == nullptr) {
-        addHead(data);
-        return 1;
-    }
-
-    int i = 0;
-    Node* p = _head;
-    while (p != nullptr && i != pos - 1) {
-        p = p->_next;
-        ++i;
-    }
-
-    if (i != pos - 1) return 0;
-
-    Node* tmp = createNode(data);
-    tmp->_next = p->_next;
-    p->_next = tmp;
-    return 1;
-}
-Node* LinkedList::getPos(int pos)
-{
-    Node* p = _head;
+    NodeLL* p = _head;
     int i = 0;
     while (p != nullptr && i != pos) {
         p = p->_next;
@@ -140,22 +103,102 @@ Node* LinkedList::getPos(int pos)
         return p;
     return nullptr;
 }
-Node* LinkedList::getRC(int r, int c)
+bool LinkedList::addPos(NodeLL* data, int pos)
 {
-    Node* p = _head;
+    if (pos == 0 || _head == nullptr) {
+        addHead(data);
+        return 1;
+    }
+
+    int i = 0;
+    NodeLL* p = _head;
+    while (p != nullptr && i != pos - 1) {
+        p = p->_next;
+        ++i;
+    }
+
+    if (i != pos - 1) return 0;
+
+    NodeLL* tmp = createNodeLL(data);
+    tmp->_next = p->_next;
+    p->_next = tmp;
+
+    _size++;
+
+    return 1;
+}
+void LinkedList::removePos(int pos)
+{
+    if (pos == 0 || _head == nullptr) {
+        removeHead();
+        return;
+    }
+
+    int i = 0;
+    NodeLL* p = _head;
+    while (p->_next->_next != nullptr && i != pos - 1) {
+        p = p->_next;
+        ++i;
+    }
+
+    if (i != pos - 1) return; //Not found
+
+    NodeLL* tmp = p->_next->_next;
+    if (tmp != nullptr)
+        tmp->_prev = p;
+    else _tail = p;
+    p->_next = tmp;
+
+    _size--;
+    //printList();
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+NodeLL* LinkedList::getRC(int r, int c)
+{
+    NodeLL* p = _head;
     while (p != nullptr && (p->_r != r || p->_c != c))
         p = p->_next;
     if (p != nullptr)
         return p;
     return nullptr;
 }
+bool addRC(NodeLL* data, int r, int c) { return 1; }
+bool LinkedList::removeRC(int r, int c)
+{
+    if (_head->_r == r && _head->_c == c) {
+        removeHead();
+        return 1;
+    }
+    int i = 0;
+    NodeLL* p = _head;
+    while (p->_next->_next != nullptr && (p->_next->_r != r || p->_next->_c != c)) {
+        p = p->_next;
+        ++i;
+    }
+
+    if (p->_next->_r != r || p->_next->_c != c) return 0; //Not found
+
+    NodeLL* tmp = p->_next->_next;
+    if (tmp != nullptr)
+        tmp->_prev = p;
+    else _tail = p;
+    p->_next = tmp;
+
+    _size--;
+
+    //printList();
+}
+
+////////////////////////////////////////////////////////////////////////////
 
 void LinkedList::printList()
 {
     std::ofstream out("check.txt", std::ios::app);
-    Node* p = _head;
+    NodeLL* p = _head;
     while (p != nullptr) {
-       out << p->getCharHolder() << ' ';
+        out << p->_charHolder << ' ';
         p = p->_next;
     }
     out << '\n';
@@ -163,7 +206,7 @@ void LinkedList::printList()
 }
 int LinkedList::countElements()
 {
-    Node* p = _head;
+    NodeLL* p = _head;
     int cnt = 0;
     while (p != nullptr) {
         cnt++;
