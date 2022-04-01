@@ -103,12 +103,21 @@ void Board::drawBoard()
 {
 	Common::clearConsole();
 
-	Common::gotoXY(120, 28);
+	Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top + 2);
 	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
-	cout << "H: MOVE SUGGESTION";
-	Common::gotoXY(120, 30);
+	cout << "H: MOVE SUGGESTION     ";
 	Common::setConsoleColor(BRIGHT_WHITE, YELLOW);
 	cout << "ESC: EXIT";
+
+	Common::setConsoleColor(BRIGHT_WHITE, GRAY);
+	for (int i = 0; i < _size; i++) {
+		Common::gotoXY(getXCoor(i), _top - 1);
+		putchar(i + '1');
+	}
+	for (int i = 0; i < _size; i++) {
+		Common::gotoXY(_left - 1, getYCoor(i));
+		putchar(i + 'A');
+	}
 
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	//Vẽ biên trên
@@ -251,27 +260,27 @@ void Board::drawScoreBoard()
 	putchar(187);
 
 	//Vẽ biên phải
-	for (int i = 1; i < CELL_HEIGHT * 4; i++)
+	for (int i = 1; i < CELL_HEIGHT * _size; i++)
 	{
 		Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, i + _top);
 		putchar(186);
 		//Sleep(5);
 	}
-	Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, CELL_HEIGHT * 4 + _top);
+	Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, CELL_HEIGHT * _size + _top);
 	putchar(188);
 
 	//Vẽ biên dưới
 	for (int i = 1; i < CELL_LENGTH * 3; i++)
 	{
-		Common::gotoXY(CELL_LENGTH * (_size + 4) - i + _left, CELL_HEIGHT * 4 + _top);
+		Common::gotoXY(CELL_LENGTH * (_size + 4) - i + _left, CELL_HEIGHT * _size + _top);
 		putchar(205);
 		//Sleep(5);
 	}
-	Common::gotoXY(CELL_LENGTH * (_size + 4) - CELL_LENGTH * 3 + _left, CELL_HEIGHT * 4 + _top);
+	Common::gotoXY(CELL_LENGTH * (_size + 4) - CELL_LENGTH * 3 + _left, CELL_HEIGHT * _size + _top);
 	putchar(200);
 
 	//Vẽ biên trái
-	for (int i = CELL_HEIGHT * 4 - 1; i >= 1; i--)
+	for (int i = CELL_HEIGHT * _size - 1; i >= 1; i--)
 	{
 		Common::gotoXY(CELL_LENGTH * (_size + 1) + _left, i + _top);
 		putchar(186);
@@ -291,31 +300,33 @@ void Board::drawScoreBoard()
 void Board::drawEnterName()
 {
 	int left = 0, top = 0;
-	ifstream inName("EnterName.txt");
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	ifstream inName("titles\\EnterName.txt");
+	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
 	string s;
 	int i = 0;
 	while (!inName.eof())
 	{
-		Common::gotoXY(left + 20, top + 2 + i);
+		Common::gotoXY(left + 25, top + 2 + i);
 		getline(inName, s);
 		cout << s << endl;
 		i++;
 	}
 	inName.close();
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 }
 
 void Board::drawEndgame(int score)
 {
 	int left = 0, top = 0;
 	Common::clearConsole();
-	ifstream endgame("GameOver.txt");
+	ifstream endgame("titles\\GameOver.txt");
 	string s;
 	int i = 0;
 
 	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
 	while (!endgame.eof()) {
-		Common::gotoXY(left + 20, top + 5 + i);
+		Common::gotoXY(left + 24, top + 5 + i);
 		getline(endgame, s);
 		cout << s;
 		i++;
@@ -331,10 +342,10 @@ void Board::drawLeaderBoard()
 {
 	Common::clearConsole();
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	int left = 50, top = 14;//left và top của leaderboard
+	int left = 55, top = 14;						//Left and top of leaderboard
 	int height = 15, width = 30;
 
-	ifstream boardtitle("Leaderboard.txt");
+	ifstream boardtitle("titles\\Leaderboard.txt");
 	string s;
 	int i = 0;
 
@@ -523,10 +534,7 @@ bool Board::outputMatchI()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "I-Matched!! :D" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME);
-	cout << "             " << endl;*/
+	cout << "I-Matched!!! :D" << endl;
 	return 1;
 }
 
@@ -534,10 +542,7 @@ bool Board::outputMatchU()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "U-Matched!! :D" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME);
-	cout << "             " << endl;*/
+	cout << "U-Matched!!! :D" << endl;
 	return 1;
 }
 
@@ -545,10 +550,7 @@ bool Board::outputMatchL()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "L-Matched!! :D" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME);
-	cout << "             " << endl;*/
+	cout << "L-Matched!!! :D" << endl;
 	return 1;
 }
 
@@ -556,10 +558,7 @@ bool Board::outputMatchZ()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "Z-Matched!! :D" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME);
-	cout << "             " << endl;*/
+	cout << "Z-Matched!!! :D" << endl;
 	return 1;
 }
 
@@ -567,9 +566,6 @@ bool Board::outputNoMatch()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "Not a match :(" << endl;
-	/*Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	Sleep(WAIT_TIME + 100);
-	cout << "              " << endl;*/
+	cout << "Not a match :((" << endl;
 	return 0;
 }
