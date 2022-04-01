@@ -42,7 +42,7 @@ void Common::hideScrollBars()
 
 void Common::setConsoleTitle()
 {
-	SetConsoleTitle(L"MATCHING GAME");
+	SetConsoleTitle(L"THE MATCHING GAME");
 }
 
 void Common::disableMaximize()
@@ -123,8 +123,8 @@ int Common::getConsoleInput()
 
 void Common::playSound(int i)
 {
-	static vector<const wchar_t*> soundFile{ L"win.wav", L"lose.wav",
-		L"move.wav", L"enter.wav", L"error.wav",  L"background.wav", L"effect.wav" };
+	static vector<const wchar_t*> soundFile{ L"sounds\\win.wav", L"sounds\\lose.wav",
+		L"sounds\\move.wav", L"sounds\\enter.wav", L"sounds\\error.wav",  L"sounds\\effect.wav" };
 	PlaySound(soundFile[i], NULL, SND_FILENAME | SND_ASYNC);
 }
 

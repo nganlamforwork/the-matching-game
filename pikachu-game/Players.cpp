@@ -24,7 +24,7 @@ std::string Players::getPlayerName()
 {	
 	int left = 0, top = 0;
 	Common::gotoXY(left + 60, top + 12);
-	cout << ">>";
+	cout << ">> ";
 	std::string name;
 	getline(cin, name);
 	while (name.empty())
@@ -87,11 +87,11 @@ void Players::writePlayersFile()
 		if (playerList[i]._display_time.empty())
 		{
 			writeList << endl;
-			writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << setprecision(2) << (float)playerList[i]._time_played.count();
+			writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << fixed << setprecision(2) << (float)playerList[i]._time_played.count();
 			continue;
 		}
 		writeList << endl;
-		writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << playerList[i]._display_time;
+		writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << fixed << setprecision(2) << playerList[i]._display_time;
 	}
 
 	writeList.close();
