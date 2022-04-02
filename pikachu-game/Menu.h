@@ -19,7 +19,7 @@
 
 struct Menu
 {
-	const string _options[6] = { "Easy Mode (4x4)","Easy Mode (6x6)","Difficult Mode (4x4)","Difficult Mode (6x6)","Leaderboard","Exit"};
+	const string _options[6] = { "Standard Mode (4x4)","Standard Mode (6x6)","Difficult Mode (4x4)","Difficult Mode (6x6)","Leaderboard","Exit"};
 	int _optionsSize, _curOption;
 	int _xMenu, _yMenu;			
 	int _left, _top;
