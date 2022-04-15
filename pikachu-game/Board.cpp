@@ -336,6 +336,33 @@ void Board::drawEndgame(int score)
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::gotoXY(left + 55, top + 5 + 11);
 	cout << "Your score is: " << score << " !!!";
+
+	ifstream bht;
+	bht.open("bht.txt");
+
+	i = 0;
+	left = 25;
+	top = 20;
+	while (!bht.eof()) {
+		getline(bht, s);
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	bht.close();
+
+	if (score < 100) {
+		Common::gotoXY(left + 2, top - 2);
+		cout << "You suck :(";
+	}
+	else if (score < 800) {
+		Common::gotoXY(left + 5, top - 2);
+		cout << "I'm suprised";
+	}
+	else {
+		Common::gotoXY(left + 5, top - 2);
+		cout << "Wow I'm amazed";
+	}
 }
 
 void Board::drawLeaderBoard()

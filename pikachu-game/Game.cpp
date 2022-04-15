@@ -100,7 +100,7 @@ void Game::endGame()
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);					//phải để dòng này ở đây thì nó mới fix được ô đen
 
 	_board->drawEndgame(_player->_score);
-	Sleep(1000);
+	Sleep(5000);
 	_board->drawLeaderBoard();
 }
 
