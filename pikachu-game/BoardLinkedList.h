@@ -40,7 +40,7 @@ struct BoardLL {
 
 	void drawDuck();
 	void drawCat();
-	void drawScoreBoard();
+	void drawInformationBoard();
 
 	void drawEnterName();
 	void drawEndgame(int);
