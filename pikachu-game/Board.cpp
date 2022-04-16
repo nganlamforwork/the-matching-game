@@ -397,7 +397,7 @@ void Board::drawLeaderBoard()//cần làm cho nó ra cả chế độ chơi là 
 
 	left = 40;
 	top = 10;							//left and top of the board
-	int height = 20, width = 50;		//board size
+	int height = 15, width = 50;		//board size
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	//Vẽ biên trên
 	for (int i = 1; i < width; i++)
