@@ -6,7 +6,7 @@ Game::Game(int mode)
 	if (_mode == 4) _left += CELL_LENGTH * 2;
 	else _left += CELL_LENGTH;
 	_board = new Board(_mode, _left, _top);
-	_player = new Players(_mode, _left, _top);
+	_player = new Players(_mode);
 	_r = _c = 0;
 	_x = _board->getXCoor(_c);
 	_y = _board->getYCoor(_r);

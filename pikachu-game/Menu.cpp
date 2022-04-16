@@ -150,7 +150,7 @@ void Menu::renderGameTitle()
 			}
 			left += wide[i] + 1;
 			if (i == 7 ) left = 45;
-			Sleep(20);
+			//Sleep(20);
 		}
 
 		colorCount++;
@@ -295,6 +295,10 @@ void Menu::aboutPage()
 void Menu::showLeaderboard()
 {
 	Board::drawLeaderBoard();
+
+	Sleep(10000);//replace this line with fireworks
+
+	BoardLL::drawLeaderBoard();
 }
 
 void Menu::exitGame()

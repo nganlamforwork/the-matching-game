@@ -6,7 +6,7 @@ GameLL::GameLL(int mode)
 	if (_mode == 4) _left += CELL_LENGTH * 2;
 	else _left += CELL_LENGTH;
 	_board = new BoardLL(_mode, _left, _top);
-	_player = new Players(_mode, _left, _top);
+	_player = new Players(_mode);
 	_r = _c = 0;
 	_x = _board->getXCoor(_c);
 	_y = _board->getYCoor(_r);
@@ -94,7 +94,7 @@ void GameLL::endGame()
 
 	Sleep(1500);
 
-	_player->writePlayersFile();
+	_player->writePlayersFileLL();
 
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);					//phải để dòng này ở đây thì nó mới fix được ô đen
 
