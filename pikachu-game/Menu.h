@@ -27,11 +27,14 @@ struct Menu
 	Menu();
 	~Menu();
 
+	void renderLoadingScreen();
 	void renderMainScreen();
 	void renderGameTitle();
 	void renderOptionsMenu();
 	void renderOptionsText();
 	void renderCurrentOption();
+
+	void renderFlowers();
 
 	int getCurrentOption();
 	void setCurrentOption(int opt);
