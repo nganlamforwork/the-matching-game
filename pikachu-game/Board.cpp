@@ -338,7 +338,7 @@ void Board::drawEndgame(int score)
 	cout << "Your score is: " << score << " !!!";
 
 	ifstream bht;
-	bht.open("bht.txt");
+	bht.open("Haha\\bht.txt");
 
 	i = 0;
 	left = 25;
@@ -373,6 +373,55 @@ void Board::drawEndgame(int score)
 	}
 }
 
+void Board::fireworksAni()
+{
+	int left = 0, top = 30;
+	string s;
+	ifstream fireworks;
+
+	string* files;
+	files = new string[11];//what a mess :(((
+	files[0] = "Haha\\fireworks1.txt";
+	files[1] = "Haha\\fireworks2.txt";
+	files[2] = "Haha\\fireworks3.txt";
+	files[3] = "Haha\\fireworks4.txt";
+	files[4] = "Haha\\fireworks5.txt";
+	files[5] = "Haha\\fireworks6.txt";
+	files[6] = "Haha\\fireworks7.txt";
+	files[7] = "Haha\\fireworks8.txt";
+	files[8] = "Haha\\fireworks9.txt";
+	files[9] = "Haha\\fireworks10.txt";
+	files[10] = "Haha\\fireworks11.txt";
+
+	for (int i = 0; i < 11; i++)
+	{
+		fireworks.open(files[i]);
+		int j = 0;
+		if (i == 3) j -= 2;
+		else if (i == 4) j -= 1;
+		else if (i == 6) j--;
+		else if (i == 7) j--;
+		else if (i == 8) j -= 2;
+		else if (i == 9) j--;
+		else if (i == 10) j -= 2;
+
+		while (!fireworks.eof()) {
+			Common::gotoXY(left, top + j - i);
+			getline(fireworks, s);
+			cout << s;
+			j++;
+		}
+		Sleep(50);
+		if (i == 10) break;
+		for (int k = 0; k <= 12; k++)
+		{
+			Common::gotoXY(left, top - k);
+			cout << "                                                       ";
+		}
+		fireworks.close();
+	}
+}
+
 void Board::drawLeaderBoard()//cần làm cho nó ra cả chế độ chơi là board nhỏ hay lớn và difficult hay normal
 {
 	Common::clearConsole();
@@ -396,7 +445,7 @@ void Board::drawLeaderBoard()//cần làm cho nó ra cả chế độ chơi là 
 	Players().readPlayersFile(playerList, "PlayersList.txt");
 
 	left = 40;
-	top = 10;							//left and top of the board
+	top = 15;							//left and top of the board
 	int height = 15, width = 50;		//board size
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	//Vẽ biên trên
@@ -521,6 +570,94 @@ void Board::drawLeaderBoard()//cần làm cho nó ra cả chế độ chơi là 
 		Common::gotoXY(left + 41 + 4 - str.length()/2, top + 3 + i);
 		cout << playerList[i]._score;
 	}
+
+	//dancing flowers
+	/*for (int i = 0; i < 5; i++)
+	{
+		int j = 0;
+		ifstream flower;
+		flower.open("Haha\\Dancing_Flower1.txt");
+		while (!flower.eof()) {
+			Common::gotoXY(5, 20 + j);
+			getline(flower, s);
+			cout << s;
+			j++;
+		}
+		flower.close();
+
+		j = 0;
+		Sleep(200);
+		Common::gotoXY(5, 20 + j - 1);
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		flower.open("Haha\\Dancing_Flower2.txt");
+		while (!flower.eof()) {
+			Common::gotoXY(5, 20 + j - 1);
+			getline(flower, s);
+			cout << s;
+			j++;
+		}
+		flower.close();
+
+		j = 0;
+		Sleep(200);
+		Common::gotoXY(5, 20 + j - 2);
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		flower.open("Haha\\Dancing_Flower3.txt");
+		while (!flower.eof()) {
+			Common::gotoXY(5, 20 + j - 2);
+			getline(flower, s);
+			cout << s;
+			j++;
+		}
+		flower.close();
+
+		j = 0;
+		Sleep(200);
+		Common::gotoXY(5, 20 + j - 2);
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		flower.open("Haha\\Dancing_Flower4.txt");
+		while (!flower.eof()) {
+			Common::gotoXY(5, 20 + j - 3);
+			getline(flower, s);
+			cout << s;
+			j++;
+		}
+		flower.close();
+
+		j = 0;
+		Sleep(200);
+		Common::gotoXY(5, 20 + j - 3);
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+		cout << "          \n";
+	}*/
+	fireworksAni();
 }
 
 ////////////////////////////////////////////////////////////////////////////

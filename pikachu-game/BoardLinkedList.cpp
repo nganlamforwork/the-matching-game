@@ -324,7 +324,7 @@ void BoardLL::drawEndgame(int score)
 	cout << "Your score is: " << score << " !!!";
 
 	ifstream bht;
-	bht.open("bht.txt");
+	bht.open("Haha\\bht.txt");
 
 	i = 0;
 	left = 25;
