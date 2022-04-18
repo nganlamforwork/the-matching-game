@@ -1,27 +1,20 @@
 The green block is the current block you are pointing to.
-
 How to move:
-	 UP			    W
-
-LEFT		RIGHT	OR	A	D
-
-	DOWN			    S
+         UP			   W
+LEFT            RIGHT    OR    A       D
+        DOWN                       S
 
 Press ENTER to select the block. Now, it turns red.
 
-If you have choosed 2 blocks, we will check:
-1. If 2 blocks are matched, we will delete them.
-2. If 2 blocks aren't matched, we will bring it back to original.
+We only delete 2 choosen blocks when they are matched (I, L, Z, U patterns)
 
-The game ends when:
-1. All blocks were deleted.
-2. There aren't any couple of blocks that can be matched.
+The game ends when: All blocks were deleted or there aren't any couple of 
+blocks that can be matched.
 
 Got stuck? Press H for MOVE SUGGESTION.
 
-DIFFICULT MODE: if there are any gap between 2 blocks (on the same
-column), the above blocks will slide down to fill the gap. We call
-that all blocks have gravity and they can't hovering in the air (like
-the real life).
+DIFFICULT MODE: if there are any gap between 2 blocks (on the same column),
+the above blocks will slide down to fill the gap. We call that all blocks 
+have gravity and they can't hovering in the air (like the real life).
 
 Thank you for choosing our game! Wish you have fun!

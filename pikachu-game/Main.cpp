@@ -13,7 +13,7 @@ int main()
 	Common::setUpConsole(18);
 
 	Menu menu;
-	menu.renderMainScreen();
+	menu.startApp();
 
 	Sleep(5000);
 

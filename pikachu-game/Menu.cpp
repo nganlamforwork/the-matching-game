@@ -3,15 +3,20 @@
 Menu::Menu()
 {
 	_curOption = 0	;
-	_optionsSize = 6;
+	_optionsSize = 7;
 	_xMenu = 50;
-	_yMenu = 16;
+	_yMenu = 15;
 }
 Menu::~Menu()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////
+void Menu::startApp()
+{
+	renderLoadingScreen();
+	renderMainScreen();
+}
 
 void Menu::renderLoadingScreen()
 {
@@ -87,23 +92,12 @@ void Menu::renderLoadingScreen()
 
 void Menu::renderMainScreen()
 {
-	renderLoadingScreen();
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::clearConsole();
 	renderGameTitle();
 	renderFlowers();
 	renderOptionsMenu();
 	renderOptionsText();
-
-
-	std::unordered_map<std::string, void(*)()> function_map = {
-		{_options[0], playEasy},
-		{_options[1], playMedium},
-		{_options[2], playEasyDifficult},
-		{_options[3], playMediumDifficult},
-		{_options[4], showLeaderboard},
-		{_options[5], exitGame} };
-
 
 	bool loadMenu = 1;
 	while (true){
@@ -117,7 +111,29 @@ void Menu::renderMainScreen()
 			break;
 		case 6:									//Enter
 			loadMenu = 0;
-			function_map[_options[_curOption]]();
+			switch (_curOption) {
+			case 0: 
+				playEasy();
+				break;
+			case 1:
+				playMedium();
+				break;
+			case 2:
+				playEasyDifficult();
+				break;
+			case 3:
+				playMediumDifficult();
+				break;
+			case 4:
+				showTutorial();
+				break;
+			case 5:
+				showLeaderboard();
+				break;
+			case 6:
+				exitGame();
+				break;
+			}
 			break;
 		default:
 			Common::playSound(ERROR_SOUND);
@@ -215,7 +231,7 @@ void Menu::renderGameTitle()
 		left = 26;
 		for (int i = 0; i < sizeOfWord; i++) {
 			for (int j = 0; j < 5; j++) {
-				if (i > 7) Common::gotoXY(left, 10 + j);
+				if (i > 7) Common::gotoXY(left, 9 + j);
 				else Common::gotoXY(left, 3 + j);
 
 				for (int k = 0; k < wide[i]; k++)
@@ -253,7 +269,7 @@ void Menu::renderOptionsMenu()
 void Menu::renderOptionsText()
 {
 	int left = _xMenu + 9, top = _yMenu + 2;
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < _optionsSize; i++) {
 		Common::gotoXY(left, top + i*2 );
 		cout << _options[i];
 	}
@@ -368,9 +384,61 @@ void Menu::playMediumDifficult()
 	game.startGame();
 }
 
-void Menu::aboutPage()
+void Menu::showTutorial()
 {
-	
+	Common::clearConsole();
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	int left = 22, top = 2;						//Left and top of title
+	int height = 15, width = 30;
+
+	ifstream in;
+	in.open("titles\\HowToPlay.txt");
+	string s;
+	int i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	while (getline(in, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	in.close();
+
+	left = 58, top = 12;
+
+	in.open("titles\\tutorial.txt");
+	i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	while (getline(in, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	in.close();
+
+	left = 3, top = 12;
+
+	in.open("images\\tutorialMonster.txt");
+	i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
+	while (getline(in, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	in.close();
+
+	while (true) {
+		switch (Common::getConsoleInput()) {
+		case 8:									
+			renderMainScreen();
+			break;
+		default:
+			Common::playSound(ERROR_SOUND);
+		}
+	}
 }
 
 void Menu::showLeaderboard()
