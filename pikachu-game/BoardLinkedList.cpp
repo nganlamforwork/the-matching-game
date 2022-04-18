@@ -320,6 +320,21 @@ void BoardLL::drawEnterName()
 		i++;
 	}
 	inName.close();
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	std::ifstream bg;
+	bg.open("images\\flowers.txt");
+
+	i = 0;
+	std::string line;
+	while (!bg.eof()) {
+		Common::gotoXY(18, 24 + i);
+		getline(bg, line);
+		cout << line << '\n';
+		i++;
+	}
+	bg.close();
+
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 }
 
