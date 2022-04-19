@@ -5,7 +5,7 @@ GameLL::GameLL(int mode)
 	_mode = mode;
 	if (_mode == 4) _left += CELL_LENGTH;
 	_board = new BoardLL(_mode, _left, _top);
-	_player = new Players(_mode, _left, _top);
+	_player = new Players(_mode, 2);			//2 is Difficult Mode
 	_r = _c = 0;
 	_x = _board->getXCoor(_c);
 	_y = _board->getYCoor(_r);

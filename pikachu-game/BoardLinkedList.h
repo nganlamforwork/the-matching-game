@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <iostream>
 #include <ctime>
+#include <sstream>
 
 #include "Players.h"
 #include "Common.h"

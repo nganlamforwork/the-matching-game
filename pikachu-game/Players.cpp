@@ -6,16 +6,15 @@ Players::Players()
 
 }
 
-Players::Players(int mode, int left, int top)
+Players::Players(int level, int mode)
 {
-	_size = mode;
-	_left = left;
-	_top = top;
+	_level = level;
+	_mode = mode;
 }
 
 int Players::calculateScore(duration<double> _time_played, int remainCards)
 {
-	_score = ((_size * _size) - remainCards) * 50 - _time_played.count() * 0.5;
+	_score = ((_level * _level) - remainCards) * 50 - _time_played.count() * 0.5;
 	if (_score < 0) _score = 0;
 	return _score;
 }
@@ -41,9 +40,9 @@ std::string Players::getPlayerName()
 	return _name;
 }
 
-void Players::readPlayersFile(std::vector<Players> &player)
+void Players::readPlayersFile(std::vector<Players> &player, std::string file)
 {
-	ifstream readList("PlayersList.txt");
+	ifstream readList(file);
 
 	string s;
 	int i = 0;
@@ -55,6 +54,10 @@ void Players::readPlayersFile(std::vector<Players> &player)
 		tmp._name = s;
 		getline(readList, s, '/');
 		tmp._score = stoi(s);
+		getline(readList, s, '/');
+		tmp._level = stoi(s);
+		getline(readList, s, '/');
+		tmp._mode = stoi(s);
 		getline(readList, s, '\n');
 		tmp._display_time = s;
 		player.push_back(tmp);
@@ -66,16 +69,17 @@ void Players::readPlayersFile(std::vector<Players> &player)
 void Players::writePlayersFile()
 {
 	vector<Players> playerList;
-	Players::readPlayersFile(playerList);
+	Players::readPlayersFile(playerList, "PlayersList.txt");
 	
 	Players tmp;
 	tmp._score = _score;
 	tmp._name = _name;
 	tmp._time_played = _time_played;
+	tmp._level = _level;
+	tmp._mode = _mode;
 	playerList.push_back(tmp);
 	
-	for (int i = playerList.size() - 1; i > 0; i--)
-	{
+	for (int i = playerList.size() - 1; i > 0; i--){
 		if (playerList[i]._score > playerList[i - 1]._score) swap(playerList[i], playerList[i - 1]);
 		else break;
 	}
@@ -84,14 +88,17 @@ void Players::writePlayersFile()
 
 	for (int i = 0; i < playerList.size(); i++)
 	{
-		if (playerList[i]._display_time.empty())
-		{
+		if (playerList[i]._display_time.empty()){
 			writeList << endl;
-			writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << fixed << setprecision(2) << (float)playerList[i]._time_played.count();
+			writeList << playerList[i]._name << "/" << playerList[i]._score << "/";
+			writeList << playerList[i]._level << "/" << playerList[i]._mode << "/";
+			writeList << fixed << setprecision(2) << (float)playerList[i]._time_played.count();
 			continue;
 		}
 		writeList << endl;
-		writeList << playerList[i]._name << "/" << playerList[i]._score << "/" << fixed << setprecision(2) << playerList[i]._display_time;
+		writeList << playerList[i]._name << "/" << playerList[i]._score << "/";
+		writeList << playerList[i]._level << "/" << playerList[i]._mode << "/";
+		writeList << fixed << setprecision(2) << playerList[i]._display_time;
 	}
 
 	writeList.close();

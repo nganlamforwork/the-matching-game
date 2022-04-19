@@ -10,18 +10,19 @@ using namespace std::chrono;
 
 struct Players {
 
-	int _left = 0;
-	int _top = 0;
-	int _size = 0;
+	int _level = 0;
+	int _mode = 0;
+
 	std::string _name = "<Unknown>";
 	int _score = 0;
 	duration<double> _time_played;
+
 	std::string _display_time;
 
 	Players();
-	Players(int,int,int);
+	Players(int, int);
 	
-	void readPlayersFile(std::vector<Players>&);
+	void readPlayersFile(std::vector<Players>&, std::string file);
 	void sortPlayers(std::vector<Players>&);
 	void writePlayersFile();
 

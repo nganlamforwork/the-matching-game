@@ -5,7 +5,7 @@ Game::Game(int mode)
 	_mode = mode;
 	if (_mode == 4) _left += CELL_LENGTH;
 	_board = new Board(_mode, _left, _top);
-	_player = new Players(_mode, _left, _top);
+	_player = new Players(_mode, 1);			//1 is Standard Mode
 	_r = _c = 0;
 	_x = _board->getXCoor(_c);
 	_y = _board->getYCoor(_r);
@@ -96,7 +96,7 @@ void Game::endGame()
 
 	_player->writePlayersFile();
 
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);					//phải để dòng này ở đây thì nó mới fix được ô đen
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);				
 
 	_board->drawEndgame(_player->_score);
 	Sleep(5000);

@@ -15,7 +15,5 @@ int main()
 	Menu menu;
 	menu.startApp();
 
-	Sleep(5000);
-
 	Common::clearConsole();
 }

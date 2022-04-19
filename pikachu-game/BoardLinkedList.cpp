@@ -304,7 +304,6 @@ void BoardLL::drawInformationBoard()
 }
 
 ////////////////////////////////////////////////////////////////////////////
-//https://patorjk.com/software/taag/#p=testall&f=Blocks&t=The%20Matching%20Game%0A
 
 void BoardLL::drawEnterName()
 {
@@ -355,125 +354,168 @@ void BoardLL::drawEndgame(int score)
 	}
 	endgame.close();
 
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::setConsoleColor(BRIGHT_WHITE, RED);
 	Common::gotoXY(left + 55, top + 5 + 11);
-	cout << "Your score is: " << score << " !!!";
+	cout << "Your score is: ";
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	cout << score << " !!!";
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	std::ifstream bg;
+	bg.open("images\\flowers.txt");
+
+	i = 0;
+	std::string line;
+	while (!bg.eof()) {
+		Common::gotoXY(18, 24 + i);
+		getline(bg, line);
+		cout << line << '\n';
+		i++;
+	}
+	bg.close();
 }
 
 void BoardLL::drawLeaderBoard()
 {
 	Common::clearConsole();
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	int left = 55, top = 14;						//Left and top of leaderboard
-	int height = 15, width = 30;
 
 	ifstream boardtitle("titles\\Leaderboard.txt");
 	string s;
 	int i = 0;
 
+	//Left and top of leaderboard title
+	int left = 15, top = 2;
 	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
 	while (getline(boardtitle, s)) {
-		Common::gotoXY(left - 40, top - 12 + i);
+		Common::gotoXY(left, top + i);
 		cout << s;
 		i++;
 	}
 	boardtitle.close();
 
 	vector<Players> playerList;
-	Players().readPlayersFile(playerList);
+	Players().readPlayersFile(playerList, "PlayersList.txt");
+
+	left = 60;
+	top = 12;							//left and top of the board
+	int height = 18, width = 65;		//board size
 
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	//Vẽ biên trên
-	for (int i = 1; i < width; i++)
-	{
+
+	//Draw horizontal borders
+	for (int i = 1; i < width; i++) {
 		Common::gotoXY(left + i, top);
 		putchar(205);
+		Common::gotoXY(i + left, top + height);
+		putchar(205);
 	}
+	Common::gotoXY(left + width, top);
 	putchar(187);
+	Common::gotoXY(left, top + height);
+	putchar(200);
 
-	//Vẽ biên phải
-	for (int i = 1; i < height; i++)
-	{
+	//Draw vertical borders
+	for (int i = 1; i < height; i++) {
 		Common::gotoXY(left + width, i + top);
+		putchar(186);
+		Common::gotoXY(left, top + i);
 		putchar(186);
 	}
 	Common::gotoXY(left + width, top + height);
 	putchar(188);
-
-	//Vẽ biên dưới
-	for (int i = width - 1; i >= 1; i--)
-	{
-		Common::gotoXY(i + left, top + height);
-		putchar(205);
-	}
-	Common::gotoXY(left, top + height);
-	putchar(200);
-
-	//Vẽ biên trái
-	for (int i = height - 1; i >= 1; i--)
-	{
-		Common::gotoXY(left, top + i);
-		putchar(186);
-	}
 	Common::gotoXY(left, top);
 	putchar(201);
 
-	//chia cột 1
-	Common::gotoXY(left + 16, top);
-	putchar(203);
-	for (int i = 1; i < height; i++)
-	{
-		Common::gotoXY(left + 16, top + i);
-		putchar(186);
-	}
-	Common::gotoXY(left + 16, top + height);
-	putchar(202);
-
-	//chia cột 2
-	Common::gotoXY(left + 22, top);
-	putchar(203);
-	for (int i = 1; i < height; i++)
-	{
-		Common::gotoXY(left + 22, top + i);
-		putchar(186);
-	}
-	Common::gotoXY(left + 22, top + height);
-	putchar(202);
-
-	//chia hàng ngang
+	//divide row
 	Common::gotoXY(left, top + 2);
 	putchar(204);
-	for (int i = 1; i < width; i++)
-	{
+	for (int i = 1; i < width; i++) {
 		Common::gotoXY(left + i, top + 2);
 		putchar(205);
 	}
 	Common::gotoXY(left + width, top + 2);
 	putchar(185);
-	Common::gotoXY(left + 16, top + 2);
-	putchar(206);
-	Common::gotoXY(left + 22, top + 2);
-	putchar(206);
 
-	Common::gotoXY(left + 1, top + 1);
-	std::cout << "Player name";
-	Common::gotoXY(left + 17, top + 1);
-	std::cout << "Score";
-	Common::gotoXY(left + 24, top + 1);
-	std::cout << "Time";
+	int posColumn[4] = { 16,27,40,53 };
 
-	int n = 10;
-	if (playerList.size() < n) n = playerList.size();
-	for (int i = 0; i < n; i++)
-	{
-		Common::gotoXY(left + 1, top + 3 + i);
-		cout << playerList[i]._name;
-		Common::gotoXY(left + 18, top + 3 + i);
-		cout << playerList[i]._score;
-		Common::gotoXY(left + 24, top + 3 + i);
-		cout << playerList[i]._display_time << 's';
+	//divid columns
+	for (int i = 0; i < 4; i++) {
+		Common::gotoXY(left + posColumn[i], top);
+		putchar(203);
+		for (int j = 1; j < height; j++) {
+			Common::gotoXY(left + posColumn[i], top + j);
+			putchar(186);
+		}
+		Common::gotoXY(left + posColumn[i], top + height);
+		putchar(202);
+
+		//plus (+) symbol
+		Common::gotoXY(left + posColumn[i], top + 2);
+		putchar(206);
 	}
 
+	string headerNameColumn[5] = { "Player name", "Time", "Level", "Mode", "Score" };
+	int headerPosNameColumn[5] = { 3, 20, 32, 45, 57 };
+
+	Common::setConsoleColor(BRIGHT_WHITE, RED);
+	for (int i = 0; i < 5; i++) {
+		Common::gotoXY(left + headerPosNameColumn[i], top + 1);
+		std::cout << headerNameColumn[i];
+	}
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	string level1 = " Easy ";
+	string level2 = "Medium";
+
+	int n = 15;
+	if (playerList.size() < n) n = playerList.size();
+	for (int i = 0; i < n; i++) {
+		Common::gotoXY(left + 8 - playerList[i]._name.length() / 2, top + 3 + i);
+		cout << playerList[i]._name;
+
+		Common::gotoXY(left + 22 - (playerList[i]._display_time.length() + 1) / 2, top + 3 + i);
+		cout << playerList[i]._display_time << 's';
+
+		Common::gotoXY(left + 31, top + 3 + i);
+		if (playerList[i]._level == 4) cout << level1;
+		else cout << level2;
+
+		Common::gotoXY(left + 43, top + 3 + i);
+		if (playerList[i]._mode == 1) cout << "Standard";
+		else cout << "Difficult";
+
+		stringstream ss;
+		ss << playerList[i]._score;
+		string str = ss.str();
+		Common::gotoXY(left + 59 - str.length() / 2, top + 3 + i);
+		cout << playerList[i]._score;
+	}
+
+	left = 3, top = 12;
+
+	ifstream in;
+	in.open("images\\exitMonster.txt");
+	i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
+	while (getline(in, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	in.close();
+
+	bool loop = 1;
+	while (loop) {
+		switch (Common::getConsoleInput()) {
+		case 1:
+			loop = 0;
+			break;
+		default:
+			Common::playSound(ERROR_SOUND);
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////
