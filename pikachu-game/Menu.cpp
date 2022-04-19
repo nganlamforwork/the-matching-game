@@ -430,15 +430,17 @@ void Menu::showTutorial()
 	}
 	in.close();
 
-	while (true) {
+	bool loop = 1;
+	while (loop) {
 		switch (Common::getConsoleInput()) {
-		case 8:									
-			renderMainScreen();
+		case 8:					
+			loop = 0;
 			break;
 		default:
 			Common::playSound(ERROR_SOUND);
 		}
 	}
+	renderMainScreen();
 }
 
 void Menu::showLeaderboard()
@@ -582,6 +584,7 @@ void Menu::showLeaderboard()
 			Common::playSound(ERROR_SOUND);
 		}
 	}
+	renderMainScreen();
 }
 
 void Menu::exitGame()
