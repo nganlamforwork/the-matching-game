@@ -7,16 +7,16 @@
 
 #include "Common.h"
 #include "Node.h"
-#include "Players.h"		//this might be the reason why i will cry tonight
+#include "Players.h"
 
 #define CELL_LENGTH 8
 #define CELL_HEIGHT 4
 #define WAIT_TIME 600
 
 struct Board {
-	int _size = 4;						//Kích cỡ bàn cờ
-	int _left = 0 , _top = 0;			//Tọa độ bắt đầu bàn cờ
-	int _remainCouple = 0;				//Số card còn lại - For scoring
+	int _size = 4;						//Size of the board
+	int _left = 0 , _top = 0;			//Coordination of the board on the console
+	int _remainCouple = 0;				//For scoring
 	int* _pairCharacter, * _pos;
 	Node** _dataBoard;
 	std::string* _imageBoard;
@@ -39,7 +39,7 @@ struct Board {
 
 	void drawDuck();
 	void drawCat();
-	void drawScoreBoard();
+	void drawInformationBoard();
 
 	void drawEnterName();
 	void drawEndgame(int);

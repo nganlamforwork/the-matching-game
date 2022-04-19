@@ -3,34 +3,101 @@
 Menu::Menu()
 {
 	_curOption = 0	;
-	_optionsSize = 6;
+	_optionsSize = 7;
 	_xMenu = 50;
-	_yMenu = 17;
+	_yMenu = 15;
 }
 Menu::~Menu()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////
+void Menu::startApp()
+{
+	renderLoadingScreen();
+	renderMainScreen();
+}
+
+void Menu::renderLoadingScreen()
+{
+	Common::playSound(BACKGROUND_SOUND);
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::clearConsole();
+
+	renderGameTitle();
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+
+	std::ifstream bg;
+	bg.open("images\\flowers.txt");
+
+	int i = 0;
+	std::string line;
+	while (!bg.eof()) {
+		Common::gotoXY(18, 24+i);
+		getline(bg, line);
+		cout << line << '\n';
+		i++;
+	}
+	bg.close();
+
+	Common::setConsoleColor(BRIGHT_WHITE, GRAY);
+	Common::gotoXY(40, 19);
+	cout << "LOADING...";
+
+	int level = 13;
+
+	//2 horizontal lines
+	for (int x = 55; x < 85; x++) { 
+		Common::gotoXY(x, 18);
+		cout << char(205);
+		Common::gotoXY(x, 20);
+		cout << char(205);
+	}
+
+	//2 vertical lines
+	for (int y = 19; y < 20; y++) { //2 vertical lines
+		Common::gotoXY(55, y);
+		cout << char(186);
+		Common::gotoXY(85, y);
+		cout << char(186);
+	}
+
+	//top left
+	Common::gotoXY(55, 18);
+	cout << (char)201;
+	//top right
+	Common::gotoXY(85, 18);
+	cout << (char)187;
+	//bottom left
+	Common::gotoXY(55, 20);
+	cout << (char)200;
+	//bottom right
+	Common::gotoXY(85, 20);
+	cout << (char)188;
+
+	//bar internal content
+	for (int load = 56; load <= 84; load++) {
+		Common::gotoXY(load, 19);
+		cout << char(178);
+		Sleep(100);
+
+		level += 3;
+		Common::gotoXY(88, 19);
+		cout << level << "%";
+	}
+	
+	Sleep(300);
+}
 
 void Menu::renderMainScreen()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	Common::clearConsole();
-	Common::playSound(BACKGROUND_SOUND);
 	renderGameTitle();
+	renderFlowers();
 	renderOptionsMenu();
 	renderOptionsText();
-
-
-	std::unordered_map<std::string, void(*)()> function_map = {
-		{_options[0], playEasy},
-		{_options[1], playMedium},
-		{_options[2], playEasyDifficult},
-		{_options[3], playMediumDifficult},
-		{_options[4], showLeaderboard},
-		{_options[5], exitGame} };
-
 
 	bool loadMenu = 1;
 	while (true){
@@ -44,7 +111,29 @@ void Menu::renderMainScreen()
 			break;
 		case 6:									//Enter
 			loadMenu = 0;
-			function_map[_options[_curOption]]();
+			switch (_curOption) {
+			case 0: 
+				playEasy();
+				break;
+			case 1:
+				playMedium();
+				break;
+			case 2:
+				playEasyDifficult();
+				break;
+			case 3:
+				playMediumDifficult();
+				break;
+			case 4:
+				showTutorial();
+				break;
+			case 5:
+				showLeaderboard();
+				break;
+			case 6:
+				exitGame();
+				break;
+			}
 			break;
 		default:
 			Common::playSound(ERROR_SOUND);
@@ -135,14 +224,14 @@ void Menu::renderGameTitle()
 	int wide[] = { 12, 10, 8, 10, 10, 6, 11, 10, 10, 10, 12, 10 };
 	int color[] = { LIGHT_AQUA, AQUA, LIGHT_BLUE, BLUE, LIGHT_PURPLE, PURPLE };
 
-	int loop = 8, colorCount = 0, left = 0;
+	int loop = 1, colorCount = 0, left = 0;
 	while (loop--) {
 		Common::setConsoleColor(BRIGHT_WHITE, color[colorCount % 6]);
 
 		left = 26;
 		for (int i = 0; i < sizeOfWord; i++) {
 			for (int j = 0; j < 5; j++) {
-				if (i > 7) Common::gotoXY(left, 10 + j);
+				if (i > 7) Common::gotoXY(left, 9 + j);
 				else Common::gotoXY(left, 3 + j);
 
 				for (int k = 0; k < wide[i]; k++)
@@ -150,7 +239,6 @@ void Menu::renderGameTitle()
 			}
 			left += wide[i] + 1;
 			if (i == 7 ) left = 45;
-			//Sleep(20);
 		}
 
 		colorCount++;
@@ -163,38 +251,25 @@ void Menu::renderOptionsMenu()
 	int left = _xMenu, top = _yMenu;
 	int length = 35, height = _optionsSize*2;
 
-	Common::gotoXY(left, top);
-	putchar(201);
-	for (int i = 1; i < length; i++)
-		putchar(205);
-	putchar(187);
+	std::ifstream bg;
+	bg.open("images\\borderMenu.txt");
 
-	for (int i = 1; i < height; i++){
+	int i = 0;
+	std::string line;
+	while (!bg.eof()) {
+		getline(bg, line);
 		Common::gotoXY(left, top + i);
-		if (i % 2 != 0){
-			putchar(186);
-			Common::gotoXY(left + length, top + i);
-			putchar(186);
-		}
-		else{
-			putchar(199);
-			for (int i = 1; i < length; i++)
-				putchar(196);
-			putchar(182);
-		}
+		cout << line << '\n';
+		i++;
 	}
-	Common::gotoXY(left, top + height);
-	putchar(200);
-	for (int i = 1; i < length; i++){
-		putchar(205);
-	}
-	putchar(188);
+	bg.close();
+
 }
 
 void Menu::renderOptionsText()
 {
-	int left = _xMenu + 8, top = _yMenu + 1;
-	for (int i = 0; i < 6; i++) {
+	int left = _xMenu + 9, top = _yMenu + 2;
+	for (int i = 0; i < _optionsSize; i++) {
 		Common::gotoXY(left, top + i*2 );
 		cout << _options[i];
 	}
@@ -204,17 +279,40 @@ void Menu::renderOptionsText()
 void Menu::renderCurrentOption()
 {
 	Common::playSound(MOVE_SOUND);
-	int left = _xMenu + 8, top = _yMenu + 1;
+	int left = _xMenu + 9, top = _yMenu + 2;
 	Common::setConsoleColor(BRIGHT_WHITE, RED);
 
 	Common::gotoXY(left, top + _curOption * 2);
 	cout << _options[_curOption];
 
-	Common::gotoXY(left - 11, top + _curOption * 2);
+	Common::gotoXY(left - 3, top + _curOption * 2);
 	putchar(175);
-	Common::gotoXY(left + 29, top + _curOption * 2);
+	Common::gotoXY(left + 21, top + _curOption * 2);
 	putchar(174);
 
+}
+
+void Menu::renderFlowers()
+{
+	std::ifstream bg;
+	bg.open("images\\flower.txt");
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+
+	int i = 0;
+	std::string line;
+	while (!bg.eof()) {
+		getline(bg, line);
+
+		Common::gotoXY(_xMenu - 38, _yMenu + 7 + i);
+		cout << line << '\n';
+
+		Common::gotoXY(_xMenu + 40, _yMenu + 7 + i);
+		cout << line << '\n';
+
+		i++;
+	}
+	bg.close();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -231,15 +329,15 @@ void Menu::setCurrentOption(int opt)
 
 void Menu::offCurrentOption()
 {
-	int left = _xMenu + 8, top = _yMenu + 1;
+	int left = _xMenu + 9, top = _yMenu + 2;
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 
 	Common::gotoXY(left, top + _curOption * 2);
 	cout << _options[_curOption];
 
-	Common::gotoXY(left - 11, top + _curOption * 2);
+	Common::gotoXY(left - 3, top + _curOption * 2);
 	putchar(' ');
-	Common::gotoXY(left + 29, top + _curOption * 2);
+	Common::gotoXY(left + 21, top + _curOption * 2);
 	putchar(' ');
 
 }
@@ -254,7 +352,6 @@ void Menu::changeOption(int direction) //-1: Up - 1: Down
 	offCurrentOption();
 	_curOption = tmp;
 	renderCurrentOption();
-
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -287,9 +384,61 @@ void Menu::playMediumDifficult()
 	game.startGame();
 }
 
-void Menu::aboutPage()
+void Menu::showTutorial()
 {
-	
+	Common::clearConsole();
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	int left = 22, top = 2;						//Left and top of title
+	int height = 15, width = 30;
+
+	ifstream in;
+	in.open("titles\\HowToPlay.txt");
+	string s;
+	int i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	while (getline(in, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	in.close();
+
+	left = 58, top = 12;
+
+	in.open("titles\\tutorial.txt");
+	i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	while (getline(in, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	in.close();
+
+	left = 3, top = 12;
+
+	in.open("images\\tutorialMonster.txt");
+	i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
+	while (getline(in, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	in.close();
+
+	while (true) {
+		switch (Common::getConsoleInput()) {
+		case 8:									
+			renderMainScreen();
+			break;
+		default:
+			Common::playSound(ERROR_SOUND);
+		}
+	}
 }
 
 void Menu::showLeaderboard()

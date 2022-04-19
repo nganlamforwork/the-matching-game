@@ -103,11 +103,21 @@ void Board::drawBoard()
 {
 	Common::clearConsole();
 
-	Common::gotoXY(_left + 1, _size * CELL_HEIGHT + _top + 2);
-	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
-	cout << "H: MOVE SUGGESTION     ";
-	Common::setConsoleColor(BRIGHT_WHITE, YELLOW);
-	cout << "ESC: EXIT";
+	if (_size == 4) {
+		Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+		std::ifstream bg;
+		bg.open("images\\flowers.txt");
+
+		int i = 0;
+		std::string line;
+		while (!bg.eof()) {
+			Common::gotoXY(18, 24 + i);
+			getline(bg, line);
+			cout << line << '\n';
+			i++;
+		}
+		bg.close();
+	}
 
 	Common::setConsoleColor(BRIGHT_WHITE, GRAY);
 	for (int i = 0; i < _size; i++) {
@@ -226,13 +236,13 @@ void Board::initBoardBackground()
 
 void Board::drawDuck()
 {
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 10 + _top);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 15 + _left, 10 + _top);
 	cout << "  __";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 11 + _top);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 15 + _left, 11 + _top);
 	cout << "<(o )___";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 12 + _top);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 15 + _left, 12 + _top);
 	cout << " ( ._> /";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 8 + _left, 13 + _top);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + 15 + _left, 13 + _top);
 	cout << "  `---' ";
 }
 
@@ -248,50 +258,57 @@ void Board::drawCat()
 	cout << "  U";
 }
 
-void Board::drawScoreBoard()
+void Board::drawInformationBoard()
 {
-	//Vẽ biên trên
-	for (int i = 1; i < CELL_LENGTH * 3; i++)
-	{
-		Common::gotoXY(CELL_LENGTH * (_size + 1) + i + _left, 0 + _top);
+	int boardSize = 6;
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+
+	//Draw horizontal borders
+	for (int i = 1; i < CELL_LENGTH * (boardSize-1); i++){
+		Common::gotoXY(CELL_LENGTH * (_size + 1) + i + _left, _top);
 		putchar(205);
-		//Sleep(5);
+
+		Common::gotoXY(CELL_LENGTH * (_size + boardSize) - i + _left, CELL_HEIGHT * _size + _top);
+		putchar(205);
+
+		Common::gotoXY(CELL_LENGTH * (_size + boardSize) - i + _left, _top + 2);
+		putchar(205);
 	}
+	Common::gotoXY(CELL_LENGTH* (_size + 1) + CELL_LENGTH * (boardSize - 1) + _left, _top);
 	putchar(187);
-
-	//Vẽ biên phải
-	for (int i = 1; i < CELL_HEIGHT * _size; i++)
-	{
-		Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, i + _top);
-		putchar(186);
-		//Sleep(5);
-	}
-	Common::gotoXY(CELL_LENGTH * (_size + 4) + _left, CELL_HEIGHT * _size + _top);
-	putchar(188);
-
-	//Vẽ biên dưới
-	for (int i = 1; i < CELL_LENGTH * 3; i++)
-	{
-		Common::gotoXY(CELL_LENGTH * (_size + 4) - i + _left, CELL_HEIGHT * _size + _top);
-		putchar(205);
-		//Sleep(5);
-	}
-	Common::gotoXY(CELL_LENGTH * (_size + 4) - CELL_LENGTH * 3 + _left, CELL_HEIGHT * _size + _top);
+	Common::gotoXY(CELL_LENGTH * (_size + boardSize) - CELL_LENGTH * (boardSize - 1) + _left, CELL_HEIGHT * _size + _top);
 	putchar(200);
 
-	//Vẽ biên trái
-	for (int i = CELL_HEIGHT * _size - 1; i >= 1; i--)
-	{
+	//Draw vertical borders
+	for (int i = 1; i < CELL_HEIGHT * _size; i++){
+		Common::gotoXY(CELL_LENGTH * (_size + boardSize) + _left, i + _top);
+		putchar(186);
 		Common::gotoXY(CELL_LENGTH * (_size + 1) + _left, i + _top);
 		putchar(186);
-		//Sleep(5);
 	}
+	Common::gotoXY(CELL_LENGTH * (_size + boardSize) + _left, CELL_HEIGHT * _size + _top);
+	putchar(188);
 	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left, 0 + _top);
 	putchar(201);
 
-	drawDuck();
-	//drawCat();
+	//Cout text
 
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left + 12, _top + 1);
+	cout << "INFORMATION BOARD";
+
+	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left + 4, _top + 4);
+	cout << "Last matching: ";
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left + 4, _top + 8);
+	cout << "Last move suggestion: ";
+
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left + 4, CELL_HEIGHT * _size + _top - 2);
+	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
+	cout << "H: MOVE SUGGESTION     ";
+	Common::setConsoleColor(BRIGHT_WHITE, YELLOW);
+	cout << "ESC: EXIT";
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -312,6 +329,20 @@ void Board::drawEnterName()
 		i++;
 	}
 	inName.close();
+
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	std::ifstream bg;
+	bg.open("images\\flowers.txt");
+
+	i = 0;
+	std::string line;
+	while (!bg.eof()) {
+		Common::gotoXY(18, 24 + i);
+		getline(bg, line);
+		cout << line << '\n';
+		i++;
+	}
+	bg.close();
 
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 }
@@ -739,39 +770,39 @@ void Board::deleteCell(const int& r, const int& c)
 bool Board::outputMatchI()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "I-Matched!!! :D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left + 12, _top + 6);
+	cout << "I-Matched!!! :D";
 	return 1;
 }
 
 bool Board::outputMatchU()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "U-Matched!!! :D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left + 12, _top + 6);
+	cout << "U-Matched!!! :D";
 	return 1;
 }
 
 bool Board::outputMatchL()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "L-Matched!!! :D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left + 12, _top + 6);
+	cout << "L-Matched!!! :D";
 	return 1;
 }
 
 bool Board::outputMatchZ()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "Z-Matched!!! :D" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left + 12, _top + 6);
+	cout << "Z-Matched!!! :D";
 	return 1;
 }
 
 bool Board::outputNoMatch()
 {
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 6 + _left, 2 + _top);
-	cout << "Not a match :((" << endl;
+	Common::gotoXY(CELL_LENGTH * (_size + 1) + _left + 12, _top + 6);
+	cout << "Not a match :((";
 	return 0;
 }
