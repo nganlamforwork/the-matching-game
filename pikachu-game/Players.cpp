@@ -15,6 +15,8 @@ Players::Players(int level, int mode)
 int Players::calculateScore(duration<double> _time_played, int remainCards)
 {
 	_score = ((_level * _level) - remainCards) * 50 - _time_played.count() * 0.5;
+	_score = _score * (_level == 6 ? 1.5 : 1);
+	_score = _score * (_mode == 2 ? 1.5 : 1);
 	if (_score < 0) _score = 0;
 	return _score;
 }
@@ -48,8 +50,8 @@ void Players::readPlayersFile(std::vector<Players> &player, std::string file)
 	int i = 0;
 	Players tmp;
 	readList.ignore();
-	while(!readList.eof())
-	{
+
+	while(!readList.eof()){
 		getline(readList, s, '/');
 		tmp._name = s;
 		getline(readList, s, '/');
@@ -106,15 +108,12 @@ void Players::writePlayersFile()
 
 void Players::sortPlayers(vector<Players>& playerList)//working on ideas
 {
-	for (int i = 1; i < playerList.size(); i++)
-	{
-		if (playerList[i]._score > playerList[i - 1]._score)
-		{
+	for (int i = 1; i < playerList.size(); i++){
+		if (playerList[i]._score > playerList[i - 1]._score){
 			int index = i - 1;
 			int score = playerList[i]._score;
 			Players key = playerList[i];
-			while (index >= 0 && score > playerList[index]._score)
-			{
+			while (index >= 0 && score > playerList[index]._score){
 				playerList[i + 1] = playerList[i];
 				index--;
 			}

@@ -226,30 +226,6 @@ void BoardLL::initBoardBackground()
 
 ////////////////////////////////////////////////////////////////////////////
 
-void BoardLL::drawDuck()
-{
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 15 + _left, 10 + _top);
-	cout << "  __";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 15 + _left, 11 + _top);
-	cout << "<(o )___";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 15 + _left, 12 + _top);
-	cout << " ( ._> /";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 15 + _left, 13 + _top);
-	cout << "  `---' ";
-}
-
-void BoardLL::drawCat()
-{
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 10 + _top);
-	cout << "___/|";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 11 + _top);
-	cout << "\\o.O|";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 12 + _top);
-	cout << "(___)";
-	Common::gotoXY(CELL_LENGTH * (_size + 1) + 10 + _left, 13 + _top);
-	cout << "  U";
-}
-
 void BoardLL::drawInformationBoard()
 {
 	int boardSize = 6;
@@ -358,7 +334,7 @@ void BoardLL::drawEndgame(int score)
 	Common::gotoXY(left + 55, top + 5 + 11);
 	cout << "Your score is: ";
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	cout << score << " !!!";
+	cout << score;
 
 	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
 	std::ifstream bg;

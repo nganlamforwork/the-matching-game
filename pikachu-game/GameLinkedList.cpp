@@ -91,11 +91,11 @@ void GameLL::endGame()
 	_player->_time_played = _timeEnd - _timeStart;
 	_player->calculateScore(_player->_time_played, _remainCells);
 
-	Sleep(1500);
+	Sleep(1000);
 
 	_player->writePlayersFile();
 
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);					//phải để dòng này ở đây thì nó mới fix được ô đen
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 
 	_board->drawEndgame(_player->_score);
 	Sleep(1000);

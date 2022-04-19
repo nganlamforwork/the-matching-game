@@ -39,8 +39,6 @@ struct BoardLL {
 	void renderBoardData();
 	void initBoardBackground();
 
-	void drawDuck();
-	void drawCat();
 	void drawInformationBoard();
 
 	void drawEnterName();
