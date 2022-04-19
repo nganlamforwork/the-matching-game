@@ -418,7 +418,7 @@ void BoardLL::drawLeaderBoard()
 	Players().readPlayersFile(playerList, "PlayersListLL.txt");
 
 	left = 40;
-	top = 10;							//left and top of the board
+	top = 15;							//left and top of the board
 	int height = 15, width = 50;		//board size
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	//Vẽ biên trên
