@@ -3,10 +3,9 @@
 GameLL::GameLL(int mode)
 {
 	_mode = mode;
-	if (_mode == 4) _left += CELL_LENGTH * 2;
-	else _left += CELL_LENGTH;
+	if (_mode == 4) _left += CELL_LENGTH;
 	_board = new BoardLL(_mode, _left, _top);
-	_player = new Players(_mode, _left, _top);
+	_player = new Players(_mode, 2);			//2 is Difficult Mode
 	_r = _c = 0;
 	_x = _board->getXCoor(_c);
 	_y = _board->getYCoor(_r);
@@ -31,7 +30,7 @@ void GameLL::renderBoard()
 	_board->generateBoardData();
 	_board->initBoardBackground();
 	_board->renderBoardData();
-	_board->drawScoreBoard();
+	_board->drawInformationBoard();
 }
 
 void GameLL::startGame()
@@ -381,7 +380,7 @@ void GameLL::renderSuggestion(const int& r1, const int& c1, const int& r2, const
 	int cnt = 0, loop = 2;
 
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	Common::gotoXY(CELL_LENGTH * (_board->_size + 1) + 6 + _left, 2 + _top);
+	Common::gotoXY(CELL_LENGTH * (_board->_size + 1) + _left + 12, _top + 10);
 	cout << '(' << (char)(r1 + 'A') << ',' << c1 + 1 << ") and (" << (char)(r2 + 'A') << ',' << c2 + 1 << ')';
 
 	while (cnt < loop) {

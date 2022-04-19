@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <iostream>
 #include <ctime>
+#include <sstream>
 
 #include "Players.h"
 #include "Common.h"
@@ -40,7 +41,7 @@ struct BoardLL {
 
 	void drawDuck();
 	void drawCat();
-	void drawScoreBoard();
+	void drawInformationBoard();
 
 	void drawEnterName();
 	void drawEndgame(int);
