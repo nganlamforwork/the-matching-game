@@ -321,8 +321,7 @@ void Board::drawEnterName()
 	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
 	string s;
 	int i = 0;
-	while (!inName.eof())
-	{
+	while (!inName.eof()){
 		Common::gotoXY(left + 25, top + 2 + i);
 		getline(inName, s);
 		cout << s << endl;
@@ -364,96 +363,28 @@ void Board::drawEndgame(int score)
 	}
 	endgame.close();
 
-	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	Common::setConsoleColor(BRIGHT_WHITE, RED);
 	Common::gotoXY(left + 55, top + 5 + 11);
-	cout << "Your score is: " << score << " !!!";
+	cout << "Your score is: ";
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	cout << score << " !!!";
 
-	ifstream bht;
-	bht.open("Haha\\bht.txt");
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	std::ifstream bg;
+	bg.open("images\\flowers.txt");
 
 	i = 0;
-	left = 25;
-	top = 20;
-	while (!bht.eof()) {
-		getline(bht, s);
-		Common::gotoXY(left, top + i);
-		cout << s;
+	std::string line;
+	while (!bg.eof()) {
+		Common::gotoXY(18, 24 + i);
+		getline(bg, line);
+		cout << line << '\n';
 		i++;
 	}
-	bht.close();
-
-	if (score < 100) {
-		Common::gotoXY(left + 2, top - 2);
-		cout << "Game nay de~ ma?";
-	}
-	else if (score < 400) {
-		Common::gotoXY(left + 5, top - 2);
-		cout << "Cui pap z";
-	}
-	else if (score < 600) {
-		Common::gotoXY(left + 5, top - 2);
-		cout << "3 ngay la xong game nay roi";
-	}
-	else if (score < 900){
-		Common::gotoXY(left + 5, top - 2);
-		cout << "Gk3 v4y tr0i";
-	}
-	else {
-		Common::gotoXY(left + 5, top - 2);
-		cout << "Diem ao~ zay";
-	}
+	bg.close();
 }
 
-void Board::fireworksAni()
-{
-	int left = 0, top = 30;
-	string s;
-	ifstream fireworks;
-
-	string* files;
-	files = new string[11];//what a mess :(((
-	files[0] = "Haha\\fireworks1.txt";
-	files[1] = "Haha\\fireworks2.txt";
-	files[2] = "Haha\\fireworks3.txt";
-	files[3] = "Haha\\fireworks4.txt";
-	files[4] = "Haha\\fireworks5.txt";
-	files[5] = "Haha\\fireworks6.txt";
-	files[6] = "Haha\\fireworks7.txt";
-	files[7] = "Haha\\fireworks8.txt";
-	files[8] = "Haha\\fireworks9.txt";
-	files[9] = "Haha\\fireworks10.txt";
-	files[10] = "Haha\\fireworks11.txt";
-
-	for (int i = 0; i < 11; i++)
-	{
-		fireworks.open(files[i]);
-		int j = 0;
-		if (i == 3) j -= 2;
-		else if (i == 4) j -= 1;
-		else if (i == 6) j--;
-		else if (i == 7) j--;
-		else if (i == 8) j -= 2;
-		else if (i == 9) j--;
-		else if (i == 10) j -= 2;
-
-		while (!fireworks.eof()) {
-			Common::gotoXY(left, top + j - i);
-			getline(fireworks, s);
-			cout << s;
-			j++;
-		}
-		Sleep(50);
-		if (i == 10) break;
-		for (int k = 0; k <= 12; k++)
-		{
-			Common::gotoXY(left, top - k);
-			cout << "                                                       ";
-		}
-		fireworks.close();
-	}
-}
-
-void Board::drawLeaderBoard()//cần làm cho nó ra cả chế độ chơi là board nhỏ hay lớn và difficult hay normal
+void Board::drawLeaderBoard()
 {
 	Common::clearConsole();
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
@@ -465,7 +396,7 @@ void Board::drawLeaderBoard()//cần làm cho nó ra cả chế độ chơi là 
 	//Left and top of leaderboard title
 	int left = 15, top = 2;
 	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
-	while (getline(boardtitle, s)){
+	while (getline(boardtitle, s)) {
 		Common::gotoXY(left, top + i);
 		cout << s;
 		i++;
@@ -475,220 +406,125 @@ void Board::drawLeaderBoard()//cần làm cho nó ra cả chế độ chơi là 
 	vector<Players> playerList;
 	Players().readPlayersFile(playerList, "PlayersList.txt");
 
-	left = 40;
-	top = 15;							//left and top of the board
-	int height = 15, width = 50;		//board size
+	left = 60;
+	top = 12;							//left and top of the board
+	int height = 18, width = 65;		//board size
+
 	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	//Vẽ biên trên
-	for (int i = 1; i < width; i++)
-	{
+
+	//Draw horizontal borders
+	for (int i = 1; i < width; i++) {
 		Common::gotoXY(left + i, top);
 		putchar(205);
+		Common::gotoXY(i + left, top + height);
+		putchar(205);
 	}
+	Common::gotoXY(left + width, top);
 	putchar(187);
+	Common::gotoXY(left, top + height);
+	putchar(200);
 
-	//Vẽ biên phải
-	for (int i = 1; i < height; i++)
-	{
+	//Draw vertical borders
+	for (int i = 1; i < height; i++) {
 		Common::gotoXY(left + width, i + top);
+		putchar(186);
+		Common::gotoXY(left, top + i);
 		putchar(186);
 	}
 	Common::gotoXY(left + width, top + height);
 	putchar(188);
-
-	//Vẽ biên dưới
-	for (int i = width - 1; i >= 1; i--)
-	{
-		Common::gotoXY(i + left, top + height);
-		putchar(205);
-	}
-	Common::gotoXY(left, top + height);
-	putchar(200);
-
-	//Vẽ biên trái
-	for (int i = height - 1; i >= 1; i--)
-	{
-		Common::gotoXY(left, top + i);
-		putchar(186);
-	}
 	Common::gotoXY(left, top);
 	putchar(201);
 
-	//chia cột 1
-	Common::gotoXY(left + 16, top);
-	putchar(203);
-	for (int i = 1; i < height; i++)
-	{
-		Common::gotoXY(left + 16, top + i);
-		putchar(186);
-	}
-	Common::gotoXY(left + 16, top + height);
-	putchar(202);
-
-	//chia cột 2
-	Common::gotoXY(left + 27, top);
-	putchar(203);
-	for (int i = 1; i < height; i++)
-	{
-		Common::gotoXY(left + 27, top + i);
-		putchar(186);
-	}
-	Common::gotoXY(left + 27, top + height);
-	putchar(202);
-
-	//chia cột 3
-	Common::gotoXY(left + 40, top);
-	putchar(203);
-	for (int i = 1; i < height; i++)
-	{
-		Common::gotoXY(left + 40, top + i);
-		putchar(186);
-	}
-	Common::gotoXY(left + 40, top + height);
-	putchar(202);
-
-	//chia hàng ngang
+	//divide row
 	Common::gotoXY(left, top + 2);
 	putchar(204);
-	for (int i = 1; i < width; i++)
-	{
+	for (int i = 1; i < width; i++) {
 		Common::gotoXY(left + i, top + 2);
 		putchar(205);
 	}
-	//Dấu cộng ở giữa hàng và cột
 	Common::gotoXY(left + width, top + 2);
 	putchar(185);
-	Common::gotoXY(left + 16, top + 2);
-	putchar(206); 
-	Common::gotoXY(left + 27, top + 2);
-	putchar(206);
-	Common::gotoXY(left + 40, top + 2);
-	putchar(206);
 
-	Common::gotoXY(left + 3, top + 1);
-	std::cout << "Player name";
-	Common::gotoXY(left + 20, top + 1);
-	std::cout << "Time";
-	Common::gotoXY(left + 32, top + 1);
-	std::cout << "Mode";
-	Common::gotoXY(left + 43, top + 1);
-	std::cout << "Score";
-	
-	string mode1 = "Easy";
-	string mode2 = "Medium";
-	int n = 17;
-	if (playerList.size() < n) n = playerList.size();
-	for (int i = 0; i < n; i++)
-	{
-		Common::gotoXY(left + 8 - playerList[i]._name.length()/2, top + 3 + i);
-		cout << playerList[i]._name;
-		Common::gotoXY(left + 22 - (playerList[i]._display_time.length()+1)/2, top + 3 + i);
-		cout << playerList[i]._display_time << 's';
-		switch (playerList[i]._mode)
-		{
-		case 4:
-			Common::gotoXY(left + 28 + 6 - mode1.length() / 2, top + 3 + i);
-			cout << mode1;
-			break;
-		case 6:
-			Common::gotoXY(left + 28 + 6 - mode2.length() / 2, top + 3 + i);
-			cout << mode2;
-			break;
+	int posColumn[4] = { 16,27,40,53 };
+
+	//divid columns
+	for (int i = 0; i < 4; i++) {
+		Common::gotoXY(left + posColumn[i], top);
+		putchar(203);
+		for (int j = 1; j < height; j++) {
+			Common::gotoXY(left + posColumn[i], top + j);
+			putchar(186);
 		}
+		Common::gotoXY(left + posColumn[i], top + height);
+		putchar(202);
+
+		//plus (+) symbol
+		Common::gotoXY(left + posColumn[i], top + 2);
+		putchar(206);
+	}
+
+	string headerNameColumn[5] = { "Player name", "Time", "Level", "Mode", "Score" };
+	int headerPosNameColumn[5] = { 3, 20, 32, 45, 57 };
+
+	Common::setConsoleColor(BRIGHT_WHITE, RED);
+	for (int i = 0; i < 5; i++) {
+		Common::gotoXY(left + headerPosNameColumn[i], top + 1);
+		std::cout << headerNameColumn[i];
+	}
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	string level1 = " Easy ";
+	string level2 = "Medium";
+
+	int n = 15;
+	if (playerList.size() < n) n = playerList.size();
+	for (int i = 0; i < n; i++) {
+		Common::gotoXY(left + 8 - playerList[i]._name.length() / 2, top + 3 + i);
+		cout << playerList[i]._name;
+
+		Common::gotoXY(left + 22 - (playerList[i]._display_time.length() + 1) / 2, top + 3 + i);
+		cout << playerList[i]._display_time << 's';
+
+		Common::gotoXY(left + 31, top + 3 + i);
+		if (playerList[i]._level == 4) cout << level1;
+		else cout << level2;
+
+		Common::gotoXY(left + 43, top + 3 + i);
+		if (playerList[i]._mode == 1) cout << "Standard";
+		else cout << "Difficult";
+
 		stringstream ss;
 		ss << playerList[i]._score;
 		string str = ss.str();
-		Common::gotoXY(left + 41 + 4 - str.length()/2, top + 3 + i);
+		Common::gotoXY(left + 59 - str.length() / 2, top + 3 + i);
 		cout << playerList[i]._score;
 	}
 
-	//dancing flowers
-	/*for (int i = 0; i < 5; i++)
-	{
-		int j = 0;
-		ifstream flower;
-		flower.open("Haha\\Dancing_Flower1.txt");
-		while (!flower.eof()) {
-			Common::gotoXY(5, 20 + j);
-			getline(flower, s);
-			cout << s;
-			j++;
-		}
-		flower.close();
+	left = 3, top = 12;
 
-		j = 0;
-		Sleep(200);
-		Common::gotoXY(5, 20 + j - 1);
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		flower.open("Haha\\Dancing_Flower2.txt");
-		while (!flower.eof()) {
-			Common::gotoXY(5, 20 + j - 1);
-			getline(flower, s);
-			cout << s;
-			j++;
-		}
-		flower.close();
+	ifstream in;
+	in.open("images\\exitMonster.txt");
+	i = 0;
 
-		j = 0;
-		Sleep(200);
-		Common::gotoXY(5, 20 + j - 2);
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		flower.open("Haha\\Dancing_Flower3.txt");
-		while (!flower.eof()) {
-			Common::gotoXY(5, 20 + j - 2);
-			getline(flower, s);
-			cout << s;
-			j++;
-		}
-		flower.close();
+	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
+	while (getline(in, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	in.close();
 
-		j = 0;
-		Sleep(200);
-		Common::gotoXY(5, 20 + j - 2);
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		flower.open("Haha\\Dancing_Flower4.txt");
-		while (!flower.eof()) {
-			Common::gotoXY(5, 20 + j - 3);
-			getline(flower, s);
-			cout << s;
-			j++;
+	bool loop = 1;
+	while (loop) {
+		switch (Common::getConsoleInput()) {
+		case 1:
+			loop = 0;
+			break;
+		default:
+			Common::playSound(ERROR_SOUND);
 		}
-		flower.close();
-
-		j = 0;
-		Sleep(200);
-		Common::gotoXY(5, 20 + j - 3);
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-		cout << "          \n";
-	}*/
-	fireworksAni();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////

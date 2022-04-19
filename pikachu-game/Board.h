@@ -44,7 +44,6 @@ struct Board {
 	void drawEnterName();
 	void drawEndgame(int);
 	static void drawLeaderBoard();
-	static void fireworksAni();
 
 	void lockCell(const int& r, const int& c);
 	void unlockCell(const int& r, const int& c);

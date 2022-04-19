@@ -443,11 +443,145 @@ void Menu::showTutorial()
 
 void Menu::showLeaderboard()
 {
-	Board::drawLeaderBoard();
+	Common::clearConsole();
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 
-	Sleep(10000);//replace this line with fireworks
+	ifstream boardtitle("titles\\Leaderboard.txt");
+	string s;
+	int i = 0;
 
-	BoardLL::drawLeaderBoard();
+	//Left and top of leaderboard title
+	int left = 15, top = 2;
+	Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	while (getline(boardtitle, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	boardtitle.close();
+
+	vector<Players> playerList;
+	Players().readPlayersFile(playerList, "PlayersList.txt");
+
+	left = 60;
+	top = 12;							//left and top of the board
+	int height = 18, width = 65;		//board size
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+
+	//Draw horizontal borders
+	for (int i = 1; i < width; i++) {
+		Common::gotoXY(left + i, top);
+		putchar(205);
+		Common::gotoXY(i + left, top + height);
+		putchar(205);
+	}
+	Common::gotoXY(left + width, top);
+	putchar(187);
+	Common::gotoXY(left, top + height);
+	putchar(200);
+
+	//Draw vertical borders
+	for (int i = 1; i < height; i++) {
+		Common::gotoXY(left + width, i + top);
+		putchar(186);
+		Common::gotoXY(left, top + i);
+		putchar(186);
+	}
+	Common::gotoXY(left + width, top + height);
+	putchar(188);
+	Common::gotoXY(left, top);
+	putchar(201);
+
+	//divide row
+	Common::gotoXY(left, top + 2);
+	putchar(204);
+	for (int i = 1; i < width; i++) {
+		Common::gotoXY(left + i, top + 2);
+		putchar(205);
+	}
+	Common::gotoXY(left + width, top + 2);
+	putchar(185);
+
+	int posColumn[4] = { 16,27,40,53 };
+
+	//divid columns
+	for (int i = 0; i < 4; i++) {
+		Common::gotoXY(left + posColumn[i], top);
+		putchar(203);
+		for (int j = 1; j < height; j++) {
+			Common::gotoXY(left + posColumn[i], top + j);
+			putchar(186);
+		}
+		Common::gotoXY(left + posColumn[i], top + height);
+		putchar(202);
+
+		//plus (+) symbol
+		Common::gotoXY(left + posColumn[i], top + 2);
+		putchar(206);
+	}
+
+	string headerNameColumn[5] = { "Player name", "Time", "Level", "Mode", "Score" };
+	int headerPosNameColumn[5] = { 3, 20, 32, 45, 57 };
+
+	Common::setConsoleColor(BRIGHT_WHITE, RED);
+	for (int i = 0; i < 5; i++) {
+		Common::gotoXY(left + headerPosNameColumn[i], top + 1);
+		std::cout << headerNameColumn[i];
+	}
+
+	Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	string level1 = " Easy ";
+	string level2 = "Medium";
+
+	int n = 15;
+	if (playerList.size() < n) n = playerList.size();
+	for (int i = 0; i < n; i++) {
+		Common::gotoXY(left + 8 - playerList[i]._name.length() / 2, top + 3 + i);
+		cout << playerList[i]._name;
+
+		Common::gotoXY(left + 22 - (playerList[i]._display_time.length() + 1) / 2, top + 3 + i);
+		cout << playerList[i]._display_time << 's';
+
+		Common::gotoXY(left + 31, top + 3 + i);
+		if (playerList[i]._level == 4) cout << level1;
+		else cout << level2;
+
+		Common::gotoXY(left + 43, top + 3 + i);
+		if (playerList[i]._mode == 1) cout << "Standard";
+		else cout << "Difficult";
+
+		stringstream ss;
+		ss << playerList[i]._score;
+		string str = ss.str();
+		Common::gotoXY(left + 59 - str.length() / 2, top + 3 + i);
+		cout << playerList[i]._score;
+	}
+
+	left = 3, top = 12;
+
+	ifstream in;
+	in.open("images\\tutorialMonster.txt");
+	i = 0;
+
+	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
+	while (getline(in, s)) {
+		Common::gotoXY(left, top + i);
+		cout << s;
+		i++;
+	}
+	in.close();
+
+	bool loop = 1;
+	while (loop) {
+		switch (Common::getConsoleInput()) {
+		case 8:
+			loop = 0;
+			break;
+		default:
+			Common::playSound(ERROR_SOUND);
+		}
+	}
 }
 
 void Menu::exitGame()
