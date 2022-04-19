@@ -92,7 +92,7 @@ void Game::endGame()
 	_player->_time_played = _timeEnd - _timeStart;
 	_player->calculateScore(_player->_time_played, _remainCells);
 
-	Sleep(1500);
+	Sleep(1000);
 
 	_player->writePlayersFile();
 

@@ -419,7 +419,7 @@ void Menu::showTutorial()
 
 	left = 3, top = 12;
 
-	in.open("images\\tutorialMonster.txt");
+	in.open("images\\menuMonster.txt");
 	i = 0;
 
 	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
@@ -563,7 +563,7 @@ void Menu::showLeaderboard()
 	left = 3, top = 12;
 
 	ifstream in;
-	in.open("images\\tutorialMonster.txt");
+	in.open("images\\menuMonster.txt");
 	i = 0;
 
 	Common::setConsoleColor(BRIGHT_WHITE, AQUA);
